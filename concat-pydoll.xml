@@ -1,0 +1,4347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<concatpydoll>
+    <MatchedFilesDirectoryStructureList>
+        <DirectoryEntry>"pydoll": ["constants.py", "element.py", "exceptions.py", "utils.py"]</DirectoryEntry>
+        <DirectoryEntry>"pydoll/browser": ["base.py", "chrome.py", "managers.py", "options.py",
+            "page.py"]</DirectoryEntry>
+        <DirectoryEntry>"pydoll/commands": ["browser.py", "dom.py", "fetch.py", "input.py",
+            "network.py", "page.py", "runtime.py", "storage.py", "target.py", "__init__.py"]</DirectoryEntry>
+        <DirectoryEntry>"pydoll/connection": ["connection.py", "managers.py"]</DirectoryEntry>
+        <DirectoryEntry>"pydoll/events": ["browser.py", "dom.py", "fetch.py", "network.py",
+            "page.py", "__init__.py"]</DirectoryEntry>
+        <DirectoryEntry>"pydoll/mixins": ["find_elements.py"]</DirectoryEntry>
+    </MatchedFilesDirectoryStructureList>
+    <FileContents>
+        <File>
+            <Filename>base.py</Filename>
+            <Content><![CDATA[
+import asyncio
+from abc import ABC, abstractmethod
+from functools import partial
+from random import randint
+
+from pydoll import exceptions
+from pydoll.browser.managers import (
+    BrowserOptionsManager,
+    BrowserProcessManager,
+    ProxyManager,
+    TempDirectoryManager,
+)
+from pydoll.browser.options import Options
+from pydoll.browser.page import Page
+from pydoll.commands.browser import BrowserCommands
+from pydoll.commands.dom import DomCommands
+from pydoll.commands.fetch import FetchCommands
+from pydoll.commands.network import NetworkCommands
+from pydoll.commands.page import PageCommands
+from pydoll.commands.storage import StorageCommands
+from pydoll.commands.target import TargetCommands
+from pydoll.connection.connection import ConnectionHandler
+from pydoll.events.fetch import FetchEvents
+
+
+class Browser(ABC):  # noqa: PLR0904
+    """
+    A class to manage a browser instance for automated interactions.
+
+    This class allows users to start and stop a browser, take screenshots,
+    and register event callbacks.
+    """
+
+    def __init__(
+        self,
+        options: Options | None = None,
+        connection_port: int = None,
+    ):
+        """
+        Initializes the Browser instance.
+
+        Args:
+            options (Options | None): An instance of the Options class to
+            configure the browser. If None, default options will be used.
+            connection_port (int): The port to connect to the browser.
+
+        Raises:
+            TypeError: If any of the arguments are not callable.
+        """
+        self.options = BrowserOptionsManager.initialize_options(options)
+        self._proxy_manager = ProxyManager(self.options)
+        self._connection_port = (
+            connection_port if connection_port else randint(9223, 9322)
+        )
+        self._browser_process_manager = BrowserProcessManager()
+        self._temp_directory_manager = TempDirectoryManager()
+        self._connection_handler = ConnectionHandler(self._connection_port)
+        BrowserOptionsManager.add_default_arguments(self.options)
+
+        self._pages = []
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.stop()
+        await self._connection_handler.close()
+
+    async def start(self) -> None:
+        """Método principal para iniciar o navegador."""
+        binary_location = (
+            self.options.binary_location or self._get_default_binary_location()
+        )
+
+        self._setup_user_dir()
+        proxy_config = self._proxy_manager.get_proxy_credentials()
+
+        self._browser_process_manager.start_browser_process(
+            binary_location,
+            self._connection_port,
+            self.options.arguments,
+        )
+        await self._verify_browser_running()
+        await self._configure_proxy(proxy_config[0], proxy_config[1])
+        await self._init_first_page()
+
+    async def set_download_path(self, path: str):
+        """
+        Sets the download path for the browser.
+        Args:
+            path (str): The path to the download directory.
+        """
+        await self._execute_command(BrowserCommands.set_download_path(path))
+
+    async def get_page_by_id(self, page_id: str) -> Page:
+        """
+        Retrieves a Page instance by its ID.
+
+        Args:
+            page_id (str): The ID of the page to retrieve.
+
+        Returns:
+            Page: The Page instance corresponding to the specified ID.
+        """
+        return Page(self._connection_port, page_id)
+
+    async def get_page(self) -> Page:
+        """
+        Retrieves a Page instance for an existing page in the browser.
+        If no pages are open, a new page will be created.
+        """
+        page_id = (
+            await self.new_page() if not self._pages else self._pages.pop()
+        )
+        return Page(self._connection_port, page_id)
+
+    async def delete_all_cookies(self):
+        """
+        Deletes all cookies from the browser.
+        """
+        await self._execute_command(StorageCommands.clear_cookies())
+        await self._execute_command(NetworkCommands.clear_browser_cookies())
+
+    async def set_cookies(self, cookies: list[dict]):
+        """
+        Sets cookies in the browser.
+
+        Args:
+            cookies (list[dict]): A list of dictionaries containing
+               the cookie data.
+        """
+        await self._execute_command(StorageCommands.set_cookies(cookies))
+        await self._execute_command(NetworkCommands.set_cookies(cookies))
+
+    async def get_cookies(self):
+        """
+        Retrieves all cookies from the browser.
+
+        Returns:
+            list[dict]: A list of dictionaries containing the cookie data.
+        """
+        response = await self._execute_command(StorageCommands.get_cookies())
+        return response['result']['cookies']
+
+    async def on(
+        self, event_name: str, callback: callable, temporary: bool = False
+    ) -> int:
+        """
+        Registers an event callback for a specific event. This method has
+        a global scope and can be used to listen for events across all pages
+        in the browser. Each `Page` instance also has an `on` method that
+        allows for listening to events on a specific page.
+
+        Args:
+            event_name (str): Name of the event to listen for.
+            callback (Callable): function to be called when the event occurs.
+
+        Returns:
+            int: The ID of the registered callback.
+        """
+
+        async def callback_wrapper(event):
+            asyncio.create_task(callback(event))
+
+        if asyncio.iscoroutinefunction(callback):
+            function_to_register = callback_wrapper
+        else:
+            function_to_register = callback
+        return await self._connection_handler.register_callback(
+            event_name, function_to_register, temporary
+        )
+
+    async def new_page(self, url: str = ''):
+        """
+        Opens a new page in the browser.
+
+        Returns:
+            Page: The new page instance.
+        """
+        response = await self._execute_command(
+            TargetCommands.create_target(url)
+        )
+        page_id = response['result']['targetId']
+        return page_id
+
+    async def get_targets(self):
+        """
+        Retrieves the list of open pages in the browser.
+
+        Returns:
+            list: The list of open pages in the browser.
+        """
+        response = await self._execute_command(TargetCommands.get_targets())
+        return response['result']['targetInfos']
+
+    async def stop(self):
+        """
+        Stops the running browser process.
+
+        Raises:
+            ValueError: If the browser is not currently running.
+        """
+        if await self._is_browser_running():
+            await self._execute_command(BrowserCommands.CLOSE)
+            self._browser_process_manager.stop_process()
+            self._temp_directory_manager.cleanup()
+        else:
+            raise exceptions.BrowserNotRunning('Browser is not running')
+
+    async def get_window_id(self):
+        """
+        Retrieves the ID of the current browser window.
+
+        Returns:
+            str: The ID of the current browser window.
+        """
+        response = await self._execute_command(BrowserCommands.get_window_id())
+        return response['result']['windowId']
+
+    async def set_window_bounds(self, bounds: dict):
+        """
+        Sets the bounds of the specified window.
+
+        Args:
+            bounds (dict): The bounds to set for the window.
+        """
+        window_id = await self.get_window_id()
+        await self._execute_command(
+            BrowserCommands.set_window_bounds(window_id, bounds)
+        )
+
+    async def set_window_maximized(self):
+        """
+        Maximizes the specified window.
+        """
+        window_id = await self.get_window_id()
+        await self._execute_command(
+            BrowserCommands.set_window_maximized(window_id)
+        )
+
+    async def set_window_minimized(self):
+        """
+        Minimizes the specified window.
+        """
+        window_id = await self.get_window_id()
+        await self._execute_command(
+            BrowserCommands.set_window_minimized(window_id)
+        )
+
+    async def enable_page_events(self):
+        """
+        Enables listening for page-related events over the websocket
+        connection. Once this method is invoked, the connection will emit
+        events pertaining to page activities, such as loading, navigation,
+        and DOM updates, to any registered event callbacks. For a comprehensive
+        list of available page events and their purposes, refer to the
+        PageEvents class documentation.
+        This functionality is crucial for monitoring and reacting to changes
+        in the page state in real-time.
+
+        This method has a global scope and can be used to listen
+        for events across all pages in the browser. Each Page instance also
+        has an `enable_page_events` method that allows for listening to events
+        on a specific page.
+
+        Returns:
+            None
+        """
+        await self._connection_handler.execute_command(
+            PageCommands.enable_page()
+        )
+
+    async def enable_network_events(self):
+        """
+        Activates listening for network events through the websocket
+        connection. After calling this method, the connection will emit
+        events related to network activities, such as resource loading and
+        response status, to any registered event callbacks. This is essential
+        for debugging network interactions and analyzing resource requests.
+        For details on available network events, consult the NetworkEvents
+        class documentation.
+
+        This method has a global scope and can be used to listen
+        for events across all pages in the browser. Each Page instance also
+        has an `enable_network_events` method that allows for listening to
+        events on a specific page.
+
+        Returns:
+            None
+        """
+        await self._connection_handler.execute_command(
+            NetworkCommands.enable_network_events()
+        )
+
+    async def enable_fetch_events(
+        self, handle_auth_requests: bool = False, resource_type: str = ''
+    ):
+        """
+        Enables the Fetch domain for intercepting network requests before they
+        are sent. This method allows you to modify, pause, or continue requests
+        as needed. If handle_auth_requests is set to True, the connection will
+        emit an event when an authentication is required during a request.
+        The resource_type parameter specifies which type of requests to
+        intercept; if omitted, all requests will be intercepted. Use the
+        _continue_request method to resume any paused requests. This is
+        especially useful for monitoring and controlling network interactions.
+
+        This method has a global scope and can be used to intercept request
+        across all pages in the browser. Each Page instance also has an
+        `enable_fetch_events` method that allows for intercepting requests
+        on a specific page.
+
+        Args:
+            handle_auth_requests (bool): Whether to handle authentication
+            requests that require user credentials.
+            resource_type (str): The type of resource to intercept (e.g.,
+            'XHR', 'Script'). If not specified, all requests will
+            be intercepted.
+
+        Returns:
+            None
+        """
+        await self._connection_handler.execute_command(
+            FetchCommands.enable_fetch_events(
+                handle_auth_requests, resource_type
+            )
+        )
+
+    async def enable_dom_events(self):
+        """
+        Enables DOM-related events for the websocket connection. When invoked,
+        this method allows the connection to listen for changes in the DOM,
+        including node additions, removals, and attribute changes. This feature
+        is vital for applications that need to react to dynamic changes in
+        the page structure. For a full list of available DOM events, refer to
+        the DomCommands class documentation.
+
+        This method has a global scope and can be used to listen
+        for events across all pages in the browser. Each Page instance also has
+        an `enable_dom_events` method that allows for listening to events on
+        a specific page.
+
+        Returns:
+            None
+        """
+        await self._connection_handler.execute_command(
+            DomCommands.enable_dom_events()
+        )
+
+    async def disable_fetch_events(self):
+        """
+        Deactivates the Fetch domain, stopping the interception of network
+        requests for the websocket connection. Once this method is called,
+        the connection will no longer monitor or pause any network requests,
+        allowing normal network operations to resume. This can be useful when
+        you want to halt the monitoring of network activity.
+
+        This method has a global scope and can be used to disable fetch events
+        across all pages in the browser. Each Page instance also has a
+        `disable_fetch_events` method that allows for disabling fetch events
+        on a specific page.
+
+        Returns:
+            None
+        """
+        await self._connection_handler.execute_command(
+            FetchCommands.disable_fetch_events()
+        )
+
+    async def _continue_request(self, event: dict):
+        """
+        Resumes a network request that was previously paused in the browser.
+        When the Fetch domain is active, certain requests can be paused based
+        on the specified resource type. This method takes the event data that
+        contains the request ID and uses it to continue the paused request,
+        allowing the browser to proceed with the network operation. This is
+        particularly useful for handling requests that require conditional
+        logic before they are sent to the server.
+
+        Args:
+            event (dict): A dictionary containing the event data, including
+            the request ID, which identifies the paused request to be resumed.
+
+        Returns:
+            None
+        """
+        request_id = event['params']['requestId']
+        await self._execute_command(FetchCommands.continue_request(request_id))
+
+    async def _continue_request_auth_required(
+        self, event: dict, proxy_username: str, proxy_password: str
+    ):
+        """
+        Resumes a network request that was previously paused in the browser
+        and requires proxy authentication. This method is triggered when an
+        authentication challenge is encountered during the request handling.
+        It uses the provided proxy credentials to continue the request,
+        enabling successful communication through the proxy server. After
+        handling the request, it disables fetch event monitoring.
+
+        Args:
+            event (dict): A dictionary containing the event data, which
+            includes the request ID for the paused request that needs
+            to be resumed.
+            proxy_username (str): The username for the proxy server
+            authentication.
+            proxy_password (str): The password for the proxy server
+            authentication.
+
+        Raises:
+            IndexError: If the event data does not contain a valid request ID.
+
+        Returns:
+            None
+        """
+        request_id = event['params']['requestId']
+        await self._execute_command(
+            FetchCommands.continue_request_with_auth(
+                request_id, proxy_username, proxy_password
+            )
+        )
+        await self.disable_fetch_events()
+
+    async def _init_first_page(self):
+        pages = await self.get_targets()
+        valid_page = await self._get_valid_page(pages)
+        self._pages.append(valid_page)
+
+    async def _verify_browser_running(self):
+        """Verifica se o navegador está rodando."""
+        if not await self._is_browser_running():
+            raise exceptions.BrowserNotRunning('Failed to start browser')
+
+    async def _configure_proxy(self, private_proxy, proxy_credentials):
+        """Configura o proxy, se necessário."""
+        if private_proxy:
+            await self.enable_fetch_events(handle_auth_requests=True)
+            await self.on(
+                FetchEvents.REQUEST_PAUSED,
+                self._continue_request,
+                temporary=True,
+            )
+            await self.on(
+                FetchEvents.AUTH_REQUIRED,
+                partial(
+                    self._continue_request_auth_required,
+                    proxy_username=proxy_credentials[0],
+                    proxy_password=proxy_credentials[1],
+                ),
+                temporary=True,
+            )
+
+    @staticmethod
+    def _is_valid_page(page: dict) -> bool:
+        """Verifica se uma página é uma nova aba válida."""
+        return page.get('type') == 'page' and 'chrome://newtab/' in page.get(
+            'url', ''
+        )
+
+    async def _get_valid_page(self, pages) -> str:
+        """
+        Obtém o ID de uma página válida ou cria uma nova.
+
+        Returns:
+            str: targetId da página existente ou nova
+        """
+        valid_page = next(
+            (page for page in pages if self._is_valid_page(page)), None
+        )
+
+        if valid_page:
+            try:
+                return valid_page['targetId']
+            except KeyError:
+                pass
+
+        return await self.new_page()
+
+    async def _is_browser_running(self, timeout: int = 10) -> bool:
+        """
+        Checks if the browser process is currently running.
+        Attempts to connect to the browser to verify its status.
+
+        Returns:
+            bool: True if the browser is running, False otherwise.
+        """
+        for _ in range(timeout):
+            if await self._connection_handler.ping():
+                return True
+            await asyncio.sleep(1)
+        return False
+
+    async def _execute_command(self, command: str):
+        """
+        Executes a command through the connection handler.
+
+        Args:
+            command (str): The command to be executed.
+
+        Returns:
+            The response from executing the command.
+        """
+        return await self._connection_handler.execute_command(
+            command, timeout=60
+        )
+
+    def _setup_user_dir(self):
+        """Prepara o diretório de dados do usuário, se necessário."""
+        temp_dir = self._temp_directory_manager.create_temp_dir()
+        if '--user-data-dir' not in [
+            arg.split('=')[0] for arg in self.options.arguments
+        ]:
+            self.options.arguments.append(f'--user-data-dir={temp_dir.name}')
+
+    @abstractmethod
+    def _get_default_binary_location(self) -> str:
+        """
+        Retrieves the default location of the browser binary.
+
+        This method must be implemented by subclasses.
+        """
+        pass
+]]></Content>
+        </File>
+        <File>
+            <Filename>chrome.py</Filename>
+            <Content><![CDATA[
+import platform
+from typing import Optional
+
+from pydoll.browser.base import Browser
+from pydoll.browser.managers import BrowserOptionsManager
+from pydoll.browser.options import Options
+
+
+class Chrome(Browser):
+    def __init__(
+        self,
+        options: Optional[Options] = None,
+        connection_port: Optional[int] = None,
+    ):
+        super().__init__(options, connection_port)
+
+    @staticmethod
+    def _get_default_binary_location():
+        os_name = platform.system()
+        browser_paths = {
+            'Windows':
+                r'C:\Program Files\Google\Chrome\Application\chrome.exe',
+            'Linux':
+                '/usr/bin/google-chrome',
+            'Darwin':
+                '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        }
+
+        browser_path = browser_paths.get(os_name)
+
+        if not browser_path:
+            raise ValueError('Unsupported OS')
+
+        return BrowserOptionsManager.validate_browser_path(
+            browser_path
+        )
+]]></Content>
+        </File>
+        <File>
+            <Filename>managers.py</Filename>
+            <Content><![CDATA[
+import os
+import shutil
+import subprocess
+from contextlib import suppress
+from tempfile import TemporaryDirectory
+
+from pydoll.browser.options import Options
+
+
+class ProxyManager:
+    def __init__(self, options):
+        self.options = options
+
+    def get_proxy_credentials(self) -> tuple[bool, tuple[str, str]]:
+        """
+        Configura as configurações de proxy e extrai credenciais se presentes.
+
+        Returns:
+            tuple[bool, tuple[str, str]]: (private_proxy, (username, password))
+        """
+        private_proxy = False
+        credentials = (None, None)
+
+        proxy_arg = self._find_proxy_argument()
+
+        if proxy_arg is not None:
+            index, proxy_value = proxy_arg
+            has_credentials, username, password, clean_proxy = (
+                self._parse_proxy(proxy_value)
+            )
+
+            if has_credentials:
+                self._update_proxy_argument(index, clean_proxy)
+                private_proxy = True
+                credentials = (username, password)
+
+        return private_proxy, credentials
+
+    def _find_proxy_argument(self) -> tuple[int, str] | None:
+        """Encontra o primeiro argumento --proxy-server válido"""
+        for index, arg in enumerate(self.options.arguments):
+            if arg.startswith('--proxy-server='):
+                return index, arg.split('=', 1)[1]
+        return None
+
+    @staticmethod
+    def _parse_proxy(proxy_value: str) -> tuple[bool, str, str, str]:
+        """Extrai credenciais e limpa o valor do proxy"""
+        if '@' not in proxy_value:
+            return False, None, None, proxy_value
+
+        try:
+            creds_part, server_part = proxy_value.split('@', 1)
+            username, password = creds_part.split(':', 1)
+            return True, username, password, server_part
+        except ValueError:
+            return False, None, None, proxy_value
+
+    def _update_proxy_argument(self, index: int, clean_proxy: str) -> None:
+        """Atualiza a lista de argumentos com proxy limpo"""
+        self.options.arguments[index] = f'--proxy-server={clean_proxy}'
+
+
+class BrowserProcessManager:
+    def __init__(self, process_creator=None):
+        self._process_creator = (
+            process_creator or self._default_process_creator
+        )
+        self._process = None
+
+    def start_browser_process(
+        self, binary_location: str, port: int, arguments: list
+    ) -> None:
+        """Inicia o processo do navegador"""
+        self._process = self._process_creator([
+            binary_location,
+            f'--remote-debugging-port={port}',
+            *arguments,
+        ])
+        return self._process
+
+    @staticmethod
+    def _default_process_creator(command: list[str]):
+        return subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+
+    def stop_process(self):
+        """Para o processo do navegador se estiver em execução"""
+        if self._process:
+            self._process.terminate()
+
+
+class TempDirectoryManager:
+    def __init__(self, temp_dir_factory=TemporaryDirectory):
+        self._temp_dir_factory = temp_dir_factory
+        self._temp_dirs = []
+
+    def create_temp_dir(self):
+        """
+        Cria um diretório temporário para a instância do navegador.
+
+        Returns:
+            TemporaryDirectory: O diretório temporário.
+        """
+        temp_dir = self._temp_dir_factory()
+        self._temp_dirs.append(temp_dir)
+        return temp_dir
+
+    def cleanup(self):
+        """Limpa todos os diretórios temporários"""
+        for temp_dir in self._temp_dirs:
+            with suppress(OSError):
+                shutil.rmtree(temp_dir.name)
+
+
+class BrowserOptionsManager:
+    @staticmethod
+    def initialize_options(options: Options | None) -> Options:
+        """
+        Inicializa as opções para o navegador.
+
+        Args:
+            options (Options | None): Uma instância da classe Options ou None.
+
+        Returns:
+            Options: A instância de opções inicializada.
+        """
+        if options is None:
+            return Options()
+        if not isinstance(options, Options):
+            raise ValueError('Invalid options')
+        return options
+
+    @staticmethod
+    def add_default_arguments(options: Options):
+        """Adiciona argumentos padrão aos argumentos fornecidos"""
+        options.arguments.append('--no-first-run')
+        options.arguments.append('--no-default-browser-check')
+
+    @staticmethod
+    def validate_browser_path(path: str) -> str:
+        """
+        Valida o caminho fornecido do navegador.
+
+        Args:
+            path (str): O caminho do arquivo executável do navegador.
+
+        Returns:
+            str: O caminho do navegador validado.
+        """
+        if not os.path.exists(path):
+            raise ValueError(f'Browser not found: {path}')
+        return path
+]]></Content>
+        </File>
+        <File>
+            <Filename>options.py</Filename>
+            <Content><![CDATA[
+class Options:
+    """
+    A class to manage command-line options for a browser instance.
+
+    This class allows the user to specify command-line arguments and
+    the binary location of the browser executable.
+    """
+
+    def __init__(self):
+        """
+        Initializes the Options instance.
+
+        Sets up an empty list for command-line arguments and a string
+        for the binary location of the browser.
+        """
+        self._arguments = []
+        self._binary_location = ''
+
+    @property
+    def arguments(self) -> list:
+        """
+        Gets the list of command-line arguments.
+
+        Returns:
+            list: A list of command-line arguments added to the options.
+        """
+        return self._arguments
+
+    @property
+    def binary_location(self) -> str:
+        """
+        Gets the location of the browser binary.
+
+        Returns:
+            str: The file path to the browser executable.
+        """
+        return self._binary_location
+
+    @binary_location.setter
+    def binary_location(self, location: str):
+        """
+        Sets the location of the browser binary.
+
+        Args:
+            location (str): The file path to the browser executable.
+        """
+        self._binary_location = location
+
+    def add_argument(self, argument: str):
+        """
+        Adds a command-line argument to the options.
+
+        Args:
+            argument (str): The command-line argument to be added.
+
+        Raises:
+            ValueError: If the argument is already in the list of arguments.
+        """
+        if argument not in self.arguments:
+            self.arguments.append(argument)
+        else:
+            raise ValueError(f'Argument already exists: {argument}')
+]]></Content>
+        </File>
+        <File>
+            <Filename>page.py</Filename>
+            <Content><![CDATA[
+import asyncio
+import json
+
+import aiofiles
+
+from pydoll.commands.dom import DomCommands
+from pydoll.commands.fetch import FetchCommands
+from pydoll.commands.network import NetworkCommands
+from pydoll.commands.page import PageCommands
+from pydoll.commands.runtime import RuntimeCommands
+from pydoll.commands.storage import StorageCommands
+from pydoll.connection.connection import ConnectionHandler
+from pydoll.element import WebElement
+from pydoll.exceptions import InvalidFileExtension
+from pydoll.mixins.find_elements import FindElementsMixin
+from pydoll.utils import decode_image_to_bytes
+
+
+class Page(FindElementsMixin):  # noqa: PLR0904
+    def __init__(self, connection_port: int, page_id: str):
+        """
+        Initializes the Page instance.
+
+        Args:
+            connection_handler (ConnectionHandler): The connection handler
+                instance.
+            page_id (str): The ID of the page, obtained via the DevTools
+                Protocol.
+        """
+        self._connection_handler = ConnectionHandler(connection_port, page_id)
+        self._page_events_enabled = False
+        self._network_events_enabled = False
+        self._fetch_events_enabled = False
+        self._dom_events_enabled = False
+
+    @property
+    def page_events_enabled(self) -> bool:
+        """
+        Returns whether page events are enabled or not.
+
+        Returns:
+            bool: True if page events are enabled, False otherwise.
+        """
+        return self._page_events_enabled
+
+    @property
+    def network_events_enabled(self) -> bool:
+        """
+        Returns whether network events are enabled or not.
+
+        Returns:
+            bool: True if network events are enabled, False otherwise.
+        """
+        return self._network_events_enabled
+
+    @property
+    def fetch_events_enabled(self) -> bool:
+        """
+        Returns whether fetch events are enabled or not.
+
+        Returns:
+            bool: True if fetch events are enabled, False otherwise.
+        """
+        return self._fetch_events_enabled
+
+    @property
+    def dom_events_enabled(self) -> bool:
+        """
+        Returns whether DOM events are enabled or not.
+
+        Returns:
+            bool: True if DOM events are enabled, False otherwise.
+        """
+        return self._dom_events_enabled
+
+    @property
+    async def current_url(self) -> str:
+        """
+        Retrieves the current URL of the page.
+
+        Returns:
+            str: The current URL of the page.
+        """
+        response = await self._execute_command(DomCommands.get_current_url())
+        return response['result']['result']['value']
+
+    @property
+    async def page_source(self) -> str:
+        """
+        Retrieves the source code of the page.
+
+        Returns:
+            str: The source code of the page.
+
+        """
+        response = await self._execute_command(
+            RuntimeCommands.evaluate_script(
+                'document.documentElement.outerHTML'
+            )
+        )
+        return response['result']['result']['value']
+
+    async def close(self):
+        """
+        Closes the page.
+        """
+        await self._execute_command(PageCommands.close())
+
+    async def get_cookies(self) -> list[dict]:
+        """
+        Retrieves the cookies of the page.
+
+        Returns:
+            list: A list of cookies.
+        """
+        response = await self._execute_command(
+            NetworkCommands.get_all_cookies()
+        )
+        return response['result']['cookies']
+
+    async def set_cookies(self, cookies: list[dict]):
+        """
+        Sets cookies for the page.
+
+        Args:
+            cookies (list): A list of cookies to set.
+        """
+        await self._execute_command(StorageCommands.set_cookies(cookies))
+        await self._execute_command(NetworkCommands.set_cookies(cookies))
+
+    async def delete_all_cookies(self):
+        """
+        Deletes all cookies from the browser.
+        """
+        await self._execute_command(StorageCommands.clear_cookies())
+        await self._execute_command(NetworkCommands.clear_browser_cookies())
+
+    async def has_dialog(self) -> bool:
+        """
+        Checks if a dialog is present on the page.
+
+        Returns:
+            bool: True if a dialog is present, False otherwise.
+        """
+        if self._connection_handler.dialog:
+            return True
+        return False
+
+    async def get_dialog_message(self) -> str:
+        """
+        Retrieves the message of the dialog on the page.
+
+        Returns:
+            str: The message of the dialog.
+        """
+        if not await self.has_dialog():
+            raise LookupError('No dialog present on the page')
+        return self._connection_handler.dialog['params']['message']
+
+    async def accept_dialog(self):
+        """
+        Accepts the dialog on the page.
+
+        Raises:
+            LookupError: If no dialog is present on the page.
+        """
+        if not await self.has_dialog():
+            raise LookupError('No dialog present on the page')
+        await self._execute_command(PageCommands.handle_dialog(True))
+
+    async def go_to(self, url: str, timeout=300):
+        """
+        Navigates to a URL in the page.
+
+        Args:
+            url (str): The URL to navigate to.
+        """
+        if await self._refresh_if_url_not_changed(url):
+            return
+
+        await self._execute_command(PageCommands.go_to(url))
+
+        try:
+            await self._wait_page_load(timeout=timeout)
+        except asyncio.TimeoutError:
+            raise TimeoutError('Page load timed out')
+
+    async def refresh(self):
+        """
+        Refreshes the page.
+        """
+        await self._execute_command(PageCommands.refresh())
+        try:
+            await self._wait_page_load()
+        except asyncio.TimeoutError:
+            raise TimeoutError('Page load timed out')
+
+    async def get_screenshot(self, path: str):
+        """
+        Captures a screenshot of the page.
+
+        Args:
+            path (str): The file path to save the screenshot to.
+        """
+        fmt = path.split('.')[-1]
+        if fmt not in {'jpeg', 'jpg', 'png'}:
+            raise InvalidFileExtension(f'{fmt} extension is not supported.')
+
+        response = await self._execute_command(
+            PageCommands.screenshot(fmt=fmt)
+        )
+        screenshot_b64 = response['result']['data'].encode('utf-8')
+        screenshot_bytes = decode_image_to_bytes(screenshot_b64)
+        async with aiofiles.open(path, 'wb') as file:
+            await file.write(screenshot_bytes)
+
+    async def set_download_path(self, path: str):
+        """
+        Sets the download path for the page.
+
+        Args:
+            path (str): The path where the downloaded files should be saved.
+        """
+        await self._execute_command(PageCommands.set_download_path(path))
+
+    async def get_pdf_base64(self):
+        """
+        Retrieves the PDF data of the page.
+
+        Returns:
+            str: The PDF data of the page.
+        """
+        response = await self._execute_command(PageCommands.print_to_pdf())
+        return response['result']['data']
+
+    async def print_to_pdf(self, path: str):
+        """
+        Prints the page to a PDF file.
+
+        Args:
+            path (str): The file path to save the PDF file to.
+        """
+        response = await self._execute_command(PageCommands.print_to_pdf(path))
+        pdf_b64 = response['result']['data'].encode('utf-8')
+        pdf_bytes = decode_image_to_bytes(pdf_b64)
+        async with aiofiles.open(path, 'wb') as file:
+            await file.write(pdf_bytes)
+
+    async def get_network_logs(self, matches: list[str] = []):
+        """
+        Retrieves network logs from the page.
+
+        Args:
+            matches (str): The URL pattern to match network logs against.
+
+        Returns:
+            list: A list of network logs that match the specified pattern.
+        """
+        network_logs = self._connection_handler.network_logs
+        logs_matched = []
+        for log in network_logs:
+            if not log.get('params', {}).get('request', {}).get('url'):
+                continue
+            for match in matches:
+                if match in log['params']['request']['url']:
+                    logs_matched.append(log)
+                    break
+
+        if not logs_matched:
+            raise LookupError('No network logs matched the specified pattern')
+
+        return logs_matched
+
+    async def get_network_response_bodies(self, matches: list[str] = []):
+        """
+        Retrieves the response bodies of network requests that match the
+        specified pattern.
+
+        Args:
+            matches (list): The URL patterns to match network requests against.
+
+        Returns:
+            list: A list of response bodies from network requests that match
+                the specified patterns.
+        """
+        logs_matched = await self.get_network_logs(matches)
+        responses = []
+        for log in logs_matched:
+            try:
+                body, base64encoded = await self.get_network_response_body(
+                    log['params']['requestId']
+                )
+            except KeyError:
+                continue
+            response = json.loads(body) if not base64encoded else body
+            responses.append(response)
+        return responses
+
+    async def get_network_response_body(self, request_id: str):
+        """
+        Retrieves the response body of a network request.
+
+        Args:
+            request_id (str): The ID of the network request.
+
+        Returns:
+            str: The response body of the network request.
+        """
+        response = await self._execute_command(
+            NetworkCommands.get_response_body(request_id)
+        )
+        return (
+            response['result']['body'],
+            response['result']['base64Encoded'],
+        )
+
+    async def enable_page_events(self):
+        """
+        Enables page events for the page.
+        """
+        await self._execute_command(PageCommands.enable_page())
+        self._page_events_enabled = True
+
+    async def enable_network_events(self):
+        """
+        Enables network events for the page.
+        """
+        await self._execute_command(NetworkCommands.enable_network_events())
+        self._network_events_enabled = True
+
+    async def enable_fetch_events(
+        self, handle_auth: bool = False, resource_type: str = 'Document'
+    ):
+        """
+        Enables fetch events for the page.
+        """
+        await self._execute_command(
+            FetchCommands.enable_fetch_events(handle_auth, resource_type)
+        )
+        self._fetch_events_enabled = True
+
+    async def enable_dom_events(self):
+        """
+        Enables DOM events for the page.
+        """
+        await self._execute_command(DomCommands.enable_dom_events())
+        self._dom_events_enabled = True
+
+    async def disable_fetch_events(self):
+        """
+        Disables fetch events for the page.
+        """
+        await self._execute_command(FetchCommands.disable_fetch_events())
+        self._fetch_events_enabled = False
+
+    async def disable_page_events(self):
+        """
+        Disables page events for the page.
+        """
+        await self._execute_command(PageCommands.disable_page())
+        self._page_events_enabled = False
+
+    async def on(
+        self, event_name: str, callback: callable, temporary: bool = False
+    ):
+        """
+        Registers an event listener for the page.
+
+        Args:
+            event (str): The event to listen for.
+            callback (callable): The callback function to execute when the
+                event is triggered.
+            temporary (bool): Whether the event listener is temporary or not.
+        """
+
+        async def callback_wrapper(event):
+            asyncio.create_task(callback(event))
+
+        if asyncio.iscoroutinefunction(callback):
+            function_to_register = callback_wrapper
+        else:
+            function_to_register = callback
+
+        return await self._connection_handler.register_callback(
+            event_name, function_to_register, temporary
+        )
+
+    async def execute_script(self, script: str, element: WebElement = None):
+        """
+        Executes a JavaScript script in the page.
+        If an element is provided, the script will be executed in the context
+        of that element. To provide the element context, use the 'argument'
+        keyword in the script.
+
+        Examples:
+        ```python
+        await page.execute_script('argument.click()', element)
+        await page.execute_script('argument.value = "Hello, World!"', element)
+        ```
+
+        Args:
+            script (str): The JavaScript script to execute.
+        """
+        if element:
+            script = script.replace('argument', 'this')
+            script = f'function(){{ {script} }}'
+            object_id = element._object_id
+            command = RuntimeCommands.call_function_on(
+                object_id, script, return_by_value=True
+            )
+        else:
+            command = RuntimeCommands.evaluate_script(script)
+        return await self._execute_command(command)
+
+    async def _refresh_if_url_not_changed(self, url: str):
+        """
+        Refreshes the page if the URL has not changed.
+
+        Args:
+            url (str): The URL to compare against.
+        """
+        current_url = await self.current_url
+        if current_url == url:
+            await self.refresh()
+            return True
+        return False
+
+    async def _wait_page_load(self, timeout: int = 300):
+        """
+        Waits for the page to finish loading.
+        """
+        start_time = asyncio.get_event_loop().time()
+        while True:
+            response = await self._execute_command(
+                RuntimeCommands.evaluate_script('document.readyState')
+            )
+            if response['result']['result']['value'] == 'complete':
+                break
+            if asyncio.get_event_loop().time() - start_time > timeout:
+                raise asyncio.TimeoutError('Page load timed out')
+            await asyncio.sleep(0.5)
+]]></Content>
+        </File>
+        <File>
+            <Filename>browser.py</Filename>
+            <Content><![CDATA[
+class BrowserCommands:
+    """
+    BrowserCommands class provides a set of commands to interact with the
+    browser's main functionality based on CDP. These commands allow for
+    managing browser windows, such as closing windows, retrieving window IDs,
+    and adjusting window bounds (size and state).
+
+    The following operations can be performed:
+    - Close the browser.
+    - Get the ID of the current window.
+    - Set the size and position of a specific window.
+    - Maximize or minimize a specific window.
+
+    Each method generates a command that can be sent to the browser
+    as part of the communication with the browser's underlying API.
+    """
+
+    CLOSE = {'method': 'Browser.close'}
+    GET_WINDOW_ID = {'method': 'Browser.WindowID'}
+    SET_WINDOW_BOUNDS_TEMPLATE = {
+        'method': 'Browser.setWindowBounds',
+        'params': {},
+    }
+    SET_DOWNLOAD_BEHAVIOR = {
+        'method': 'Browser.setDownloadBehavior',
+        'params': {},
+    }
+
+    @classmethod
+    def set_download_path(cls, path: str) -> dict:
+        """
+        Generates the command to set the download path for the browser.
+
+        Args:
+            path (str): The path to set for downloads.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        command = cls.SET_DOWNLOAD_BEHAVIOR.copy()
+        command['params']['behavior'] = 'allow'
+        command['params']['downloadPath'] = path
+        return command
+
+    @classmethod
+    def close(cls) -> dict:
+        """
+        Generates the command to close the browser.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        return cls.CLOSE
+
+    @classmethod
+    def get_window_id(cls) -> dict:
+        """
+        Generates the command to get the ID of the current window.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        return cls.GET_WINDOW_ID
+
+    @classmethod
+    def set_window_bounds(cls, window_id: int, bounds: dict) -> dict:
+        """
+        Generates the command to set the bounds of a window.
+
+        Args:
+            window_id (int): The ID of the window to set the bounds for.
+            bounds (dict): The bounds to set for the window,
+                           which should include width, height,
+                           and optionally x and y coordinates.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        command = cls.SET_WINDOW_BOUNDS_TEMPLATE.copy()
+        command['params']['windowId'] = window_id
+        command['params']['bounds'] = bounds
+        return command
+
+    @classmethod
+    def set_window_maximized(cls, window_id: int) -> dict:
+        """
+        Generates the command to maximize a window.
+
+        Args:
+            window_id (int): The ID of the window to maximize.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        return cls.set_window_bounds(window_id, {'windowState': 'maximized'})
+
+    @classmethod
+    def set_window_minimized(cls, window_id: int) -> dict:
+        """
+        Generates the command to minimize a window.
+
+        Args:
+            window_id (int): The ID of the window to minimize.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        return cls.set_window_bounds(window_id, {'windowState': 'minimized'})
+]]></Content>
+        </File>
+        <File>
+            <Filename>dom.py</Filename>
+            <Content><![CDATA[
+import copy
+from typing import Literal
+
+from pydoll.commands.runtime import RuntimeCommands
+from pydoll.constants import By, Scripts
+
+
+class DomCommands:
+    """
+    A class to define commands for interacting with the Document
+    Object Model (DOM) using the Chrome DevTools Protocol (CDP).
+    The commands allow for various operations on DOM nodes,
+    such as enabling the DOM domain, retrieving the
+    DOM document, describing nodes, and querying elements.
+
+    Attributes:
+        SelectorType (Literal): A type definition for supported selector types.
+    """
+
+    SelectorType = Literal[
+        By.CSS_SELECTOR, By.XPATH, By.CLASS_NAME, By.ID, By.TAG_NAME
+    ]
+
+    ENABLE = {'method': 'DOM.enable'}
+    DOM_DOCUMENT = {'method': 'DOM.getDocument'}
+    DESCRIBE_NODE_TEMPLATE = {'method': 'DOM.describeNode', 'params': {}}
+    FIND_ELEMENT_TEMPLATE = {'method': 'DOM.querySelector', 'params': {}}
+    FIND_ALL_ELEMENTS_TEMPLATE = {
+        'method': 'DOM.querySelectorAll',
+        'params': {},
+    }
+    BOX_MODEL_TEMPLATE = {'method': 'DOM.getBoxModel', 'params': {}}
+    RESOLVE_NODE_TEMPLATE = {'method': 'DOM.resolveNode', 'params': {}}
+    REQUEST_NODE_TEMPLATE = {'method': 'DOM.requestNode', 'params': {}}
+    GET_OUTER_HTML = {
+        'method': 'DOM.getOuterHTML',
+        'params': {},
+    }
+    SCROLL_INTO_VIEW_IF_NEEDED = {
+        'method': 'DOM.scrollIntoViewIfNeeded',
+        'params': {},
+    }
+
+    @classmethod
+    def scroll_into_view(cls, object_id: str) -> dict:
+        """Generates the command to scroll a specific DOM node into view."""
+        command = copy.deepcopy(cls.SCROLL_INTO_VIEW_IF_NEEDED)
+        command['params']['objectId'] = object_id
+        return command
+
+    @classmethod
+    def get_outer_html(cls, object_id: int) -> dict:
+        """Generates the command to get the outer HTML"""
+        command = copy.deepcopy(cls.GET_OUTER_HTML)
+        command['params']['objectId'] = object_id
+        return command
+
+    @classmethod
+    def dom_document(cls) -> dict:
+        """
+        Generates the command to get the root DOM node of the current page.
+        """
+        return cls.DOM_DOCUMENT
+
+    @classmethod
+    def request_node(cls, object_id: str) -> dict:
+        """Generates the command to request a specific DOM node by its object
+        ID."""
+        command = copy.deepcopy(cls.REQUEST_NODE_TEMPLATE)
+        command['params']['objectId'] = object_id
+        return command
+
+    @classmethod
+    def describe_node(cls, object_id: str) -> dict:
+        """Generates the command to describe a specific DOM node."""
+        command = copy.deepcopy(cls.DESCRIBE_NODE_TEMPLATE)
+        command['params']['objectId'] = object_id
+        return command
+
+    @classmethod
+    def box_model(cls, object_id: str) -> dict:
+        """
+        Generates the command to get the box model of a specific DOM node.
+        """
+        command = copy.deepcopy(cls.BOX_MODEL_TEMPLATE)
+        command['params']['objectId'] = object_id
+        return command
+
+    @classmethod
+    def enable_dom_events(cls) -> dict:
+        """Generates the command to enable the DOM domain."""
+        return cls.ENABLE
+
+    @classmethod
+    def get_current_url(cls) -> dict:
+        """Generates the command to get the current URL of the page."""
+        return RuntimeCommands.evaluate_script('window.location.href')
+
+    @classmethod
+    def find_element(
+        cls,
+        by: SelectorType,
+        value: str,
+        object_id: str = '',
+    ) -> dict:
+        """Generates a command to find a DOM element based on the specified
+        criteria."""
+        escaped_value = value.replace('"', '\\"')
+        match by:
+            case By.CLASS_NAME:
+                selector = f'.{escaped_value}'
+            case By.ID:
+                selector = f'#{escaped_value}'
+            case _:
+                selector = escaped_value
+        if object_id and not by == By.XPATH:
+            script = Scripts.RELATIVE_QUERY_SELECTOR.replace(
+                '{selector}', selector
+            )
+            command = RuntimeCommands.call_function_on(
+                object_id,
+                script,
+                return_by_value=False,
+            )
+        elif by == By.XPATH:
+            command = cls._find_element_by_xpath(value, object_id)
+        else:
+            command = RuntimeCommands.evaluate_script(
+                Scripts.QUERY_SELECTOR.replace('{selector}', selector)
+            )
+        return command
+
+    @classmethod
+    def find_elements(
+        cls,
+        by: SelectorType,
+        value: str,
+        object_id: str = '',
+    ) -> dict:
+        """Generates a command to find multiple DOM elements based on the
+        specified criteria."""
+        escaped_value = value.replace('"', '\\"')
+        match by:
+            case By.CLASS_NAME:
+                selector = f'.{escaped_value}'
+            case By.ID:
+                selector = f'#{escaped_value}'
+            case _:
+                selector = escaped_value
+        if object_id and not by == By.XPATH:
+            script = Scripts.RELATIVE_QUERY_SELECTOR_ALL.replace(
+                '{selector}', escaped_value
+            )
+            command = RuntimeCommands.call_function_on(
+                object_id,
+                script,
+                return_by_value=False,
+            )
+        elif by == By.XPATH:
+            command = cls._find_elements_by_xpath(value, object_id)
+        else:
+            command = RuntimeCommands.evaluate_script(
+                Scripts.QUERY_SELECTOR_ALL.replace('{selector}', selector)
+            )
+        return command
+
+    @classmethod
+    def _find_element_by_xpath(cls, xpath: str, object_id: str) -> dict:
+        """Creates a command to find a DOM element by XPath."""
+        escaped_value = xpath.replace('"', '\\"')
+        if object_id:
+            escaped_value = cls._ensure_relative_xpath(escaped_value)
+            script = Scripts.FIND_RELATIVE_XPATH_ELEMENT.replace(
+                '{escaped_value}', escaped_value
+            )
+            command = RuntimeCommands.call_function_on(
+                object_id,
+                script,
+                return_by_value=False,
+            )
+        else:
+            script = Scripts.FIND_XPATH_ELEMENT.replace(
+                '{escaped_value}', escaped_value
+            )
+            command = RuntimeCommands.evaluate_script(script)
+        return command
+
+    @classmethod
+    def _find_elements_by_xpath(cls, xpath: str, object_id: str) -> dict:
+        """Creates a command to find multiple DOM elements by XPath."""
+        escaped_value = xpath.replace('"', '\\"')
+        if object_id:
+            escaped_value = cls._ensure_relative_xpath(escaped_value)
+            script = Scripts.FIND_RELATIVE_XPATH_ELEMENTS.replace(
+                '{escaped_value}', escaped_value
+            )
+            command = RuntimeCommands.call_function_on(
+                object_id,
+                script,
+                return_by_value=False,
+            )
+        else:
+            script = Scripts.FIND_XPATH_ELEMENTS.replace(
+                '{escaped_value}', escaped_value
+            )
+            command = RuntimeCommands.evaluate_script(script)
+        return command
+
+    @staticmethod
+    def _ensure_relative_xpath(xpath: str) -> str:
+        """Ensures that the XPath expression is relative."""
+        return f'.{xpath}' if not xpath.startswith('.') else xpath
+]]></Content>
+        </File>
+        <File>
+            <Filename>fetch.py</Filename>
+            <Content><![CDATA[
+class FetchCommands:
+    """
+    A collection of command templates for handling fetch events in the browser.
+
+    This class provides a structured way to create and manage commands related
+    to fetch operations intercepted by the Fetch API. Each command corresponds
+    to specific actions that can be performed on fetch requests, such as
+    continuing a fetch request, fulfilling a fetch response, or handling
+    authentication challenges.
+
+    Attributes:
+        CONTINUE_REQUEST (dict): Template for continuing an intercepted fetch
+            request.
+        CONTINUE_REQUEST_WITH_AUTH (dict): Template for continuing a fetch
+            request that requires authentication.
+        DISABLE (dict): Template for disabling fetch interception.
+        ENABLE (dict): Template for enabling fetch interception.
+        FAIL_REQUEST (dict): Template for simulating a failure in a fetch
+            request.
+        FULFILL_REQUEST (dict): Template for fulfilling a fetch request with
+            custom responses.
+        GET_RESPONSE_BODY (dict): Template for retrieving the response body of
+            a fetch request.
+        CONTINUE_RESPONSE (dict): Template for continuing a fetch response for
+            an intercepted request.
+    """
+
+    CONTINUE_REQUEST = {'method': 'Fetch.continueRequest', 'params': {}}
+    CONTINUE_REQUEST_WITH_AUTH = {
+        'method': 'Fetch.continueWithAuth',
+        'params': {},
+    }
+    DISABLE = {'method': 'Fetch.disable', 'params': {}}
+    ENABLE = {'method': 'Fetch.enable', 'params': {}}
+    FAIL_REQUEST = {'method': 'Fetch.failRequest', 'params': {}}
+    FULFILL_REQUEST = {'method': 'Fetch.fulfillRequest', 'params': {}}
+    GET_RESPONSE_BODY = {'method': 'Fetch.getResponseBody', 'params': {}}
+    CONTINUE_RESPONSE = {'method': 'Fetch.continueResponse', 'params': {}}
+
+    @classmethod
+    def continue_request(  # noqa: PLR0913, PLR0917
+        cls,
+        request_id: str,
+        url: str = '',
+        method: str = '',
+        post_data: str = '',
+        headers: dict = {},
+        intercept_response: bool = False,
+    ):
+        """
+        Creates a command to continue a paused fetch request.
+
+        This command allows the browser to resume a fetch operation that has
+        been intercepted. You can modify the fetch request URL, method,
+        headers, and body before continuing.
+
+        Args:
+            request_id (str): The ID of the fetch request to continue.
+            url (str, optional): The new URL for the fetch request. Defaults to
+                ''.
+            method (str, optional): The HTTP method to use (e.g., 'GET',
+                'POST'). Defaults to ''.
+            postData (str, optional): The body data to send with the fetch
+                request. Defaults to ''.
+            headers (dict, optional): A dictionary of HTTP headers to include
+              in the fetch request. Defaults to {}.
+            interceptResponse (bool, optional): Indicates if the response
+              should be intercepted. Defaults to False.
+
+        Returns:
+            dict: A command template for continuing the fetch request.
+        """
+        continue_request_template = cls.CONTINUE_REQUEST.copy()
+        continue_request_template['params']['requestId'] = request_id
+        if url:
+            continue_request_template['params']['url'] = url
+        if method:
+            continue_request_template['params']['method'] = method
+        if post_data:
+            continue_request_template['params']['postData'] = post_data
+        if headers:
+            continue_request_template['params']['headers'] = headers
+        if intercept_response:
+            continue_request_template['params']['interceptResponse'] = (
+                intercept_response
+            )
+        return continue_request_template
+
+    @classmethod
+    def continue_request_with_auth(
+        cls, request_id: str, proxy_username: str, proxy_password: str
+    ):
+        """
+        Creates a command to continue a paused fetch request with
+        authentication.
+
+        This command is used when the fetch operation requires authentication.
+        It provides the necessary credentials to continue the request.
+
+        Args:
+            request_id (str): The ID of the fetch request to continue.
+            proxy_username (str): The username for proxy authentication.
+            proxy_password (str): The password for proxy authentication.
+
+        Returns:
+            dict: A command template for continuing the fetch request with
+                authentication.
+        """
+        continue_request_with_auth_template = (
+            cls.CONTINUE_REQUEST_WITH_AUTH.copy()
+        )
+        continue_request_with_auth_template['params']['requestId'] = request_id
+        continue_request_with_auth_template['params'][
+            'authChallengeResponse'
+        ] = {
+            'response': 'ProvideCredentials',
+            'username': proxy_username,
+            'password': proxy_password,
+        }
+        return continue_request_with_auth_template
+
+    @classmethod
+    def disable_fetch_events(cls):
+        """
+        Creates a command to disable fetch interception.
+
+        This command stops the browser from intercepting fetch requests.
+
+        Returns:
+            dict: A command template for disabling fetch interception.
+        """
+        return cls.DISABLE
+
+    @classmethod
+    def enable_fetch_events(
+        cls, handle_auth_requests: bool, resource_type: str
+    ):
+        """
+        Creates a command to enable fetch interception.
+
+        This command allows the browser to start intercepting fetch requests.
+        You can specify whether to handle authentication challenges and the
+        types of resources to intercept.
+
+        Args:
+            handle_auth_requests (bool): Indicates if authentication requests
+                should be handled.
+            resource_type (str): The type of resource to intercept (e.g.,
+                'Document', 'Image').
+
+        Returns:
+            dict: A command template for enabling fetch interception.
+        """
+        enable_fetch_events_template = cls.ENABLE.copy()
+        enable_fetch_events_template['params']['patterns'] = [
+            {'urlPattern': '*'}
+        ]
+        if resource_type:
+            enable_fetch_events_template['params']['patterns'][0][
+                'resourceType'
+            ] = resource_type
+
+        enable_fetch_events_template['params']['handleAuthRequests'] = (
+            handle_auth_requests
+        )
+        return enable_fetch_events_template
+
+    @classmethod
+    def fail_request(cls, request_id: str, error_reason: str):
+        """
+        Creates a command to simulate a failure in a fetch request.
+
+        This command allows you to simulate a failure for a specific fetch
+        operation, providing a reason for the failure.
+
+        Args:
+            request_id (str): The ID of the fetch request to fail.
+            errorReason (str): A description of the failure reason.
+
+        Returns:
+            dict: A command template for failing the fetch request.
+        """
+        fail_request_template = cls.FAIL_REQUEST.copy()
+        fail_request_template['params']['requestId'] = request_id
+        fail_request_template['params']['errorReason'] = error_reason
+        return fail_request_template
+
+    @classmethod
+    def fulfill_request(  # noqa: PLR0913, PLR0917
+        cls,
+        request_id: str,
+        response_code: int,
+        response_headers: dict = {},
+        binary_response_headers: str = '',
+        body: str = '',
+        response_phrase: str = '',
+    ):
+        """
+        Creates a command to fulfill a fetch request with a custom response.
+
+        This command allows you to provide a custom response for a fetch
+        operation, including the HTTP status code, headers, and body content.
+
+        Args:
+            request_id (str): The ID of the fetch request to fulfill.
+            responseCode (int): The HTTP status code to return.
+            responseHeaders (dict, optional): A dictionary of response headers.
+                Defaults to {}.
+            binaryResponseHeaders (str, optional): Binary response headers.
+                Defaults to ''.
+            body (str, optional): The body content of the response. Defaults to
+                ''.
+            responsePhrase (str, optional): The response phrase (e.g., 'OK',
+                'Not Found'). Defaults to ''.
+
+        Returns:
+            dict: A command template for fulfilling the fetch request.
+        """
+        fulfill_request_template = cls.FULFILL_REQUEST.copy()
+        fulfill_request_template['params']['requestId'] = request_id
+        if response_code:
+            fulfill_request_template['params']['responseCode'] = response_code
+        if response_headers:
+            fulfill_request_template['params']['responseHeaders'] = (
+                response_headers
+            )
+        if binary_response_headers:
+            fulfill_request_template['params']['binaryResponseHeaders'] = (
+                binary_response_headers
+            )
+        if body:
+            fulfill_request_template['params']['body'] = body
+        if response_phrase:
+            fulfill_request_template['params']['responsePhrase'] = (
+                response_phrase
+            )
+        return fulfill_request_template
+
+    @classmethod
+    def get_response_body(cls, request_id: str):
+        """
+        Creates a command to retrieve the response body of a fetch request.
+
+        This command allows you to access the body of a completed fetch
+        operation, which can be useful for analyzing the response data.
+
+        Args:
+            request_id (str): The ID of the fetch request to retrieve the body
+                from.
+
+        Returns:
+            dict: A command template for getting the response body.
+        """
+        get_response_body_template = cls.GET_RESPONSE_BODY.copy()
+        get_response_body_template['params']['requestId'] = request_id
+        return get_response_body_template
+
+    @classmethod
+    def continue_response(
+        cls,
+        request_id: str,
+        response_code: int = '',
+        response_headers: dict = {},
+        binary_response_headers: str = '',
+        response_phrase: str = '',
+    ):
+        """
+        Creates a command to continue a fetch response for an intercepted
+        request.
+
+        This command allows the browser to continue the response flow for a
+        specific fetch request, including customizing the HTTP status code,
+        headers, and response phrase.
+
+        Args:
+            requestId (str): The ID of the fetch request to continue the
+                response for.
+            responseCode (int, optional): The HTTP status code to send.
+                Defaults to ''.
+            responseHeaders (dict, optional): A dictionary of response headers.
+                Defaults to {}.
+            binaryResponseHeaders (str, optional): Binary response headers.
+                Defaults to ''.
+            responsePhrase (str, optional): The response phrase (e.g., 'OK').
+                Defaults to ''.
+
+        Returns:
+            dict: A command template for continuing the fetch response.
+        """
+        continue_response_template = cls.CONTINUE_RESPONSE.copy()
+        continue_response_template['params']['requestId'] = request_id
+        if response_code:
+            continue_response_template['params']['responseCode'] = (
+                response_code
+            )
+        if response_headers:
+            continue_response_template['params']['responseHeaders'] = (
+                response_headers
+            )
+        if binary_response_headers:
+            continue_response_template['params']['binaryResponseHeaders'] = (
+                binary_response_headers
+            )
+        if response_phrase:
+            continue_response_template['params']['responsePhrase'] = (
+                response_phrase
+            )
+        return continue_response_template
+]]></Content>
+        </File>
+        <File>
+            <Filename>input.py</Filename>
+            <Content><![CDATA[
+class InputCommands:
+    """
+    A class to define input commands for simulating user interactions
+    with the browser using the Chrome DevTools Protocol (CDP).
+    The commands allow for simulating mouse clicks and keyboard presses.
+    """
+
+    CLICK_ELEMENT_TEMPLATE = {
+        'method': 'Input.dispatchMouseEvent',
+        'params': {},
+    }
+    KEY_PRESS_TEMPLATE = {'method': 'Input.dispatchKeyEvent', 'params': {}}
+    INSERT_TEXT_TEMPLATE = {'method': 'Input.insertText', 'params': {}}
+
+    @classmethod
+    def mouse_press(cls, x: int, y: int) -> dict:
+        """
+        Generates the command to simulate pressing the mouse button on a
+        specific location.
+
+        Args:
+            x (int): The x-coordinate of the mouse press.
+            y (int): The y-coordinate of the mouse press.
+
+        This command utilizes the CDP to simulate a mouse press event at
+        the specified coordinates.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        command = cls.CLICK_ELEMENT_TEMPLATE.copy()
+        command['params'] = {
+            'type': 'mousePressed',
+            'button': 'left',
+            'x': x,
+            'y': y,
+            'clickCount': 1,
+            'modifiers': 0,
+        }
+        return command
+
+    @classmethod
+    def mouse_release(cls, x: int, y: int) -> dict:
+        """
+        Generates the command to simulate releasing the mouse button.
+
+        Args:
+            x (int): The x-coordinate of the mouse release.
+            y (int): The y-coordinate of the mouse release.
+
+        This command uses the CDP to simulate a mouse release event at
+        the specified coordinates.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        command = cls.CLICK_ELEMENT_TEMPLATE.copy()
+        command['params'] = {
+            'type': 'mouseReleased',
+            'button': 'left',
+            'x': x,
+            'y': y,
+            'clickCount': 1,
+            'modifiers': 0,
+        }
+        return command
+
+    @classmethod
+    def key_press(cls, char: str) -> dict:
+        """
+        Generates the command to simulate pressing a key on the keyboard.
+
+        Args:
+            char (str): The character to be pressed.
+
+        This command utilizes the CDP to simulate a keyboard event for
+        the specified character.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        command = cls.KEY_PRESS_TEMPLATE.copy()
+        command['params'] = {
+            'type': 'char',
+            'text': char,
+        }
+        return command
+
+    @classmethod
+    def insert_text(cls, text: str) -> dict:
+        """
+        Generates the command to insert text into an input field.
+
+        Args:
+            text (str): The text to be inserted.
+
+        This command uses the CDP to simulate typing text into an input field.
+
+        Returns:
+            dict: The command to be sent to the browser.
+        """
+        command = cls.INSERT_TEXT_TEMPLATE.copy()
+        command['params'] = {
+            'text': text,
+        }
+        return command
+]]></Content>
+        </File>
+        <File>
+            <Filename>network.py</Filename>
+            <Content><![CDATA[
+import copy
+
+
+class NetworkCommands:
+    """
+    This class encapsulates the network commands of the
+    Chrome DevTools Protocol (CDP).
+
+    CDP allows developers to interact with the Chrome browser's internal
+    mechanisms to inspect, manipulate, and monitor network operations,
+    which can be invaluable for debugging web applications, testing network
+    behaviors, and optimizing performance.
+
+    The commands defined in this class provide functionality for:
+    - Managing browser cache and cookies.
+    - Enabling and disabling network events.
+    - Retrieving and modifying request and response data.
+    - Customizing HTTP headers and user agent strings.
+    - Blocking specific URLs to prevent unwanted network traffic.
+    """
+
+    CLEAR_BROWSER_CACHE = {'method': 'Network.clearBrowserCache'}
+    CLEAR_BROWSER_COOKIES = {'method': 'Network.clearBrowserCookies'}
+    DELETE_COOKIES_TEMPLATE = {'method': 'Network.deleteCookies', 'params': {}}
+    DISABLE = {'method': 'Network.disable'}
+    ENABLE = {'method': 'Network.enable'}
+    GET_COOKIES_TEMPLATE = {'method': 'Network.getCookies', 'params': {}}
+    GET_REQUEST_POST_DATA_TEMPLATE = {
+        'method': 'Network.getRequestPostData',
+        'params': {},
+    }
+    GET_RESPONSE_BODY_TEMPLATE = {
+        'method': 'Network.getResponseBody',
+        'params': {},
+    }
+    SET_CACHE_DISABLED_TEMPLATE = {
+        'method': 'Network.setCacheDisabled',
+        'params': {},
+    }
+    SET_COOKIE_TEMPLATE = {'method': 'Network.setCookie', 'params': {}}
+    SET_COOKIES_TEMPLATE = {'method': 'Network.setCookies', 'params': {}}
+    SET_EXTRA_HTTP_HEADERS_TEMPLATE = {
+        'method': 'Network.setExtraHTTPHeaders',
+        'params': {},
+    }
+    SET_USERAGENT_OVERRIDE_TEMPLATE = {
+        'method': 'Network.setUserAgentOverride',
+        'params': {},
+    }
+    GET_ALL_COOKIES = {'method': 'Network.getAllCookies'}
+    SEARCH_IN_RESPONSE_TEMPLATE = {
+        'method': 'Network.searchInResponseBody',
+        'params': {},
+    }
+    SET_BLOCKED_URLS = {'method': 'Network.setBlockedURLs', 'params': {}}
+
+    @classmethod
+    def clear_browser_cache(cls):
+        """
+        Command to clear the browser's cache.
+
+        This is useful when you want to ensure that your application retrieves
+        the most up-to-date resources from the server instead of loading
+        potentially stale data from the cache.
+        """
+        return cls.CLEAR_BROWSER_CACHE
+
+    @classmethod
+    def clear_browser_cookies(cls):
+        """
+        Command to clear all cookies stored in the browser.
+
+        This can be beneficial for testing scenarios where you need
+        to simulate a fresh user session without any previously stored
+        cookies that might affect the application's behavior.
+        """
+        return cls.CLEAR_BROWSER_COOKIES
+
+    @classmethod
+    def delete_cookies(cls, name: str, url: str = ''):
+        """
+        Creates a command to delete a specific cookie by name.
+
+        Args:
+            name (str): The name of the cookie to delete.
+            url (str, optional): The URL associated with the cookie.
+            If specified, only the cookie matching both the name and
+            URL will be deleted. If omitted, all cookies with the given
+            name will be deleted regardless of URL.
+
+        Returns:
+            dict: A command to delete the specified cookie.
+        """
+        delete_cookies_template = copy.deepcopy(cls.DELETE_COOKIES_TEMPLATE)
+        delete_cookies_template['params']['name'] = name
+        if url:
+            delete_cookies_template['params']['url'] = url
+        return delete_cookies_template
+
+    @classmethod
+    def disable_network_events(cls):
+        """
+        Command to disable network event notifications.
+
+        Use this command when you want to temporarily suspend the emission of
+        network events, which can be useful during specific operations
+        where you don't want to be notified about every network request
+        and response.
+        """
+        return cls.DISABLE
+
+    @classmethod
+    def enable_network_events(cls):
+        """
+        Command to enable network event notifications.
+
+        This allows you to start receiving network-related events again after
+        they have been disabled. It's essential to call this before you expect
+        to receive network events.
+        """
+        return cls.ENABLE
+
+    @classmethod
+    def get_cookies(cls, urls: list[str] = []):
+        """
+        Creates a command to retrieve cookies from specified URLs.
+
+        Args:
+            urls (list[str], optional): A list of URLs for which to retrieve
+                cookies. If not provided, cookies from all URLs will
+                be fetched.
+
+        Returns:
+            dict: A command to get cookies associated with the specified URLs.
+        """
+        get_cookies_template = copy.deepcopy(cls.GET_COOKIES_TEMPLATE)
+        if urls:
+            get_cookies_template['params']['urls'] = urls
+        return get_cookies_template
+
+    @classmethod
+    def get_request_post_data(cls, request_id: str):
+        """
+        Creates a command to retrieve POST data associated with a specific
+        request.
+
+        Args:
+            request_id (str): The unique identifier of the network
+                request whose POST data is to be retrieved.
+
+        Returns:
+            dict: A command to get the POST data for the specified request.
+        """
+        get_request_post_data_template = copy.deepcopy(
+            cls.GET_REQUEST_POST_DATA_TEMPLATE
+        )
+        get_request_post_data_template['params']['requestId'] = request_id
+        return get_request_post_data_template
+
+    @classmethod
+    def get_response_body(cls, request_id: str):
+        """
+        Creates a command to retrieve the body of a response for a specific
+        request.
+
+        Args:
+            request_id (str): The unique identifier of the request
+                for which the response body is to be fetched.
+
+        Returns:
+            dict: A command to get the response body associated with the
+                specified request.
+        """
+        get_response_body_template = copy.deepcopy(
+            cls.GET_RESPONSE_BODY_TEMPLATE
+        )
+        get_response_body_template['params']['requestId'] = request_id
+        return get_response_body_template
+
+    @classmethod
+    def set_cache_disabled(cls, cache_disabled: bool):
+        """
+        Creates a command to enable or disable the browser cache.
+
+        Args:
+            cache_disabled (bool): Set to True to disable caching, or False to
+                enable it.
+
+        Returns:
+            dict: A command to set the cache state in the browser.
+        """
+        set_cache_disabled_template = copy.deepcopy(
+            cls.SET_CACHE_DISABLED_TEMPLATE
+        )
+        set_cache_disabled_template['params']['cacheDisabled'] = cache_disabled
+        return set_cache_disabled_template
+
+    @classmethod
+    def set_cookie(cls, name: str, value: str, url: str = ''):
+        """
+        Creates a command to set a specific cookie.
+
+        Args:
+            name (str): The name of the cookie.
+            value (str): The value of the cookie.
+            url (str, optional): The URL associated with the cookie.
+                If provided, the cookie will be valid for this URL only.
+
+        Returns:
+            dict: A command to set the specified cookie in the browser.
+        """
+        set_cookie_template = copy.deepcopy(cls.SET_COOKIE_TEMPLATE)
+        set_cookie_template['params']['name'] = name
+        set_cookie_template['params']['value'] = value
+        if url:
+            set_cookie_template['params']['url'] = url
+        return set_cookie_template
+
+    @classmethod
+    def set_cookies(cls, cookies: list[dict]):
+        """
+        Creates a command to set multiple cookies at once.
+
+        Args:
+            cookies (list[dict]): A list of dictionaries, each representing a
+                cookie with its properties (name, value, url, etc.).
+
+        Returns:
+            dict: A command to set the specified cookies in the browser.
+        """
+        set_cookies_template = copy.deepcopy(cls.SET_COOKIES_TEMPLATE)
+        set_cookies_template['params']['cookies'] = cookies
+        return set_cookies_template
+
+    @classmethod
+    def set_extra_http_headers(cls, headers: dict):
+        """
+        Creates a command to set additional HTTP headers for subsequent network
+        requests.
+
+        Args:
+            headers (dict): A dictionary of headers to include in all future
+                requests.
+
+        Returns:
+            dict: A command to set extra HTTP headers for the browser's network
+                requests.
+        """
+        set_extra_http_headers_template = copy.deepcopy(
+            cls.SET_EXTRA_HTTP_HEADERS_TEMPLATE
+        )
+        set_extra_http_headers_template['params']['headers'] = headers
+        return set_extra_http_headers_template
+
+    @classmethod
+    def set_useragent_override(cls, user_agent: str):
+        """
+        Creates a command to override the user agent string used in network
+        requests.
+
+        Args:
+            user_agent (str): The user agent string to set for future network
+                requests.
+
+        Returns:
+            dict: A command to override the browser's user agent for network
+                requests.
+        """
+        set_useragent_override_template = copy.deepcopy(
+            cls.SET_USERAGENT_OVERRIDE_TEMPLATE
+        )
+        set_useragent_override_template['params']['userAgent'] = user_agent
+        return set_useragent_override_template
+
+    @classmethod
+    def get_all_cookies(cls):
+        """
+        Command to retrieve all cookies stored in the browser.
+
+        This can be useful for diagnostics, testing, or ensuring that your
+        application behaves as expected when accessing cookies.
+        """
+        return cls.GET_ALL_COOKIES
+
+    @classmethod
+    def search_in_response(
+        cls,
+        request_id: str,
+        query: str,
+        case_sensitive: bool = False,
+        is_regex: bool = False,
+    ):
+        """
+        Creates a command to search for a specific query in the response body
+        of a network request.
+
+        Args:
+            request_id (str): The unique identifier of the request to search
+                within.
+            query (str): The string to search for within the response body.
+            case_sensitive (bool, optional): Whether the search should be case
+                sensitive. Defaults to False.
+            is_regex (bool, optional): Whether the query should be treated as a
+                regular expression. Defaults to False.
+
+        Returns:
+            dict: A command to search the specified query within the response
+                body of the given request.
+        """
+        search_in_response_template = copy.deepcopy(
+            cls.SEARCH_IN_RESPONSE_TEMPLATE
+        )
+        search_in_response_template['params']['requestId'] = request_id
+        search_in_response_template['params']['query'] = query
+        search_in_response_template['params']['caseSensitive'] = case_sensitive
+        search_in_response_template['params']['isRegex'] = is_regex
+        return search_in_response_template
+
+    @classmethod
+    def set_blocked_urls(cls, urls: list[str]):
+        """
+        Creates a command to block specific URLs from being requested by the
+        browser.
+
+        Args:
+            urls (list[str]): A list of URL patterns to block. The browser will
+                not make requests to any URLs matching these patterns.
+
+        Returns:
+            dict: A command to set the specified URLs as blocked.
+        """
+        set_blocked_urls_template = copy.deepcopy(cls.SET_BLOCKED_URLS)
+        set_blocked_urls_template['params']['urls'] = urls
+        return set_blocked_urls_template
+]]></Content>
+        </File>
+        <File>
+            <Filename>page.py</Filename>
+            <Content><![CDATA[
+class PageCommands:
+    """
+    PageCommands class provides a set of commands to interact with the
+    Page domain of the Chrome DevTools Protocol (CDP). These commands enable
+    users to perform operations related to web pages, such as capturing
+    screenshots, navigating to URLs, refreshing pages, printing to PDF,
+    and enabling the Page domain.
+
+    The following operations can be performed:
+    - Capture a screenshot of the current page.
+    - Navigate to a specified URL.
+    - Refresh the current page, with an option to ignore the cache.
+    - Print the current page to a PDF document.
+    - Enable the Page domain for further interactions.
+
+    Each method generates a command that can be sent to the browser as part of
+    the DevTools Protocol communication.
+    """
+
+    SCREENSHOT_TEMPLATE = {
+        'method': 'Page.captureScreenshot',
+        'params': {},
+    }
+    GO_TO_TEMPLATE = {'method': 'Page.navigate', 'params': {}}
+    REFRESH_TEMPLATE = {'method': 'Page.reload', 'params': {}}
+    PRINT_TO_PDF_TEMPLATE = {'method': 'Page.printToPDF', 'params': {}}
+    ENABLE_PAGE = {'method': 'Page.enable'}
+    DISABLE_PAGE = {'method': 'Page.disable'}
+    SET_DOWNLOAD_BEHAVIOR = {
+        'method': 'Page.setDownloadBehavior',
+        'params': {},
+    }
+    HANDLE_DIALOG = {'method': 'Page.handleJavaScriptDialog', 'params': {}}
+    CLOSE = {'method': 'Page.close'}
+
+    @classmethod
+    def handle_dialog(cls, accept: bool = True) -> dict:
+        """
+        Generates the command to handle a JavaScript dialog.
+
+        Args:
+            accept (bool): Whether to accept the dialog.
+                           If True, the dialog will be accepted.
+                           If False, the dialog will be dismissed.
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method and parameters for handling the dialog.
+        """
+        command = cls.HANDLE_DIALOG.copy()
+        command['params']['accept'] = accept
+        return command
+
+    @classmethod
+    def set_download_path(cls, path: str) -> dict:
+        """
+        Generates the command to set the download path for the browser.
+
+        Args:
+            path (str): The path where the downloaded files should be saved.
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method and parameters for setting
+                  the download path.
+        """
+        command = cls.SET_DOWNLOAD_BEHAVIOR.copy()
+        command['params']['behavior'] = 'allow'
+        command['params']['downloadPath'] = path
+        return command
+
+    @classmethod
+    def screenshot(
+        cls, fmt: str = 'jpeg', quality: int = 100, clip: dict = None
+    ) -> dict:
+        """
+        Generates the command to capture a screenshot of the current page.
+
+        Args:
+            fmt (str): The format of the image to be captured.
+                          Can be 'png' or 'jpeg'.
+            quality (int): The quality of the image to be captured,
+                           applicable only if the format is 'jpeg'.
+                           Value should be between 0 (lowest quality)
+                           and 100 (highest quality).
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method and parameters for the screenshot.
+        """
+        command = cls.SCREENSHOT_TEMPLATE.copy()
+        command['params']['format'] = fmt
+        command['params']['quality'] = quality
+        if clip:
+            command['params']['clip'] = clip
+        return command
+
+    @classmethod
+    def go_to(cls, url: str) -> dict:
+        """
+        Generates the command to navigate to a specific URL.
+
+        Args:
+            url (str): The URL to navigate to. It should be a valid URL format.
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method and parameters for navigation.
+        """
+        command = cls.GO_TO_TEMPLATE.copy()
+        command['params']['url'] = url
+        return command
+
+    @classmethod
+    def refresh(cls, ignore_cache: bool = False) -> dict:
+        """
+        Generates the command to refresh the current page.
+
+        Args:
+            ignore_cache (bool): Whether to ignore the cache when refreshing.
+                                 If True, the cached resources will not be
+                                 used.
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method and parameters for page refresh.
+        """
+        command = cls.REFRESH_TEMPLATE.copy()
+        command['params']['ignoreCache'] = ignore_cache
+        return command
+
+    @classmethod
+    def print_to_pdf(
+        cls, scale: int = 1, paper_width: float = 8.5, paper_height: float = 11
+    ) -> dict:
+        """
+        Generates the command to print the current page to a PDF.
+
+        Args:
+            scale (int): The scale of the page to print. Default is 1 (100%).
+            paper_width (float): The width of the paper to print on, in inches.
+                Default is 8.5 inches.
+            paper_height (float): The height of the paper to print on,
+                in inches. Default is 11 inches.
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method and parameters for printing to PDF.
+        """
+        command = cls.PRINT_TO_PDF_TEMPLATE.copy()
+        command['params']['scale'] = scale
+        command['params']['paperWidth'] = paper_width
+        command['params']['paperHeight'] = paper_height
+        return command
+
+    @classmethod
+    def enable_page(cls) -> dict:
+        """
+        Generates the command to enable the Page domain.
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method to enable the Page domain.
+        """
+        return cls.ENABLE_PAGE
+
+    @classmethod
+    def disable_page(cls) -> dict:
+        """
+        Generates the command to disable the Page domain.
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method to disable the Page domain.
+        """
+        return cls.DISABLE_PAGE
+
+    @classmethod
+    def close(cls) -> dict:
+        """
+        Generates the command to close the current page.
+
+        Returns:
+            dict: The command to be sent to the browser,
+                  containing the method to close the current page.
+        """
+        return cls.CLOSE
+]]></Content>
+        </File>
+        <File>
+            <Filename>runtime.py</Filename>
+            <Content><![CDATA[
+import copy
+
+
+class RuntimeCommands:
+    EVALUATE_TEMPLATE = {'method': 'Runtime.evaluate', 'params': {}}
+    CALL_FUNCTION_ON_TEMPLATE = {
+        'method': 'Runtime.callFunctionOn',
+        'params': {},
+    }
+    GET_PROPERTIES = {
+        'method': 'Runtime.getProperties',
+        'params': {},
+    }
+
+    @classmethod
+    def get_properties(cls, object_id: str) -> dict:
+        """Generates the command to get the properties of a specific object."""
+        command = copy.deepcopy(cls.GET_PROPERTIES)
+        command['params']['objectId'] = object_id
+        command['params']['ownProperties'] = True
+        return command
+
+    @classmethod
+    def call_function_on(
+        cls,
+        object_id: str,
+        function_declaration: str,
+        return_by_value: bool = False,
+    ) -> dict:
+        """Generates the command to call a function on a specific object."""
+        command = copy.deepcopy(cls.CALL_FUNCTION_ON_TEMPLATE)
+        command['params']['objectId'] = object_id
+        command['params']['functionDeclaration'] = function_declaration
+        command['params']['returnByValue'] = return_by_value
+        return command
+
+    @classmethod
+    def evaluate_script(cls, expression: str) -> dict:
+        """Generates the command to evaluate JavaScript code."""
+        command = copy.deepcopy(cls.EVALUATE_TEMPLATE)
+        command['params'] = {
+            'expression': expression,
+            'returnByValue': False,
+        }
+        return command
+]]></Content>
+        </File>
+        <File>
+            <Filename>storage.py</Filename>
+            <Content><![CDATA[
+class StorageCommands:
+    CLEAR_COOKIES = {'method': 'Storage.clearCookies', 'params': {}}
+    SET_COOKIES = {'method': 'Storage.setCookies', 'params': {}}
+    GET_COOKIES = {'method': 'Storage.getCookies', 'params': {}}
+
+    @classmethod
+    def clear_cookies(cls) -> dict:
+        return cls.CLEAR_COOKIES
+
+    @classmethod
+    def set_cookies(cls, cookies: list) -> dict:
+        set_cookies = cls.SET_COOKIES.copy()
+        set_cookies['params']['cookies'] = cookies
+        return set_cookies
+
+    @classmethod
+    def get_cookies(cls) -> dict:
+        return cls.GET_COOKIES
+]]></Content>
+        </File>
+        <File>
+            <Filename>target.py</Filename>
+            <Content><![CDATA[
+class TargetCommands:
+    ACTIVATE_TARGET = {'method': 'Target.activateTarget', 'params': {}}
+    ATTACH_TO_TARGET = {'method': 'Target.attachToTarget', 'params': {}}
+    CLOSE_TARGET = {'method': 'Target.closeTarget', 'params': {}}
+    CREATE_TARGET = {'method': 'Target.createTarget', 'params': {}}
+    GET_TARGETS = {'method': 'Target.getTargets', 'params': {}}
+    GET_TARGET_INFO = {'method': 'Target.getTargetInfo', 'params': {}}
+
+    @classmethod
+    def activate_target(cls, target_id: str) -> dict:
+        activate_target = cls.ATTACH_TO_TARGET.copy()
+        activate_target['params']['targetId'] = target_id
+        return activate_target
+
+    @classmethod
+    def attach_to_target(cls, target_id: str) -> dict:
+        attach_to_target = cls.ATTACH_TO_TARGET.copy()
+        attach_to_target['params']['targetId'] = target_id
+        return attach_to_target
+
+    @classmethod
+    def close_target(cls, target_id: str) -> dict:
+        close_target = cls.CLOSE_TARGET.copy()
+        close_target['params']['targetId'] = target_id
+        return close_target
+
+    @classmethod
+    def create_target(cls, url: str) -> dict:
+        create_target = cls.CREATE_TARGET.copy()
+        create_target['params']['url'] = url
+        return create_target
+
+    @classmethod
+    def get_targets(cls) -> dict:
+        return cls.GET_TARGETS
+]]></Content>
+        </File>
+        <File>
+            <Filename>__init__.py</Filename>
+            <Content><![CDATA[
+# global imports
+from pydoll.commands.dom import DomCommands
+from pydoll.commands.fetch import FetchCommands
+from pydoll.commands.input import InputCommands
+from pydoll.commands.network import NetworkCommands
+from pydoll.commands.page import PageCommands
+from pydoll.commands.runtime import RuntimeCommands
+from pydoll.commands.storage import StorageCommands
+
+__all__ = [
+    'DomCommands',
+    'FetchCommands',
+    'InputCommands',
+    'NetworkCommands',
+    'PageCommands',
+    'RuntimeCommands',
+    'StorageCommands',
+]
+]]></Content>
+        </File>
+        <File>
+            <Filename>connection.py</Filename>
+            <Content><![CDATA[
+import asyncio
+import json
+import logging
+from typing import Callable
+
+import websockets
+
+from pydoll import exceptions
+from pydoll.connection.managers import CommandManager, EventsHandler
+from pydoll.utils import get_browser_ws_address
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+
+class ConnectionHandler:
+    """
+    A class to handle WebSocket connections for browser automation.
+
+    This class manages the connection to the browser and the associated page,
+    providing methods to execute commands and register event callbacks.
+    """
+
+    def __init__(
+        self,
+        connection_port: int,
+        page_id: str = 'browser',
+        ws_address_resolver: Callable[[int], str] = get_browser_ws_address,
+        ws_connector: Callable = websockets.connect,
+    ):
+        """
+        Initializes the ConnectionHandler instance.
+
+        Args:
+            connection_port (int): The port to connect to the browser.
+
+        Sets up the internal state including WebSocket addresses,
+        connection instance, event callbacks, and command ID.
+        """
+        self._connection_port = connection_port
+        self._page_id = page_id
+        self._ws_address_resolver = ws_address_resolver
+        self._ws_connector = ws_connector
+        self._ws_connection = None
+        self._command_manager = CommandManager()
+        self._events_handler = EventsHandler()
+        logger.info('ConnectionHandler initialized.')
+
+    @property
+    def network_logs(self):
+        return self._events_handler.network_logs
+
+    @property
+    def dialog(self):
+        return self._events_handler.dialog
+
+    async def ping(self) -> bool:
+        """
+        Sends a ping message to the browser.
+
+        Returns:
+            bool: True if the ping was successful, False otherwise.
+        """
+        try:
+            await self._ensure_active_connection()
+            await self._ws_connection.ping()
+            return True
+        except Exception:
+            return False
+
+    async def execute_command(self, command: dict, timeout: int = 10) -> dict:
+        """
+        Sends a command to the browser and awaits its response.
+
+        Args:
+            command (dict): The command to send, structured as a dictionary.
+            timeout (int, optional): Time in seconds to wait for a response.
+                Defaults to 10.
+
+        Returns:
+            dict: The response from the browser.
+
+        Raises:
+            InvalidCommand: If the command is not a dictionary.
+            TimeoutError: If the command execution exceeds the timeout.
+        """
+        if not isinstance(command, dict):
+            logger.error('Command must be a dictionary.')
+            raise exceptions.InvalidCommand('Command must be a dictionary')
+
+        await self._ensure_active_connection()
+        future = self._command_manager.create_command_future(command)
+        command_str = json.dumps(command)
+
+        try:
+            await self._ws_connection.send(command_str)
+            response: str = await asyncio.wait_for(future, timeout)
+            return json.loads(response)
+        except asyncio.TimeoutError as exc:
+            self._command_manager.remove_pending_command(command['id'])
+            raise exc
+        except websockets.ConnectionClosed as exc:
+            await self._handle_connection_loss()
+            raise exc
+
+    async def register_callback(
+        self, event_name: str, callback: Callable, temporary: bool = False
+    ):
+        return self._events_handler.register_callback(
+            event_name, callback, temporary
+        )
+
+    async def remove_callback(self, callback_id: int):
+        return self._events_handler.remove_callback(callback_id)
+
+    async def clear_callbacks(self):
+        return self._events_handler.clear_callbacks()
+
+    async def close(self):
+        """
+        Closes the WebSocket connection.
+
+        Closes the WebSocket connection and clears all event callbacks.
+        """
+        await self.clear_callbacks()
+        await self._ws_connection.close()
+        logger.info('WebSocket connection closed.')
+
+    async def _ensure_active_connection(self):
+        """Guarantee an active connection exists."""
+        if self._ws_connection is None or self._ws_connection.closed:
+            await self._establish_new_connection()
+
+    async def _establish_new_connection(self):
+        """Create fresh connection and start listening."""
+        ws_address = await self._resolve_ws_address()
+        logger.info(f'Connecting to {ws_address}')
+        self._ws_connection = await self._ws_connector(ws_address)
+        self._receive_task = asyncio.create_task(self._receive_events())
+        logger.debug('WebSocket connection established')
+
+    async def _resolve_ws_address(self):
+        """Determine correct WebSocket address."""
+        if 'browser' in self._page_id:
+            return await self._ws_address_resolver(self._connection_port)
+        return (
+            f'ws://localhost:{self._connection_port}/devtools/page/'
+            f'{self._page_id}'
+        )
+
+    async def _handle_connection_loss(self):
+        """Clean up after connection loss."""
+        if self._ws_connection and not self._ws_connection.closed:
+            await self._ws_connection.close()
+        self._ws_connection = None
+
+        if self._receive_task and not self._receive_task.done():
+            self._receive_task.cancel()
+
+        logger.info('Connection resources cleaned up')
+
+    async def _receive_events(self):
+        """
+        Main loop for receiving and processing incoming WebSocket messages.
+        Delegates processing to specialized handlers based on message type.
+        """
+        try:
+            async for raw_message in self._incoming_messages():
+                await self._process_single_message(raw_message)
+        except websockets.ConnectionClosed as e:
+            logger.info(f'Connection closed gracefully: {e}')
+        except Exception as e:
+            logger.error(f'Unexpected error in event loop: {e}')
+            raise
+
+    async def _incoming_messages(self):
+        """Generator that yields raw messages while connection is open"""
+        while not self._ws_connection.closed:
+            yield await self._ws_connection.recv()
+
+    async def _process_single_message(self, raw_message: str):
+        """Orchestrates processing of a single raw WebSocket message"""
+        message = self._parse_message(raw_message)
+        if not message:
+            return
+
+        if self._is_command_response(message):
+            await self._handle_command_message(message)
+        else:
+            await self._handle_event_message(message)
+
+    @staticmethod
+    def _parse_message(raw_message: str) -> dict | None:
+        """
+        Attempts to parse raw message string into JSON.
+        Returns parsed dict or None if parsing fails.
+        """
+        try:
+            return json.loads(raw_message)
+        except json.JSONDecodeError:
+            logger.warning(f'Failed to parse message: {raw_message[:200]}...')
+            return None
+
+    @staticmethod
+    def _is_command_response(message: dict) -> bool:
+        """Determines if message is a response to a command"""
+        return 'id' in message and isinstance(message['id'], int)
+
+    async def _handle_command_message(self, message: dict):
+        """Processes messages that are command responses"""
+        logger.debug(f'Processing command response: {message.get("id")}')
+        self._command_manager.resolve_command(
+            message['id'], json.dumps(message)
+        )
+
+    async def _handle_event_message(self, message: dict):
+        """Processes messages that are spontaneous events"""
+        event_type = message.get('method', 'unknown-event')
+        logger.debug(f'Processing {event_type} event')
+        await self._events_handler.process_event(message)
+
+    def __repr__(self):
+        return f'ConnectionHandler(port={self._connection_port})'
+
+    def __str__(self):
+        return f'ConnectionHandler(port={self._connection_port})'
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
+]]></Content>
+        </File>
+        <File>
+            <Filename>managers.py</Filename>
+            <Content><![CDATA[
+import asyncio
+import logging
+from typing import Callable, Dict
+
+from pydoll import exceptions
+
+logger = logging.getLogger(__name__)
+
+
+class CommandManager:
+    def __init__(self):
+        self._pending_commands: dict[int, asyncio.Future] = {}
+        self._id = 1
+
+    def create_command_future(self, command: dict) -> asyncio.Future:
+        command['id'] = self._id
+        future = asyncio.Future()
+        self._pending_commands[self._id] = future
+        self._id += 1
+        return future
+
+    def resolve_command(self, response_id: int, result: str):
+        if response_id in self._pending_commands:
+            self._pending_commands[response_id].set_result(result)
+            del self._pending_commands[response_id]
+
+    def remove_pending_command(self, command_id: int):
+        """
+        Remove um comando pendente sem resolvê-lo (útil para timeouts).
+
+        Args:
+            command_id: ID do comando a ser removido
+        """
+        if command_id in self._pending_commands:
+            del self._pending_commands[command_id]
+
+
+class EventsHandler:
+    """
+    Gerencia registro de callbacks, processamento de eventos e logs de rede.
+    """
+
+    def __init__(self):
+        self._event_callbacks: Dict[int, dict] = {}
+        self._callback_id = 0
+        self.network_logs = []
+        self.dialog = {}
+        logger.info('EventsHandler initialized')
+
+    def register_callback(
+        self, event_name: str, callback: Callable, temporary: bool = False
+    ) -> int:
+        """
+        Registra um callback para um tipo específico de evento.
+
+        Retorna:
+            int: ID do callback registrado
+        """
+        if not callable(callback):
+            logger.error('Callback must be a callable function.')
+            raise exceptions.InvalidCallback('Callback must be callable')
+
+        self._callback_id += 1
+        self._event_callbacks[self._callback_id] = {
+            'event': event_name,
+            'callback': callback,
+            'temporary': temporary,
+        }
+        logger.info(
+            f"Registered callback '{event_name}' with ID {self._callback_id}"
+        )
+        return self._callback_id
+
+    def remove_callback(self, callback_id: int) -> bool:
+        """Remove um callback pelo ID."""
+        if callback_id not in self._event_callbacks:
+            logger.warning(f'Callback ID {callback_id} not found')
+            return False
+
+        del self._event_callbacks[callback_id]
+        logger.info(f'Removed callback ID {callback_id}')
+        return True
+
+    def clear_callbacks(self):
+        """Reseta todos os callbacks registrados."""
+        self._event_callbacks.clear()
+        logger.info('All callbacks cleared')
+
+    async def process_event(self, event_data: dict):
+        """
+        Processa um evento recebido e dispara os callbacks correspondentes.
+
+        Args:
+            event_data: Dados do evento no formato dicionário
+        """
+        event_name = event_data.get('method')
+        logger.debug(f'Processing event: {event_name}')
+
+        # Atualiza logs de rede se necessário
+        if 'Network.requestWillBeSent' in event_name:
+            self._update_network_logs(event_data)
+
+        if 'Page.javascriptDialogOpening' in event_name:
+            self.dialog = event_data
+
+        if 'Page.javascriptDialogClosed' in event_name:
+            self.dialog = {}
+
+        # Processa callbacks
+        await self._trigger_callbacks(event_name, event_data)
+
+    def _update_network_logs(self, event_data: dict):
+        """Mantém os logs de rede atualizados."""
+        self.network_logs.append(event_data)
+        self.network_logs = self.network_logs[-10000:]  # Mantém tamanho máximo
+
+    async def _trigger_callbacks(self, event_name: str, event_data: dict):
+        """Dispara todos os callbacks registrados para o evento."""
+        callbacks_to_remove = []
+
+        for cb_id, cb_data in list(self._event_callbacks.items()):
+            if cb_data['event'] == event_name:
+                try:
+                    if asyncio.iscoroutinefunction(cb_data['callback']):
+                        await cb_data['callback'](event_data)
+                    else:
+                        cb_data['callback'](event_data)
+                except Exception as e:
+                    logger.error(f'Error in callback {cb_id}: {str(e)}')
+
+                if cb_data['temporary']:
+                    callbacks_to_remove.append(cb_id)
+
+        # Remove callbacks temporários após processamento
+        for cb_id in callbacks_to_remove:
+            self.remove_callback(cb_id)
+]]></Content>
+        </File>
+        <File>
+            <Filename>constants.py</Filename>
+            <Content><![CDATA[
+from enum import Enum
+
+
+class By(str, Enum):
+    CSS_SELECTOR = 'css'
+    XPATH = 'xpath'
+    CLASS_NAME = 'class_name'
+    ID = 'id'
+    TAG_NAME = 'tag_name'
+
+
+class Scripts:
+    ELEMENT_VISIBLE = """
+    function() {
+        const rect = this.getBoundingClientRect();
+        return (
+            rect.width > 0 && rect.height > 0
+            && getComputedStyle(this).visibility !== 'hidden'
+            && getComputedStyle(this).display !== 'none'
+        )
+    }
+    """
+
+    ELEMENT_ON_TOP = """
+    function() {
+        const rect = this.getBoundingClientRect();
+        const elementFromPoint = document.elementFromPoint(
+            rect.x + rect.width / 2,
+            rect.y + rect.height / 2
+        );
+        return elementFromPoint === this;
+    }
+    """
+
+    CLICK = """
+    function(){
+        clicked = false;
+        this.addEventListener('click', function(){
+            clicked = true;
+        });
+        this.click();
+        return clicked;
+    }
+    """
+
+    CLICK_OPTION_TAG = """
+    document.querySelector('option[value="{self.value}"]').selected = true;
+    var selectParentXpath = (
+        '//option[@value="{self.value}"]//ancestor::select'
+    );
+    var select = document.evaluate(
+        selectParentXpath,
+        document,
+        null,
+        XPathResult.FIRST_ORDERED_NODE_TYPE,
+        null
+    ).singleNodeValue;
+    var event = new Event('change', { bubbles: true });
+    select.dispatchEvent(event);
+    """
+
+    BOUNDS = """
+    function() {
+        return JSON.stringify(this.getBoundingClientRect());
+    }
+    """
+
+    FIND_RELATIVE_XPATH_ELEMENT = """
+        function() {
+            return document.evaluate(
+                "{escaped_value}", this, null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE, null
+            ).singleNodeValue;
+        }
+    """
+
+    FIND_XPATH_ELEMENT = """
+        var element = document.evaluate(
+            "{escaped_value}", document, null,
+            XPathResult.FIRST_ORDERED_NODE_TYPE, null
+        ).singleNodeValue;
+        element;
+    """
+
+    FIND_RELATIVE_XPATH_ELEMENTS = """
+        function() {
+            var elements = document.evaluate(
+                "{escaped_value}", this, null,
+                XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null
+            );
+            var results = [];
+            for (var i = 0; i < elements.snapshotLength; i++) {
+                results.push(elements.snapshotItem(i));
+            }
+            return results;
+        }
+    """
+
+    FIND_XPATH_ELEMENTS = """
+        var elements = document.evaluate(
+            "{escaped_value}", document, null,
+            XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null
+        );
+        var results = [];
+        for (var i = 0; i < elements.snapshotLength; i++) {
+            results.push(elements.snapshotItem(i));
+        }
+        results;
+    """
+
+    QUERY_SELECTOR = 'document.querySelector("{selector}");'
+
+    RELATIVE_QUERY_SELECTOR = """
+        function() {
+            return this.querySelector("{selector}");
+        }
+    """
+
+    QUERY_SELECTOR_ALL = 'document.querySelectorAll("{selector}");'
+
+    RELATIVE_QUERY_SELECTOR_ALL = """
+        function() {
+            return this.querySelectorAll("{selector}");
+        }
+    """
+]]></Content>
+        </File>
+        <File>
+            <Filename>element.py</Filename>
+            <Content><![CDATA[
+import asyncio
+import json
+
+import aiofiles
+from bs4 import BeautifulSoup
+
+from pydoll import exceptions
+from pydoll.commands.dom import DomCommands
+from pydoll.commands.input import InputCommands
+from pydoll.commands.page import PageCommands
+from pydoll.commands.runtime import RuntimeCommands
+from pydoll.connection.connection import ConnectionHandler
+from pydoll.constants import Scripts
+from pydoll.mixins.find_elements import FindElementsMixin
+from pydoll.utils import decode_image_to_bytes
+
+
+class WebElement(FindElementsMixin):
+    def __init__(
+        self,
+        object_id: str,
+        connection_handler: ConnectionHandler,
+        method: str = None,
+        selector: str = None,
+        attributes_list: list = [],
+    ):
+        """
+        Initializes the WebElement instance.
+
+        Args:
+            node (dict): The node description from the browser.
+            connection_handler (ConnectionHandler): The connection instance.
+        """
+        self._object_id = object_id
+        self._search_method = method
+        self._selector = selector
+        self._connection_handler = connection_handler
+        self._attributes = {}
+        self._def_attributes(attributes_list)
+
+    def __repr__(self):
+        attrs = ', '.join(f'{k}={v!r}' for k, v in self._attributes.items())
+        return (
+            f'{self.__class__.__name__}({attrs})(object_id={self._object_id})'
+        )
+
+    def _def_attributes(self, attributes_list: list):
+        for i in range(0, len(attributes_list), 2):
+            key = attributes_list[i]
+            key = key if key != 'class' else 'class_name'
+            value = attributes_list[i + 1]
+            self._attributes[key] = value
+
+    @property
+    def value(self) -> str:
+        """
+        Retrieves the value of the element.
+
+        Returns:
+            str: The value of the element.
+        """
+        return self._attributes.get('value')
+
+    @property
+    def class_name(self) -> str:
+        """
+        Retrieves the class name of the
+        element.
+
+        Returns:
+            str: The class name of the
+            element.
+
+        """
+        return self._attributes.get('class_name')
+
+    @property
+    def id(self) -> str:
+        """
+        Retrieves the id of the element.
+
+        Returns:
+            str: The id of the element.
+        """
+        return self._attributes.get('id')
+
+    @property
+    def is_enabled(self) -> bool:
+        """
+        Retrieves the enabled status of the element.
+
+        Returns:
+            bool: The enabled status of the element.
+        """
+        return bool('disabled' not in self._attributes.keys())
+
+    @property
+    async def bounds(self) -> list:
+        """
+        Asynchronously retrieves the bounding box of the element.
+
+        Returns:
+            dict: The bounding box of the element.
+        """
+        command = DomCommands.box_model(object_id=self._object_id)
+        response = await self._execute_command(command)
+        return response['result']['model']['content']
+
+    @property
+    async def inner_html(self) -> str:
+        """
+        Retrieves the inner HTML of the element.
+
+        Returns:
+            str: The inner HTML of the element.
+        """
+        command = DomCommands.get_outer_html(self._object_id)
+        response = await self._execute_command(command)
+        return response['result']['outerHTML']
+
+    async def get_bounds_using_js(self) -> list:
+        """
+        Retrieves the bounding box of the element using JavaScript.
+
+        Returns:
+            list: The bounding box of the element.
+        """
+        response = await self._execute_script(
+            Scripts.BOUNDS, return_by_value=True
+        )
+        return json.loads(response['result']['result']['value'])
+
+    async def _execute_script(
+        self, script: str, return_by_value: bool = False
+    ):
+        """
+        Executes a JavaScript script on the element.
+
+        Args:
+            script (str): The JavaScript script to execute.
+        """
+        return await self._execute_command(
+            RuntimeCommands.call_function_on(
+                self._object_id, script, return_by_value
+            )
+        )
+
+    async def _is_element_visible(self):
+        """
+        Verifies if the element is visible using JavaScript.
+        It uses the getBoundingClientRect method to check if the element is
+        within the viewport and the width and height are greater than 0.
+
+        Returns:
+            bool: True if the element is visible, False otherwise.
+        """
+        result = await self._execute_script(
+            Scripts.ELEMENT_VISIBLE, return_by_value=True
+        )
+        return result['result']['result']['value']
+
+    async def _is_element_on_top(self):
+        """
+        Verifies if the element is on top of the page using JavaScript.
+        It uses the elementFromPoint method to check if the element is the
+        topmost element at the center of its bounding box.
+
+        Returns:
+            bool: True if the element is on top of the page, False otherwise.
+        """
+        result = await self._execute_script(
+            Scripts.ELEMENT_ON_TOP, return_by_value=True
+        )
+        return result['result']['result']['value']
+
+    async def get_screenshot(self, path: str):
+        """
+        Takes a screenshot of the element.
+
+        Args:
+            path (str): The path where the screenshot will be saved.
+        """
+        bounds = await self.get_bounds_using_js()
+        clip = {
+            'x': bounds['x'],
+            'y': bounds['y'],
+            'width': bounds['width'],
+            'height': bounds['height'],
+            'scale': 1,
+        }
+        screenshot = await self._connection_handler.execute_command(
+            PageCommands.screenshot(fmt='jpeg', clip=clip)
+        )
+        async with aiofiles.open(path, 'wb') as file:
+            image_bytes = decode_image_to_bytes(screenshot['result']['data'])
+            await file.write(image_bytes)
+
+    async def get_element_text(self) -> str:
+        """
+        Retrieves the text of the element.
+
+        Returns:
+            str: The text of the element.
+        """
+        outer_html = await self.inner_html
+        soup = BeautifulSoup(outer_html, 'html.parser')
+        text_inside = soup.get_text(strip=True)
+        return text_inside
+
+    def get_attribute(self, name: str) -> str:
+        """
+        Retrieves the attribute value of the element.
+
+        Args:
+            name (str): The name of the attribute.
+
+        Returns:
+            str: The value of the attribute.
+        """
+        return self._attributes.get(name)
+
+    async def scroll_into_view(self):
+        """
+        Scrolls the element into view.
+        """
+        command = DomCommands.scroll_into_view(object_id=self._object_id)
+        await self._execute_command(command)
+
+    async def click_using_js(self):
+        if self._is_option_tag():
+            return await self.click_option_tag()
+
+        await self.scroll_into_view()
+
+        if not await self._is_element_visible():
+            raise exceptions.ElementNotVisible(
+                'Element is not visible on the page.'
+            )
+
+        result = await self._execute_script(
+            Scripts.CLICK, return_by_value=True
+        )
+        clicked = result['result']['result']['value']
+        if not clicked:
+            raise exceptions.ElementNotInteractable(
+                'Element is not interactable.'
+            )
+
+    async def click(self, x_offset: int = 0, y_offset: int = 0):
+        if self._is_option_tag():
+            return await self.click_option_tag()
+
+        if not await self._is_element_visible():
+            raise exceptions.ElementNotVisible(
+                'Element is not visible on the page.'
+            )
+
+        await self.scroll_into_view()
+
+        try:
+            element_bounds = await self.bounds
+            position_to_click = self._calculate_center(element_bounds)
+            position_to_click = (
+                position_to_click[0] + x_offset,
+                position_to_click[1] + y_offset,
+            )
+        except KeyError:
+            element_bounds = await self.get_bounds_using_js()
+            position_to_click = (
+                element_bounds['x'] + element_bounds['width'] / 2,
+                element_bounds['y'] + element_bounds['height'] / 2,
+            )
+
+        press_command = InputCommands.mouse_press(*position_to_click)
+        release_command = InputCommands.mouse_release(*position_to_click)
+        await self._connection_handler.execute_command(press_command)
+        await asyncio.sleep(0.1)
+        await self._connection_handler.execute_command(release_command)
+
+    async def click_option_tag(self):
+        script = Scripts.CLICK_OPTION_TAG.replace('{self.value}', self.value)
+        await self._execute_command(RuntimeCommands.evaluate_script(script))
+
+    async def send_keys(self, text: str):
+        """
+        Sends a sequence of keys to the element.
+
+        Args:
+            text (str): The text to send to the element.
+        """
+        await self._execute_command(InputCommands.insert_text(text))
+
+    async def type_keys(self, text: str):
+        """
+        Types in a realistic manner by sending keys one by one.
+
+        Args:
+            text (str): The text to send to the element.
+        """
+        for char in text:
+            await self._execute_command(InputCommands.key_press(char))
+            await asyncio.sleep(0.1)
+
+    def _is_option_tag(self):
+        return self._attributes['tag_name'].lower() == 'option'
+
+    @staticmethod
+    def _calculate_center(bounds: list) -> tuple:
+        x_values = [bounds[i] for i in range(0, len(bounds), 2)]
+        y_values = [bounds[i] for i in range(1, len(bounds), 2)]
+        x_center = sum(x_values) / len(x_values)
+        y_center = sum(y_values) / len(y_values)
+        return x_center, y_center
+]]></Content>
+        </File>
+        <File>
+            <Filename>browser.py</Filename>
+            <Content><![CDATA[
+class BrowserEvents:
+    """
+    A class to define the browser events available through the
+    Chrome DevTools Protocol (CDP). These events allow for monitoring
+    specific actions and states within the browser, such as downloads.
+    """
+
+    DOWNLOAD_PROGRESS = 'Browser.downloadProgress'
+    """
+    Event triggered when the download progress updates.
+
+    This event provides details about the ongoing download,
+    including the amount downloaded and the total size.
+    It is part of the CDP's capabilities for monitoring
+    download activities in the browser.
+    """
+
+    DOWNLOAD_WILL_BEGIN = 'Browser.downloadWillBegin'
+    """
+    Event triggered when a download is about to start.
+
+    This event notifies listeners before the download begins,
+    providing an opportunity to handle or react to download events.
+    This is part of the CDP's support for download management
+    in the browser.
+    """
+]]></Content>
+        </File>
+        <File>
+            <Filename>dom.py</Filename>
+            <Content><![CDATA[
+class DomEvents:
+    """
+    A class to define the DOM events available through the
+    Chrome DevTools Protocol (CDP). These events allow for monitoring
+    changes and updates within the Document Object Model (DOM)
+    of a web page, enabling developers to react to specific
+    modifications and interactions with the DOM elements.
+    """
+
+    ATTRIBUTE_MODIFIED = 'DOM.attributeModified'
+    """
+    Event triggered when an attribute of a DOM node is modified.
+
+    This event provides information about the node affected and the
+    attribute that was changed. It is part of the CDP's capabilities
+    for tracking DOM changes and allows developers to respond
+    to attribute modifications in real time.
+    """
+
+    ATTRIBUTE_REMOVED = 'DOM.attributeRemoved'
+    """
+    Event triggered when an attribute of a DOM node is removed.
+
+    This event indicates that an attribute has been deleted from a
+    node, allowing developers to manage state or perform cleanup
+    based on the changes. It is supported by the CDP to ensure
+    developers can monitor DOM manipulations effectively.
+    """
+
+    CHARACTER_DATA_MODIFIED = 'DOM.characterDataModified'
+    """
+    Event triggered when the character data of a DOM node is modified.
+
+    This event informs listeners about changes in the text content
+    of a node, which is essential for applications that need to
+    reflect real-time updates in the UI based on data changes.
+    """
+
+    CHILD_NODE_COUNT_UPDATED = 'DOM.childNodeCountUpdated'
+    """
+    Event triggered when the number of child nodes of a DOM node is updated.
+
+    This event alerts developers when the number of children changes,
+    allowing them to react to structural changes in the DOM tree.
+    """
+
+    CHILD_NODE_INSERTED = 'DOM.childNodeInserted'
+    """
+    Event triggered when a new child node is inserted into a DOM node.
+
+    This event notifies listeners of new additions to the DOM,
+    enabling actions such as updating UI components or handling
+    related data.
+    """
+
+    CHILD_NODE_REMOVED = 'DOM.childNodeRemoved'
+    """
+    Event triggered when a child node is removed from a DOM node.
+
+    This event indicates that a child has been deleted, allowing
+    developers to manage their state or trigger updates based on
+    the removal of elements in the DOM.
+    """
+
+    DOCUMENT_UPDATED = 'DOM.documentUpdated'
+    """
+    Event triggered when the DOM document is updated.
+
+    This event signifies that changes have occurred at the document
+    level, prompting developers to refresh or update their views
+    accordingly.
+    """
+
+    SCROLLABLE_FLAG_UPDATED = 'DOM.scrollableFlagUpdated'
+    """
+    Event triggered when the scrollable flag of a DOM node is updated.
+
+    This event is useful for determining which elements in the DOM
+    can be scrolled, allowing for enhanced user interactions and
+    responsive designs.
+    """
+
+    SHADOW_ROOT_POPPED = 'DOM.shadowRootPopped'
+    """
+    Event triggered when a shadow root is popped from the stack.
+
+    This event indicates that a shadow DOM context has been removed,
+    which is relevant for applications utilizing shadow DOM features
+    for encapsulated styling and markup.
+    """
+
+    SHADOW_ROOT_PUSHED = 'DOM.shadowRootPushed'
+    """
+    Event triggered when a shadow root is pushed onto the stack.
+
+    This event signifies that a new shadow DOM context has been
+    created, allowing developers to manage and respond to changes
+    in encapsulated DOM structures.
+    """
+
+    TOP_LAYER_ELEMENTS_UPDATED = 'DOM.topLayerElementsUpdated'
+    """
+    Event triggered when the top layer elements in the DOM are updated.
+
+    This event allows for monitoring changes in the most visible
+    elements in the DOM, which is essential for managing UI states
+    and rendering updates.
+    """
+]]></Content>
+        </File>
+        <File>
+            <Filename>fetch.py</Filename>
+            <Content><![CDATA[
+class FetchEvents:
+    """
+    A class to define the Fetch events available through the
+    Chrome DevTools Protocol (CDP). These events are related to
+    the management of network requests, allowing developers to
+    intercept, modify, and monitor HTTP requests and responses
+    made by the browser.
+    """
+
+    AUTH_REQUIRED = 'Fetch.authRequired'
+    """
+    Event triggered when authentication is required for a network
+    request.
+
+    This event allows developers to respond to authentication
+    challenges, enabling them to provide credentials or take
+    appropriate actions when the requested resource requires
+    authentication.
+    """
+
+    REQUEST_PAUSED = 'Fetch.requestPaused'
+    """
+    Event triggered when a network request is paused.
+
+    This event is particularly useful for developers who want to
+    analyze or modify requests before they are sent. When a request
+    is paused, it gives the opportunity to inspect the request data
+    or alter headers before resuming it.
+    """
+]]></Content>
+        </File>
+        <File>
+            <Filename>network.py</Filename>
+            <Content><![CDATA[
+class NetworkEvents:
+    """
+    A class that defines constants for various network-related events.
+
+    These constants can be used to identify and handle network interactions in
+    applications, particularly in event-driven architectures or APIs that
+    monitor network activity.
+    """
+
+    DATA_RECEIVED = 'Network.dataReceived'
+    """
+    Event triggered when data is received over the network.
+
+    This can include responses from HTTP requests, incoming WebSocket messages,
+    or data from other network interactions. Useful for tracking incoming data
+    flow.
+    """
+
+    EVENT_SOURCE_MESSAGE_RECEIVED = 'Network.eventSourceMessageReceived'
+    """
+    Event fired when a message is received from an EventSource.
+
+    Typically used for server-sent events (SSE), this event indicates that a
+    new message has been sent from the server to the client, enabling real-time
+    updates.
+    """
+
+    LOADING_FAILED = 'Network.loadingFailed'
+    """
+    Event that indicates a failure in loading a network resource.
+
+    This can occur due to various reasons, such as network errors, resource
+    not found, or permission issues. This event is critical for error handling
+    and debugging.
+    """
+
+    LOADING_FINISHED = 'Network.loadingFinished'
+    """
+    Event fired when a network loading operation is completed.
+
+    This event is triggered regardless of whether the loading was successful
+    or failed, making it useful for cleaning up or updating the user interface
+    after loading operations.
+    """
+
+    REQUEST_SERVED_FROM_CACHE = 'Network.requestServedFromCache'
+    """
+    Event indicating that a network request was fulfilled from the cache.
+
+    This helps identify when data is being retrieved from cache instead of
+    making a new network request, which can improve performance and reduce
+    latency.
+    """
+
+    REQUEST_WILL_BE_SENT = 'Network.requestWillBeSent'
+    """
+    Event triggered just before a network request is sent.
+
+    This is useful for logging, modifying request headers, or performing
+    actions before the actual request is made. It allows developers to
+    intercept and examine requests.
+    """
+
+    RESPONSE_RECEIVED = 'Network.responseReceived'
+    """
+    Event that indicates a response has been received from a network request.
+
+    This event contains details about the response, such as status codes,
+    headers, and the body of the response. It's crucial for processing the
+    results of network requests.
+    """
+
+    WEB_SOCKET_CLOSED = 'Network.webSocketClosed'
+    """
+    Event that occurs when a WebSocket connection has been closed.
+
+    This can happen due to normal closure, errors, or network interruptions.
+    Handling this event is important for managing WebSocket connections and
+    reconnection logic.
+    """
+
+    WEB_SOCKET_CREATED = 'Network.webSocketCreated'
+    """
+    Event fired when a new WebSocket connection is established.
+
+    This indicates that a WebSocket connection is active and ready for
+    communication, allowing developers to set up message handlers or perform
+    other initialization tasks.
+    """
+
+    WEB_SOCKET_FRAME_ERROR = 'Network.webSocketFrameError'
+    """
+    Event indicating that there was an error with a frame in a WebSocket
+    communication.
+
+    This can be used to handle specific frame-related errors and improve the
+    robustness of WebSocket implementations by allowing for error logging and
+    corrective actions.
+    """
+
+    WEB_SOCKET_FRAME_RECEIVED = 'Network.webSocketFrameReceived'
+    """
+    Event fired when a frame is received through a WebSocket.
+
+    This is essential for processing incoming messages and performing actions
+    based on the content of those messages.
+    """
+
+    WEB_SOCKET_FRAME_SENT = 'Network.webSocketFrameSent'
+    """
+    Event representing a frame that has been sent through a WebSocket.
+
+    This event can be used for logging sent messages, monitoring communication,
+    or performing actions after a message has been sent.
+    """
+
+    WEB_TRANSPORT_CLOSED = 'Network.webTransportClosed'
+    """
+    Event indicating that a web transport connection has been closed.
+
+    Web transport connections are often used for low-latency communication.
+    Handling this event is vital for ensuring that resources are properly
+    released and that the application can react to disconnections.
+    """
+
+    WEB_TRANSPORT_CONNECTION_ESTABLISHED = (
+        'Network.webTransportConnectionEstablished'
+    )
+    """
+    Event fired when a web transport connection is successfully established.
+
+    This signifies that the connection is ready for use, allowing for
+    immediate data transmission and interaction.
+    """
+
+    WEB_TRANSPORT_CREATED = 'Network.webTransportCreated'
+    """
+    Event that signifies that a new web transport connection has been created.
+
+    This is useful for setting up communication channels and initializing
+    necessary resources for the newly created transport.
+    """
+
+    POLICY_UPDATED = 'Network.policyUpdated'
+    """
+    Event that indicates that the network policy has been updated.
+
+    This might relate to security, access controls, or other network-related
+    policies that affect how requests and responses are handled. It’s important
+    for maintaining compliance and security in applications.
+    """
+
+    REQUEST_INTERCEPTED = 'Network.requestIntercepted'
+    """
+    Event fired when a network request has been intercepted.
+
+    This is often used in service workers or other intermediary layers to
+    modify or block requests before they reach the network. Handling this event
+    is crucial for implementing custom request logic or caching strategies.
+    """
+]]></Content>
+        </File>
+        <File>
+            <Filename>page.py</Filename>
+            <Content><![CDATA[
+class PageEvents:
+    """
+    A class that defines constants for various page-related events.
+
+    These constants represent significant events in the lifecycle of a web
+    page, particularly in the context of web automation, testing,
+    or monitoring.
+    """
+
+    PAGE_LOADED = 'Page.loadEventFired'
+    """
+    Event triggered when the page has fully loaded.
+
+    This includes the loading of all resources, such as images and stylesheets.
+    It is typically used to perform actions that require the entire page to be
+    ready for interaction or manipulation.
+    """
+
+    DOM_CONTENT_LOADED = 'Page.domContentEventFired'
+    """
+    Event fired when the DOMContentLoaded event is fired.
+
+    This event indicates that the initial HTML document has been completely
+    loaded and parsed, which allows for immediate manipulation of the DOM
+    before external resources like images are fully loaded.
+    """
+
+    FILE_CHOOSER_OPENED = 'Page.fileChooserOpened'
+    """
+    Event indicating that a file chooser dialog has been opened.
+
+    This event is crucial for applications that require user interaction for
+    file uploads, allowing for tracking when a user is prompted to select
+    files.
+    """
+
+    FRAME_ATTACHED = 'Page.frameAttached'
+    """
+    Event that occurs when a frame is attached to the page.
+
+    This event is significant in scenarios involving iframes or nested browsing
+    contexts, enabling developers to manage and interact with newly added
+    frames.
+    """
+
+    FRAME_DETACHED = 'Page.frameDetached'
+    """
+    Event triggered when a frame is detached from the page.
+
+    This can happen when iframes are removed or navigated away, and it’s
+    important for cleanup and managing resources associated with those frames.
+    """
+
+    FRAME_NAVIGATED = 'Page.frameNavigated'
+    """
+    Event that indicates a frame has been navigated to a new URL.
+
+    This is essential for tracking navigation within iframes, allowing for
+    updates to the application state or user interface based on the content
+    of the frame.
+    """
+
+    JS_DIALOG_CLOSED = 'Page.javascriptDialogClosed'
+    """
+    Event fired when a JavaScript dialog (such as an alert or confirmation)
+    is closed.
+
+    This is useful for managing user interactions with dialogs, allowing for
+    actions to be taken after a dialog has been dismissed.
+    """
+
+    JS_DIALOG_OPENING = 'Page.javascriptDialogOpening'
+    """
+    Event triggered when a JavaScript dialog is about to open.
+
+    This event can be used to intervene in the opening of the dialog, such as
+    providing automated responses or logging dialog interactions.
+    """
+
+    LIFECYCLE_EVENT = 'Page.lifecycleEvent'
+    """
+    Event representing a generic lifecycle event for the page.
+
+    This event is a catch-all for various lifecycle-related events and can be
+    used for monitoring changes in the page state throughout its lifetime.
+    """
+
+    WINDOW_OPENED = 'Page.windowOpen'
+    """
+    Event that indicates a new window has been opened.
+
+    This is useful for applications that need to monitor or manage multiple
+    windows and their interactions, particularly in the context of pop-ups
+    or new tabs.
+    """
+
+    DOCUMENT_OPENED = 'Page.documentOpened'
+    """
+    Event that signifies a new document has been opened in the page.
+
+    This event is important for tracking changes in the document context,
+    particularly in environments where documents can be dynamically created
+    or loaded.
+    """
+
+    FRAME_STARTED_LOADING = 'Page.frameStartedLoading'
+    """
+    Event triggered when a frame starts loading content.
+
+    This event is useful for tracking the loading state of frames,
+    enabling developers to manage loading indicators or perform actions when
+    frames begin loading resources.
+    """
+
+    FRAME_STOPPED_LOADING = 'Page.frameStoppedLoading'
+    """
+    Event that indicates a frame has stopped loading content.
+
+    This can signify that a frame has successfully loaded or encountered an
+    error, allowing for appropriate handling of frame loading states.
+    """
+
+    DOWNLOAD_PROGRESS = 'Page.downloadProgress'
+    """
+    Event fired to indicate progress on a download operation.
+
+    This event provides updates on the download status, enabling the
+    application to inform users about ongoing downloads and their completion.
+    """
+
+    DOWNLOAD_WILL_BEGIN = 'Page.downloadWillBegin'
+    """
+    Event that occurs when a download is about to start.
+
+    This event is significant for tracking the initiation of downloads,
+    allowing for pre-download actions such as logging or user notifications.
+    """
+    NAVIGATED_WITHIN_DOCUMENT = 'Page.navigatedWithinDocument'
+    """
+    Event that indicates navigation within the same document.
+
+    This event is useful for tracking changes in the document state, such as
+    anchor links or in-page navigation, without requiring a full page reload.
+    """
+]]></Content>
+        </File>
+        <File>
+            <Filename>__init__.py</Filename>
+            <Content><![CDATA[
+from pydoll.events.browser import BrowserEvents
+from pydoll.events.dom import DomEvents
+from pydoll.events.fetch import FetchEvents
+from pydoll.events.network import NetworkEvents
+from pydoll.events.page import PageEvents
+
+__all__ = [
+    'BrowserEvents',
+    'DomEvents',
+    'FetchEvents',
+    'NetworkEvents',
+    'PageEvents',
+]
+]]></Content>
+        </File>
+        <File>
+            <Filename>exceptions.py</Filename>
+            <Content><![CDATA[
+class ConnectionFailed(Exception):
+    message = 'Failed to connect to the browser'
+
+    def __str__(self):
+        return self.message
+
+
+class InvalidCommand(Exception):
+    message = 'The command provided is invalid'
+
+    def __str__(self):
+        return self.message
+
+
+class InvalidCallback(Exception):
+    message = 'The callback provided is invalid'
+
+    def __str__(self):
+        return self.message
+
+
+class NetworkError(Exception):
+    message = 'A network error occurred'
+
+    def __str__(self):
+        return self.message
+
+
+class InvalidResponse(Exception):
+    message = 'The response received is invalid'
+
+    def __str__(self):
+        return self.message
+
+
+class ReconnectionFailed(Exception):
+    message = 'Failed to reconnect to the browser'
+
+    def __str__(self):
+        return self.message
+
+
+class ResendCommandFailed(Exception):
+    message = 'Failed to resend the command'
+
+    def __str__(self):
+        return self.message
+
+
+class BrowserNotRunning(Exception):
+    message = 'The browser is not running'
+
+    def __str__(self):
+        return self.message
+
+
+class ElementNotFound(Exception):
+    message = 'The specified element was not found'
+
+    def __str__(self):
+        return self.message
+
+
+class ClickIntercepted(Exception):
+    message = 'The click was intercepted'
+
+    def __str__(self):
+        return self.message
+
+
+class ElementNotVisible(Exception):
+    message = 'The element is not visible'
+
+    def __str__(self):
+        return self.message
+
+
+class ElementNotInteractable(Exception):
+    message = 'The element is not interactable'
+
+    def __str__(self):
+        return self.message
+
+
+class InvalidFileExtension(Exception):
+    message = 'The file extension provided is not supported'
+
+    def __str__(self):
+        return self.message
+]]></Content>
+        </File>
+        <File>
+            <Filename>find_elements.py</Filename>
+            <Content><![CDATA[
+import asyncio
+
+from pydoll import exceptions
+from pydoll.commands.dom import DomCommands
+from pydoll.commands.runtime import RuntimeCommands
+
+
+def create_web_element(*args, **kwargs):
+    """
+    Creates a WebElement instance to avoid circular imports.
+    """
+    from pydoll.element import WebElement  # noqa: PLC0415
+
+    return WebElement(*args, **kwargs)
+
+
+class FindElementsMixin:
+    async def wait_element(
+        self,
+        by: DomCommands.SelectorType,
+        value: str,
+        timeout: int = 10,
+        raise_exc: bool = True,
+    ):
+        """
+        Waits for an element to be present in the DOM.
+
+        Args:
+            by (SelectorType): The type of selector to use.
+            value (str): The value of the selector.
+            timeout (int, optional): Time in seconds to wait for the element.
+            Defaults to 10.
+
+        Returns:
+            Element: The element found in the DOM.
+
+        Raises:
+            TimeoutError: If the element is not found within the timeout.
+        """
+        start_time = asyncio.get_event_loop().time()
+        while True:
+            try:
+                element = await self.find_element(by, value, raise_exc=False)
+                if element:
+                    return element
+            except exceptions.ElementNotFound:
+                pass
+
+            if asyncio.get_event_loop().time() - start_time > timeout:
+                if raise_exc:
+                    raise TimeoutError('Element not found')
+                return None
+
+            await asyncio.sleep(0.5)
+
+    async def find_element(
+        self, by: DomCommands.SelectorType, value: str, raise_exc: bool = True
+    ):
+        """
+        Finds an element on the current page using the specified selector.
+
+        Args:
+            by (SelectorType): The type of selector to use.
+            value (str): The value of the selector to use.
+
+        Returns:
+            dict: The response from the browser.
+
+        Raises:
+            ElementNotFound: If the element is not found and raise_exc is True.
+        """
+        if hasattr(self, '_object_id'):
+            command = DomCommands.find_element(by, value, self._object_id)
+        else:
+            command = DomCommands.find_element(by, value)
+
+        response = await self._execute_command(command)
+
+        if not response.get('result', {}).get('result', {}).get('objectId'):
+            if raise_exc:
+                raise exceptions.ElementNotFound('Element not found')
+            return None
+
+        object_id = response['result']['result']['objectId']
+        node_description = await self._describe_node(object_id=object_id)
+        attributes = node_description.get('attributes', [])
+
+        tag_name = node_description.get('nodeName', '').lower()
+        attributes.extend(['tag_name', tag_name])
+
+        return create_web_element(
+            object_id, self._connection_handler, by, value, attributes
+        )
+
+    async def find_elements(
+        self, by: DomCommands.SelectorType, value: str, raise_exc: bool = True
+    ):
+        """
+        Finds all elements on the current page using the specified selector.
+
+        Args:
+            by (SelectorType): The type of selector to use.
+            value (str): The value of the selector to use.
+
+        Returns:
+            list: A list of elements found on the page.
+
+        Raises:
+            ElementNotFound: If no elements are found and raise_exc is True.
+        """
+        if hasattr(self, '_object_id'):
+            command = DomCommands.find_elements(by, value, self._object_id)
+        else:
+            command = DomCommands.find_elements(by, value)
+
+        response = await self._execute_command(command)
+
+        if not response.get('result', {}).get('result', {}).get('objectId'):
+            if raise_exc:
+                raise exceptions.ElementNotFound('Element not found')
+            return []
+
+        object_id = response['result']['result']['objectId']
+        query_response = await self._execute_command(
+            RuntimeCommands.get_properties(object_id=object_id)
+        )
+        response = []
+        for query in query_response['result']['result']:
+            query_value = query.get('value', {})
+            if query_value and query_value['type'] == 'object':
+                response.append(query_value['objectId'])
+
+        elements = []
+        for object_id in response:
+            try:
+                node_description = await self._describe_node(
+                    object_id=object_id
+                )
+            except KeyError:
+                continue
+
+            attributes = node_description.get('attributes', [])
+            tag_name = node_description.get('nodeName', '').lower()
+            attributes.extend(['tag_name', tag_name])
+
+            elements.append(
+                create_web_element(
+                    object_id, self._connection_handler, by, value, attributes
+                )
+            )
+        return elements
+
+    async def _describe_node(self, object_id: str = '') -> dict:
+        """
+        Provides a detailed description of a specific node within the DOM.
+
+        Args:
+            node_id (int): The unique ID of the node to describe.
+
+        Returns:
+            dict: A dictionary containing the detailed description of the node.
+        """
+        response = await self._execute_command(
+            DomCommands.describe_node(object_id=object_id)
+        )
+        return response['result']['node']
+
+    async def _execute_command(self, command: dict) -> dict:
+        """
+        Executes a command on the page.
+
+        Args:
+            command (dict): The command to execute.
+
+        Returns:
+            dict: The result of the command execution.
+        """
+        return await self._connection_handler.execute_command(
+            command, timeout=60
+        )
+]]></Content>
+        </File>
+        <File>
+            <Filename>utils.py</Filename>
+            <Content><![CDATA[
+import base64
+import logging
+
+import aiohttp
+
+from pydoll import exceptions
+
+logger = logging.getLogger(__name__)
+
+
+def decode_image_to_bytes(image: str) -> bytes:
+    """
+    Decodes a base64 image string to bytes.
+
+    Args:
+        image (str): The base64 image string to decode.
+
+    Returns:
+        bytes: The decoded image as bytes.
+    """
+    return base64.b64decode(image)
+
+
+async def get_browser_ws_address(port: int) -> str:
+    """
+    Fetches the WebSocket address for the browser instance.
+
+    Returns:
+        str: The WebSocket address for the browser.
+
+    Raises:
+        ValueError: If the address cannot be fetched due to network errors
+        or missing data.
+    """
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f'http://localhost:{port}/json/version'
+            ) as response:
+                response.raise_for_status()
+                data = await response.json()
+                return data['webSocketDebuggerUrl']
+
+    except aiohttp.ClientError as e:
+        raise exceptions.NetworkError(f'Failed to get browser ws address: {e}')
+
+    except KeyError as e:
+        raise exceptions.InvalidResponse(
+            f'Failed to get browser ws address: {e}'
+        )
+]]></Content>
+        </File>
+    </FileContents>
+</concatpydoll>
