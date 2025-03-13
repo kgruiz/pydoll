@@ -6,12 +6,12 @@ Welcome to Pydoll's Documentation!
    :caption: Contents:
 
    modules
-   pydoll
-   pydoll.browser
-   pydoll.commands
-   pydoll.connection
-   pydoll.events
-   pydoll.mixins
+   source/pydoll
+
+   source/pydoll.commands
+   source/pydoll.connection
+   source/pydoll.events
+   source/pydoll.mixins
 
 Indices and tables
 ==================

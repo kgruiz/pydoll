@@ -18,7 +18,9 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pydoll.browser package" href="pydoll.browser.html" />
+    <link rel="prev" title="Pydoll API Reference" href="../modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,8 +43,134 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Pydoll API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pydoll package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.browser.html">pydoll.browser package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.commands.html">pydoll.commands package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.connection.html">pydoll.connection package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.events.html">pydoll.events package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.mixins.html">pydoll.mixins package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.constants">pydoll.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.constants.By"><code class="docutils literal notranslate"><span class="pre">By</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.By.CLASS_NAME"><code class="docutils literal notranslate"><span class="pre">By.CLASS_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.By.CSS_SELECTOR"><code class="docutils literal notranslate"><span class="pre">By.CSS_SELECTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.By.ID"><code class="docutils literal notranslate"><span class="pre">By.ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.By.TAG_NAME"><code class="docutils literal notranslate"><span class="pre">By.TAG_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.By.XPATH"><code class="docutils literal notranslate"><span class="pre">By.XPATH</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.constants.Scripts"><code class="docutils literal notranslate"><span class="pre">Scripts</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.BOUNDS"><code class="docutils literal notranslate"><span class="pre">Scripts.BOUNDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.CLICK"><code class="docutils literal notranslate"><span class="pre">Scripts.CLICK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.CLICK_OPTION_TAG"><code class="docutils literal notranslate"><span class="pre">Scripts.CLICK_OPTION_TAG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.ELEMENT_ON_TOP"><code class="docutils literal notranslate"><span class="pre">Scripts.ELEMENT_ON_TOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.ELEMENT_VISIBLE"><code class="docutils literal notranslate"><span class="pre">Scripts.ELEMENT_VISIBLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.FIND_RELATIVE_XPATH_ELEMENT"><code class="docutils literal notranslate"><span class="pre">Scripts.FIND_RELATIVE_XPATH_ELEMENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.FIND_RELATIVE_XPATH_ELEMENTS"><code class="docutils literal notranslate"><span class="pre">Scripts.FIND_RELATIVE_XPATH_ELEMENTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.FIND_XPATH_ELEMENT"><code class="docutils literal notranslate"><span class="pre">Scripts.FIND_XPATH_ELEMENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.FIND_XPATH_ELEMENTS"><code class="docutils literal notranslate"><span class="pre">Scripts.FIND_XPATH_ELEMENTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.QUERY_SELECTOR"><code class="docutils literal notranslate"><span class="pre">Scripts.QUERY_SELECTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.QUERY_SELECTOR_ALL"><code class="docutils literal notranslate"><span class="pre">Scripts.QUERY_SELECTOR_ALL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.RELATIVE_QUERY_SELECTOR"><code class="docutils literal notranslate"><span class="pre">Scripts.RELATIVE_QUERY_SELECTOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.constants.Scripts.RELATIVE_QUERY_SELECTOR_ALL"><code class="docutils literal notranslate"><span class="pre">Scripts.RELATIVE_QUERY_SELECTOR_ALL</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.element">pydoll.element module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.element.WebElement"><code class="docutils literal notranslate"><span class="pre">WebElement</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.bounds"><code class="docutils literal notranslate"><span class="pre">WebElement.bounds</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.class_name"><code class="docutils literal notranslate"><span class="pre">WebElement.class_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.click"><code class="docutils literal notranslate"><span class="pre">WebElement.click()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.click_option_tag"><code class="docutils literal notranslate"><span class="pre">WebElement.click_option_tag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.click_using_js"><code class="docutils literal notranslate"><span class="pre">WebElement.click_using_js()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.get_attribute"><code class="docutils literal notranslate"><span class="pre">WebElement.get_attribute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.get_bounds_using_js"><code class="docutils literal notranslate"><span class="pre">WebElement.get_bounds_using_js()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.get_element_text"><code class="docutils literal notranslate"><span class="pre">WebElement.get_element_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.get_screenshot"><code class="docutils literal notranslate"><span class="pre">WebElement.get_screenshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.id"><code class="docutils literal notranslate"><span class="pre">WebElement.id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.inner_html"><code class="docutils literal notranslate"><span class="pre">WebElement.inner_html</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.is_enabled"><code class="docutils literal notranslate"><span class="pre">WebElement.is_enabled</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.scroll_into_view"><code class="docutils literal notranslate"><span class="pre">WebElement.scroll_into_view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.send_keys"><code class="docutils literal notranslate"><span class="pre">WebElement.send_keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.type_keys"><code class="docutils literal notranslate"><span class="pre">WebElement.type_keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.element.WebElement.value"><code class="docutils literal notranslate"><span class="pre">WebElement.value</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.exceptions">pydoll.exceptions module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.BrowserNotRunning"><code class="docutils literal notranslate"><span class="pre">BrowserNotRunning</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.BrowserNotRunning.message"><code class="docutils literal notranslate"><span class="pre">BrowserNotRunning.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.ClickIntercepted"><code class="docutils literal notranslate"><span class="pre">ClickIntercepted</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.ClickIntercepted.message"><code class="docutils literal notranslate"><span class="pre">ClickIntercepted.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.ConnectionFailed"><code class="docutils literal notranslate"><span class="pre">ConnectionFailed</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.ConnectionFailed.message"><code class="docutils literal notranslate"><span class="pre">ConnectionFailed.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.ElementNotFound"><code class="docutils literal notranslate"><span class="pre">ElementNotFound</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.ElementNotFound.message"><code class="docutils literal notranslate"><span class="pre">ElementNotFound.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.ElementNotInteractable"><code class="docutils literal notranslate"><span class="pre">ElementNotInteractable</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.ElementNotInteractable.message"><code class="docutils literal notranslate"><span class="pre">ElementNotInteractable.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.ElementNotVisible"><code class="docutils literal notranslate"><span class="pre">ElementNotVisible</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.ElementNotVisible.message"><code class="docutils literal notranslate"><span class="pre">ElementNotVisible.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.InvalidCallback"><code class="docutils literal notranslate"><span class="pre">InvalidCallback</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.InvalidCallback.message"><code class="docutils literal notranslate"><span class="pre">InvalidCallback.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.InvalidCommand"><code class="docutils literal notranslate"><span class="pre">InvalidCommand</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.InvalidCommand.message"><code class="docutils literal notranslate"><span class="pre">InvalidCommand.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.InvalidFileExtension"><code class="docutils literal notranslate"><span class="pre">InvalidFileExtension</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.InvalidFileExtension.message"><code class="docutils literal notranslate"><span class="pre">InvalidFileExtension.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.InvalidResponse"><code class="docutils literal notranslate"><span class="pre">InvalidResponse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.InvalidResponse.message"><code class="docutils literal notranslate"><span class="pre">InvalidResponse.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.NetworkError"><code class="docutils literal notranslate"><span class="pre">NetworkError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.NetworkError.message"><code class="docutils literal notranslate"><span class="pre">NetworkError.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.ReconnectionFailed"><code class="docutils literal notranslate"><span class="pre">ReconnectionFailed</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.ReconnectionFailed.message"><code class="docutils literal notranslate"><span class="pre">ReconnectionFailed.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.exceptions.ResendCommandFailed"><code class="docutils literal notranslate"><span class="pre">ResendCommandFailed</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.exceptions.ResendCommandFailed.message"><code class="docutils literal notranslate"><span class="pre">ResendCommandFailed.message</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.utils">pydoll.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.utils.decode_image_to_bytes"><code class="docutils literal notranslate"><span class="pre">decode_image_to_bytes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.utils.get_browser_ws_address"><code class="docutils literal notranslate"><span class="pre">get_browser_ws_address()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.commands.html">pydoll.commands package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.connection.html">pydoll.connection package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.events.html">pydoll.events package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.mixins.html">pydoll.mixins package</a></li>
 </ul>
 
         </div>
@@ -1208,7 +1336,10 @@ element.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../modules.html" class="btn btn-neutral float-left" title="Pydoll API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pydoll.browser.html" class="btn btn-neutral float-right" title="pydoll.browser package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

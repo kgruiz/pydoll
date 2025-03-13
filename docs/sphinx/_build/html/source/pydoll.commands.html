@@ -18,7 +18,9 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pydoll.connection package" href="pydoll.connection.html" />
+    <link rel="prev" title="pydoll.browser package" href="pydoll.browser.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,8 +43,374 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Pydoll API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pydoll.html">pydoll package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pydoll.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pydoll.browser.html">pydoll.browser package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pydoll.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.browser">pydoll.commands.browser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.dom">pydoll.commands.dom module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.fetch">pydoll.commands.fetch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.input">pydoll.commands.input module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.network">pydoll.commands.network module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.page">pydoll.commands.page module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.runtime">pydoll.commands.runtime module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.storage">pydoll.commands.storage module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands.target">pydoll.commands.target module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.commands">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.connection.html">pydoll.connection package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.events.html">pydoll.events package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.mixins.html">pydoll.mixins package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.constants">pydoll.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.element">pydoll.element module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.exceptions">pydoll.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.utils">pydoll.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pydoll.commands package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.browser">pydoll.commands.browser module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands"><code class="docutils literal notranslate"><span class="pre">BrowserCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.CLOSE"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.CLOSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.GET_WINDOW_ID"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.GET_WINDOW_ID</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.SET_DOWNLOAD_BEHAVIOR"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.SET_DOWNLOAD_BEHAVIOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.SET_WINDOW_BOUNDS_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.SET_WINDOW_BOUNDS_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.close"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.get_window_id"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.get_window_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.set_download_path"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.set_download_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.set_window_bounds"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.set_window_bounds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.set_window_maximized"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.set_window_maximized()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.browser.BrowserCommands.set_window_minimized"><code class="docutils literal notranslate"><span class="pre">BrowserCommands.set_window_minimized()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.dom">pydoll.commands.dom module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.dom.DomCommands"><code class="docutils literal notranslate"><span class="pre">DomCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.SelectorType"><code class="docutils literal notranslate"><span class="pre">DomCommands.SelectorType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.BOX_MODEL_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.BOX_MODEL_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.DESCRIBE_NODE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.DESCRIBE_NODE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.DOM_DOCUMENT"><code class="docutils literal notranslate"><span class="pre">DomCommands.DOM_DOCUMENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.ENABLE"><code class="docutils literal notranslate"><span class="pre">DomCommands.ENABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.FIND_ALL_ELEMENTS_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.FIND_ALL_ELEMENTS_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.FIND_ELEMENT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.FIND_ELEMENT_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.GET_OUTER_HTML"><code class="docutils literal notranslate"><span class="pre">DomCommands.GET_OUTER_HTML</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.REQUEST_NODE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.REQUEST_NODE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.RESOLVE_NODE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.RESOLVE_NODE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.SCROLL_INTO_VIEW_IF_NEEDED"><code class="docutils literal notranslate"><span class="pre">DomCommands.SCROLL_INTO_VIEW_IF_NEEDED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">DomCommands.SelectorType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.box_model"><code class="docutils literal notranslate"><span class="pre">DomCommands.box_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.describe_node"><code class="docutils literal notranslate"><span class="pre">DomCommands.describe_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.dom_document"><code class="docutils literal notranslate"><span class="pre">DomCommands.dom_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.enable_dom_events"><code class="docutils literal notranslate"><span class="pre">DomCommands.enable_dom_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.find_element"><code class="docutils literal notranslate"><span class="pre">DomCommands.find_element()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.find_elements"><code class="docutils literal notranslate"><span class="pre">DomCommands.find_elements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.get_current_url"><code class="docutils literal notranslate"><span class="pre">DomCommands.get_current_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.get_outer_html"><code class="docutils literal notranslate"><span class="pre">DomCommands.get_outer_html()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.request_node"><code class="docutils literal notranslate"><span class="pre">DomCommands.request_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.dom.DomCommands.scroll_into_view"><code class="docutils literal notranslate"><span class="pre">DomCommands.scroll_into_view()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.fetch">pydoll.commands.fetch module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands"><code class="docutils literal notranslate"><span class="pre">FetchCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.CONTINUE_REQUEST"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.CONTINUE_REQUEST_WITH_AUTH"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_REQUEST_WITH_AUTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.DISABLE"><code class="docutils literal notranslate"><span class="pre">FetchCommands.DISABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.ENABLE"><code class="docutils literal notranslate"><span class="pre">FetchCommands.ENABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.FAIL_REQUEST"><code class="docutils literal notranslate"><span class="pre">FetchCommands.FAIL_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.FULFILL_REQUEST"><code class="docutils literal notranslate"><span class="pre">FetchCommands.FULFILL_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.GET_RESPONSE_BODY"><code class="docutils literal notranslate"><span class="pre">FetchCommands.GET_RESPONSE_BODY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.CONTINUE_RESPONSE"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_RESPONSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_REQUEST_WITH_AUTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_RESPONSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">FetchCommands.DISABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">FetchCommands.ENABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">FetchCommands.FAIL_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">FetchCommands.FULFILL_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">FetchCommands.GET_RESPONSE_BODY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.continue_request"><code class="docutils literal notranslate"><span class="pre">FetchCommands.continue_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.continue_request_with_auth"><code class="docutils literal notranslate"><span class="pre">FetchCommands.continue_request_with_auth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.continue_response"><code class="docutils literal notranslate"><span class="pre">FetchCommands.continue_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.disable_fetch_events"><code class="docutils literal notranslate"><span class="pre">FetchCommands.disable_fetch_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.enable_fetch_events"><code class="docutils literal notranslate"><span class="pre">FetchCommands.enable_fetch_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.fail_request"><code class="docutils literal notranslate"><span class="pre">FetchCommands.fail_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.fulfill_request"><code class="docutils literal notranslate"><span class="pre">FetchCommands.fulfill_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.fetch.FetchCommands.get_response_body"><code class="docutils literal notranslate"><span class="pre">FetchCommands.get_response_body()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.input">pydoll.commands.input module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.input.InputCommands"><code class="docutils literal notranslate"><span class="pre">InputCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.input.InputCommands.CLICK_ELEMENT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">InputCommands.CLICK_ELEMENT_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.input.InputCommands.INSERT_TEXT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">InputCommands.INSERT_TEXT_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.input.InputCommands.KEY_PRESS_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">InputCommands.KEY_PRESS_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.input.InputCommands.insert_text"><code class="docutils literal notranslate"><span class="pre">InputCommands.insert_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.input.InputCommands.key_press"><code class="docutils literal notranslate"><span class="pre">InputCommands.key_press()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.input.InputCommands.mouse_press"><code class="docutils literal notranslate"><span class="pre">InputCommands.mouse_press()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.input.InputCommands.mouse_release"><code class="docutils literal notranslate"><span class="pre">InputCommands.mouse_release()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.network">pydoll.commands.network module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands"><code class="docutils literal notranslate"><span class="pre">NetworkCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.CLEAR_BROWSER_CACHE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.CLEAR_BROWSER_CACHE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.CLEAR_BROWSER_COOKIES"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.CLEAR_BROWSER_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.DELETE_COOKIES_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.DELETE_COOKIES_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.DISABLE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.DISABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.ENABLE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.ENABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.GET_ALL_COOKIES"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.GET_ALL_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.GET_COOKIES_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.GET_COOKIES_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.GET_REQUEST_POST_DATA_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.GET_REQUEST_POST_DATA_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.GET_RESPONSE_BODY_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.GET_RESPONSE_BODY_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.SEARCH_IN_RESPONSE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SEARCH_IN_RESPONSE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.SET_BLOCKED_URLS"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_BLOCKED_URLS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.SET_CACHE_DISABLED_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_CACHE_DISABLED_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.SET_COOKIES_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_COOKIES_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.SET_COOKIE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_COOKIE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.SET_EXTRA_HTTP_HEADERS_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_EXTRA_HTTP_HEADERS_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.SET_USERAGENT_OVERRIDE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_USERAGENT_OVERRIDE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.clear_browser_cache"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.clear_browser_cache()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.clear_browser_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.clear_browser_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.delete_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.delete_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.disable_network_events"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.disable_network_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.enable_network_events"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.enable_network_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.get_all_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.get_all_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.get_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.get_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.get_request_post_data"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.get_request_post_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.get_response_body"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.get_response_body()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.search_in_response"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.search_in_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.set_blocked_urls"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_blocked_urls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.set_cache_disabled"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_cache_disabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.set_cookie"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_cookie()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.set_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.set_extra_http_headers"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_extra_http_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.network.NetworkCommands.set_useragent_override"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_useragent_override()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.page">pydoll.commands.page module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.page.PageCommands"><code class="docutils literal notranslate"><span class="pre">PageCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.CLOSE"><code class="docutils literal notranslate"><span class="pre">PageCommands.CLOSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.DISABLE_PAGE"><code class="docutils literal notranslate"><span class="pre">PageCommands.DISABLE_PAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.ENABLE_PAGE"><code class="docutils literal notranslate"><span class="pre">PageCommands.ENABLE_PAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.GO_TO_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">PageCommands.GO_TO_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.HANDLE_DIALOG"><code class="docutils literal notranslate"><span class="pre">PageCommands.HANDLE_DIALOG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.PRINT_TO_PDF_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">PageCommands.PRINT_TO_PDF_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.REFRESH_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">PageCommands.REFRESH_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.SCREENSHOT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">PageCommands.SCREENSHOT_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.SET_DOWNLOAD_BEHAVIOR"><code class="docutils literal notranslate"><span class="pre">PageCommands.SET_DOWNLOAD_BEHAVIOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.close"><code class="docutils literal notranslate"><span class="pre">PageCommands.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.disable_page"><code class="docutils literal notranslate"><span class="pre">PageCommands.disable_page()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.enable_page"><code class="docutils literal notranslate"><span class="pre">PageCommands.enable_page()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.go_to"><code class="docutils literal notranslate"><span class="pre">PageCommands.go_to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.handle_dialog"><code class="docutils literal notranslate"><span class="pre">PageCommands.handle_dialog()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.print_to_pdf"><code class="docutils literal notranslate"><span class="pre">PageCommands.print_to_pdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.refresh"><code class="docutils literal notranslate"><span class="pre">PageCommands.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.screenshot"><code class="docutils literal notranslate"><span class="pre">PageCommands.screenshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.page.PageCommands.set_download_path"><code class="docutils literal notranslate"><span class="pre">PageCommands.set_download_path()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.runtime">pydoll.commands.runtime module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.runtime.RuntimeCommands"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.runtime.RuntimeCommands.CALL_FUNCTION_ON_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.CALL_FUNCTION_ON_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.runtime.RuntimeCommands.EVALUATE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.EVALUATE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.runtime.RuntimeCommands.GET_PROPERTIES"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.GET_PROPERTIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.runtime.RuntimeCommands.call_function_on"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.call_function_on()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.runtime.RuntimeCommands.evaluate_script"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.evaluate_script()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.runtime.RuntimeCommands.get_properties"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.get_properties()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.storage">pydoll.commands.storage module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.storage.StorageCommands"><code class="docutils literal notranslate"><span class="pre">StorageCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.storage.StorageCommands.CLEAR_COOKIES"><code class="docutils literal notranslate"><span class="pre">StorageCommands.CLEAR_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.storage.StorageCommands.GET_COOKIES"><code class="docutils literal notranslate"><span class="pre">StorageCommands.GET_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.storage.StorageCommands.SET_COOKIES"><code class="docutils literal notranslate"><span class="pre">StorageCommands.SET_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.storage.StorageCommands.clear_cookies"><code class="docutils literal notranslate"><span class="pre">StorageCommands.clear_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.storage.StorageCommands.get_cookies"><code class="docutils literal notranslate"><span class="pre">StorageCommands.get_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.storage.StorageCommands.set_cookies"><code class="docutils literal notranslate"><span class="pre">StorageCommands.set_cookies()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands.target">pydoll.commands.target module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.target.TargetCommands"><code class="docutils literal notranslate"><span class="pre">TargetCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.ACTIVATE_TARGET"><code class="docutils literal notranslate"><span class="pre">TargetCommands.ACTIVATE_TARGET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.ATTACH_TO_TARGET"><code class="docutils literal notranslate"><span class="pre">TargetCommands.ATTACH_TO_TARGET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.CLOSE_TARGET"><code class="docutils literal notranslate"><span class="pre">TargetCommands.CLOSE_TARGET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.CREATE_TARGET"><code class="docutils literal notranslate"><span class="pre">TargetCommands.CREATE_TARGET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.GET_TARGETS"><code class="docutils literal notranslate"><span class="pre">TargetCommands.GET_TARGETS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.GET_TARGET_INFO"><code class="docutils literal notranslate"><span class="pre">TargetCommands.GET_TARGET_INFO</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.activate_target"><code class="docutils literal notranslate"><span class="pre">TargetCommands.activate_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.attach_to_target"><code class="docutils literal notranslate"><span class="pre">TargetCommands.attach_to_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.close_target"><code class="docutils literal notranslate"><span class="pre">TargetCommands.close_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.create_target"><code class="docutils literal notranslate"><span class="pre">TargetCommands.create_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.target.TargetCommands.get_targets"><code class="docutils literal notranslate"><span class="pre">TargetCommands.get_targets()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.commands">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.DomCommands"><code class="docutils literal notranslate"><span class="pre">DomCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.SelectorType"><code class="docutils literal notranslate"><span class="pre">DomCommands.SelectorType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.BOX_MODEL_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.BOX_MODEL_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.DESCRIBE_NODE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.DESCRIBE_NODE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.DOM_DOCUMENT"><code class="docutils literal notranslate"><span class="pre">DomCommands.DOM_DOCUMENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.ENABLE"><code class="docutils literal notranslate"><span class="pre">DomCommands.ENABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.FIND_ALL_ELEMENTS_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.FIND_ALL_ELEMENTS_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.FIND_ELEMENT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.FIND_ELEMENT_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.GET_OUTER_HTML"><code class="docutils literal notranslate"><span class="pre">DomCommands.GET_OUTER_HTML</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.REQUEST_NODE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.REQUEST_NODE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.RESOLVE_NODE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">DomCommands.RESOLVE_NODE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.SCROLL_INTO_VIEW_IF_NEEDED"><code class="docutils literal notranslate"><span class="pre">DomCommands.SCROLL_INTO_VIEW_IF_NEEDED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">DomCommands.SelectorType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.box_model"><code class="docutils literal notranslate"><span class="pre">DomCommands.box_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.describe_node"><code class="docutils literal notranslate"><span class="pre">DomCommands.describe_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.dom_document"><code class="docutils literal notranslate"><span class="pre">DomCommands.dom_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.enable_dom_events"><code class="docutils literal notranslate"><span class="pre">DomCommands.enable_dom_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.find_element"><code class="docutils literal notranslate"><span class="pre">DomCommands.find_element()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.find_elements"><code class="docutils literal notranslate"><span class="pre">DomCommands.find_elements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.get_current_url"><code class="docutils literal notranslate"><span class="pre">DomCommands.get_current_url()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.get_outer_html"><code class="docutils literal notranslate"><span class="pre">DomCommands.get_outer_html()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.request_node"><code class="docutils literal notranslate"><span class="pre">DomCommands.request_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.DomCommands.scroll_into_view"><code class="docutils literal notranslate"><span class="pre">DomCommands.scroll_into_view()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.FetchCommands"><code class="docutils literal notranslate"><span class="pre">FetchCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.CONTINUE_REQUEST"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.CONTINUE_REQUEST_WITH_AUTH"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_REQUEST_WITH_AUTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.DISABLE"><code class="docutils literal notranslate"><span class="pre">FetchCommands.DISABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.ENABLE"><code class="docutils literal notranslate"><span class="pre">FetchCommands.ENABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.FAIL_REQUEST"><code class="docutils literal notranslate"><span class="pre">FetchCommands.FAIL_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.FULFILL_REQUEST"><code class="docutils literal notranslate"><span class="pre">FetchCommands.FULFILL_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.GET_RESPONSE_BODY"><code class="docutils literal notranslate"><span class="pre">FetchCommands.GET_RESPONSE_BODY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.CONTINUE_RESPONSE"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_RESPONSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_REQUEST_WITH_AUTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">FetchCommands.CONTINUE_RESPONSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">FetchCommands.DISABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">FetchCommands.ENABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">FetchCommands.FAIL_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">FetchCommands.FULFILL_REQUEST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">FetchCommands.GET_RESPONSE_BODY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.continue_request"><code class="docutils literal notranslate"><span class="pre">FetchCommands.continue_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.continue_request_with_auth"><code class="docutils literal notranslate"><span class="pre">FetchCommands.continue_request_with_auth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.continue_response"><code class="docutils literal notranslate"><span class="pre">FetchCommands.continue_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.disable_fetch_events"><code class="docutils literal notranslate"><span class="pre">FetchCommands.disable_fetch_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.enable_fetch_events"><code class="docutils literal notranslate"><span class="pre">FetchCommands.enable_fetch_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.fail_request"><code class="docutils literal notranslate"><span class="pre">FetchCommands.fail_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.fulfill_request"><code class="docutils literal notranslate"><span class="pre">FetchCommands.fulfill_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.FetchCommands.get_response_body"><code class="docutils literal notranslate"><span class="pre">FetchCommands.get_response_body()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.InputCommands"><code class="docutils literal notranslate"><span class="pre">InputCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.InputCommands.CLICK_ELEMENT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">InputCommands.CLICK_ELEMENT_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.InputCommands.INSERT_TEXT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">InputCommands.INSERT_TEXT_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.InputCommands.KEY_PRESS_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">InputCommands.KEY_PRESS_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.InputCommands.insert_text"><code class="docutils literal notranslate"><span class="pre">InputCommands.insert_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.InputCommands.key_press"><code class="docutils literal notranslate"><span class="pre">InputCommands.key_press()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.InputCommands.mouse_press"><code class="docutils literal notranslate"><span class="pre">InputCommands.mouse_press()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.InputCommands.mouse_release"><code class="docutils literal notranslate"><span class="pre">InputCommands.mouse_release()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.NetworkCommands"><code class="docutils literal notranslate"><span class="pre">NetworkCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.CLEAR_BROWSER_CACHE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.CLEAR_BROWSER_CACHE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.CLEAR_BROWSER_COOKIES"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.CLEAR_BROWSER_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.DELETE_COOKIES_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.DELETE_COOKIES_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.DISABLE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.DISABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.ENABLE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.ENABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.GET_ALL_COOKIES"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.GET_ALL_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.GET_COOKIES_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.GET_COOKIES_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.GET_REQUEST_POST_DATA_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.GET_REQUEST_POST_DATA_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.GET_RESPONSE_BODY_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.GET_RESPONSE_BODY_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.SEARCH_IN_RESPONSE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SEARCH_IN_RESPONSE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.SET_BLOCKED_URLS"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_BLOCKED_URLS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.SET_CACHE_DISABLED_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_CACHE_DISABLED_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.SET_COOKIES_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_COOKIES_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.SET_COOKIE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_COOKIE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.SET_EXTRA_HTTP_HEADERS_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_EXTRA_HTTP_HEADERS_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.SET_USERAGENT_OVERRIDE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.SET_USERAGENT_OVERRIDE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.clear_browser_cache"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.clear_browser_cache()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.clear_browser_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.clear_browser_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.delete_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.delete_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.disable_network_events"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.disable_network_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.enable_network_events"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.enable_network_events()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.get_all_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.get_all_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.get_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.get_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.get_request_post_data"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.get_request_post_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.get_response_body"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.get_response_body()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.search_in_response"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.search_in_response()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.set_blocked_urls"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_blocked_urls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.set_cache_disabled"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_cache_disabled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.set_cookie"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_cookie()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.set_cookies"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.set_extra_http_headers"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_extra_http_headers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.NetworkCommands.set_useragent_override"><code class="docutils literal notranslate"><span class="pre">NetworkCommands.set_useragent_override()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.PageCommands"><code class="docutils literal notranslate"><span class="pre">PageCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.CLOSE"><code class="docutils literal notranslate"><span class="pre">PageCommands.CLOSE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.DISABLE_PAGE"><code class="docutils literal notranslate"><span class="pre">PageCommands.DISABLE_PAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.ENABLE_PAGE"><code class="docutils literal notranslate"><span class="pre">PageCommands.ENABLE_PAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.GO_TO_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">PageCommands.GO_TO_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.HANDLE_DIALOG"><code class="docutils literal notranslate"><span class="pre">PageCommands.HANDLE_DIALOG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.PRINT_TO_PDF_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">PageCommands.PRINT_TO_PDF_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.REFRESH_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">PageCommands.REFRESH_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.SCREENSHOT_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">PageCommands.SCREENSHOT_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.SET_DOWNLOAD_BEHAVIOR"><code class="docutils literal notranslate"><span class="pre">PageCommands.SET_DOWNLOAD_BEHAVIOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.close"><code class="docutils literal notranslate"><span class="pre">PageCommands.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.disable_page"><code class="docutils literal notranslate"><span class="pre">PageCommands.disable_page()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.enable_page"><code class="docutils literal notranslate"><span class="pre">PageCommands.enable_page()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.go_to"><code class="docutils literal notranslate"><span class="pre">PageCommands.go_to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.handle_dialog"><code class="docutils literal notranslate"><span class="pre">PageCommands.handle_dialog()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.print_to_pdf"><code class="docutils literal notranslate"><span class="pre">PageCommands.print_to_pdf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.refresh"><code class="docutils literal notranslate"><span class="pre">PageCommands.refresh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.screenshot"><code class="docutils literal notranslate"><span class="pre">PageCommands.screenshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.PageCommands.set_download_path"><code class="docutils literal notranslate"><span class="pre">PageCommands.set_download_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.RuntimeCommands"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.RuntimeCommands.CALL_FUNCTION_ON_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.CALL_FUNCTION_ON_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.RuntimeCommands.EVALUATE_TEMPLATE"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.EVALUATE_TEMPLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.RuntimeCommands.GET_PROPERTIES"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.GET_PROPERTIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.RuntimeCommands.call_function_on"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.call_function_on()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.RuntimeCommands.evaluate_script"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.evaluate_script()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.RuntimeCommands.get_properties"><code class="docutils literal notranslate"><span class="pre">RuntimeCommands.get_properties()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.commands.StorageCommands"><code class="docutils literal notranslate"><span class="pre">StorageCommands</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.StorageCommands.CLEAR_COOKIES"><code class="docutils literal notranslate"><span class="pre">StorageCommands.CLEAR_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.StorageCommands.GET_COOKIES"><code class="docutils literal notranslate"><span class="pre">StorageCommands.GET_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.StorageCommands.SET_COOKIES"><code class="docutils literal notranslate"><span class="pre">StorageCommands.SET_COOKIES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.StorageCommands.clear_cookies"><code class="docutils literal notranslate"><span class="pre">StorageCommands.clear_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.StorageCommands.get_cookies"><code class="docutils literal notranslate"><span class="pre">StorageCommands.get_cookies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.commands.StorageCommands.set_cookies"><code class="docutils literal notranslate"><span class="pre">StorageCommands.set_cookies()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.connection.html">pydoll.connection package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.events.html">pydoll.events package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.mixins.html">pydoll.mixins package</a></li>
 </ul>
 
         </div>
@@ -59,6 +427,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pydoll.html">pydoll package</a></li>
       <li class="breadcrumb-item active">pydoll.commands package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/pydoll.commands.rst.txt" rel="nofollow"> View page source</a>
@@ -2956,7 +3325,10 @@ the download path.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pydoll.browser.html" class="btn btn-neutral float-left" title="pydoll.browser package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pydoll.connection.html" class="btn btn-neutral float-right" title="pydoll.connection package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

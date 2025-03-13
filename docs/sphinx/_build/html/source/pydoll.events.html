@@ -18,7 +18,9 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pydoll.mixins package" href="pydoll.mixins.html" />
+    <link rel="prev" title="pydoll.connection package" href="pydoll.connection.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,8 +43,185 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Pydoll API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pydoll.html">pydoll package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pydoll.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pydoll.browser.html">pydoll.browser package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.commands.html">pydoll.commands package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.connection.html">pydoll.connection package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pydoll.events package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.events.browser">pydoll.events.browser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.events.dom">pydoll.events.dom module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.events.fetch">pydoll.events.fetch module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.events.network">pydoll.events.network module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.events.page">pydoll.events.page module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.events">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.mixins.html">pydoll.mixins package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.constants">pydoll.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.element">pydoll.element module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.exceptions">pydoll.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.utils">pydoll.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.commands.html">pydoll.commands package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.connection.html">pydoll.connection package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pydoll.events package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.events.browser">pydoll.events.browser module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.browser.BrowserEvents"><code class="docutils literal notranslate"><span class="pre">BrowserEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.browser.BrowserEvents.DOWNLOAD_PROGRESS"><code class="docutils literal notranslate"><span class="pre">BrowserEvents.DOWNLOAD_PROGRESS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.browser.BrowserEvents.DOWNLOAD_WILL_BEGIN"><code class="docutils literal notranslate"><span class="pre">BrowserEvents.DOWNLOAD_WILL_BEGIN</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.events.dom">pydoll.events.dom module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.dom.DomEvents"><code class="docutils literal notranslate"><span class="pre">DomEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.ATTRIBUTE_MODIFIED"><code class="docutils literal notranslate"><span class="pre">DomEvents.ATTRIBUTE_MODIFIED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.ATTRIBUTE_REMOVED"><code class="docutils literal notranslate"><span class="pre">DomEvents.ATTRIBUTE_REMOVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.CHARACTER_DATA_MODIFIED"><code class="docutils literal notranslate"><span class="pre">DomEvents.CHARACTER_DATA_MODIFIED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.CHILD_NODE_COUNT_UPDATED"><code class="docutils literal notranslate"><span class="pre">DomEvents.CHILD_NODE_COUNT_UPDATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.CHILD_NODE_INSERTED"><code class="docutils literal notranslate"><span class="pre">DomEvents.CHILD_NODE_INSERTED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.CHILD_NODE_REMOVED"><code class="docutils literal notranslate"><span class="pre">DomEvents.CHILD_NODE_REMOVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.DOCUMENT_UPDATED"><code class="docutils literal notranslate"><span class="pre">DomEvents.DOCUMENT_UPDATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.SCROLLABLE_FLAG_UPDATED"><code class="docutils literal notranslate"><span class="pre">DomEvents.SCROLLABLE_FLAG_UPDATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.SHADOW_ROOT_POPPED"><code class="docutils literal notranslate"><span class="pre">DomEvents.SHADOW_ROOT_POPPED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.SHADOW_ROOT_PUSHED"><code class="docutils literal notranslate"><span class="pre">DomEvents.SHADOW_ROOT_PUSHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.dom.DomEvents.TOP_LAYER_ELEMENTS_UPDATED"><code class="docutils literal notranslate"><span class="pre">DomEvents.TOP_LAYER_ELEMENTS_UPDATED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.events.fetch">pydoll.events.fetch module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.fetch.FetchEvents"><code class="docutils literal notranslate"><span class="pre">FetchEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.fetch.FetchEvents.AUTH_REQUIRED"><code class="docutils literal notranslate"><span class="pre">FetchEvents.AUTH_REQUIRED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.fetch.FetchEvents.REQUEST_PAUSED"><code class="docutils literal notranslate"><span class="pre">FetchEvents.REQUEST_PAUSED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.events.network">pydoll.events.network module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.network.NetworkEvents"><code class="docutils literal notranslate"><span class="pre">NetworkEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.DATA_RECEIVED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.DATA_RECEIVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.EVENT_SOURCE_MESSAGE_RECEIVED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.EVENT_SOURCE_MESSAGE_RECEIVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.LOADING_FAILED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.LOADING_FAILED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.LOADING_FINISHED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.LOADING_FINISHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.POLICY_UPDATED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.POLICY_UPDATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.REQUEST_INTERCEPTED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.REQUEST_INTERCEPTED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.REQUEST_SERVED_FROM_CACHE"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.REQUEST_SERVED_FROM_CACHE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.REQUEST_WILL_BE_SENT"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.REQUEST_WILL_BE_SENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.RESPONSE_RECEIVED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.RESPONSE_RECEIVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_CLOSED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_CLOSED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_CREATED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_CREATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_ERROR"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_FRAME_ERROR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_RECEIVED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_FRAME_RECEIVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_SENT"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_FRAME_SENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CLOSED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_TRANSPORT_CLOSED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CONNECTION_ESTABLISHED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_TRANSPORT_CONNECTION_ESTABLISHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CREATED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_TRANSPORT_CREATED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.events.page">pydoll.events.page module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.page.PageEvents"><code class="docutils literal notranslate"><span class="pre">PageEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.DOCUMENT_OPENED"><code class="docutils literal notranslate"><span class="pre">PageEvents.DOCUMENT_OPENED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.DOM_CONTENT_LOADED"><code class="docutils literal notranslate"><span class="pre">PageEvents.DOM_CONTENT_LOADED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.DOWNLOAD_PROGRESS"><code class="docutils literal notranslate"><span class="pre">PageEvents.DOWNLOAD_PROGRESS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.DOWNLOAD_WILL_BEGIN"><code class="docutils literal notranslate"><span class="pre">PageEvents.DOWNLOAD_WILL_BEGIN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.FILE_CHOOSER_OPENED"><code class="docutils literal notranslate"><span class="pre">PageEvents.FILE_CHOOSER_OPENED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.FRAME_ATTACHED"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_ATTACHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.FRAME_DETACHED"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_DETACHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.FRAME_NAVIGATED"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_NAVIGATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.FRAME_STARTED_LOADING"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_STARTED_LOADING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.FRAME_STOPPED_LOADING"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_STOPPED_LOADING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.JS_DIALOG_CLOSED"><code class="docutils literal notranslate"><span class="pre">PageEvents.JS_DIALOG_CLOSED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.JS_DIALOG_OPENING"><code class="docutils literal notranslate"><span class="pre">PageEvents.JS_DIALOG_OPENING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.LIFECYCLE_EVENT"><code class="docutils literal notranslate"><span class="pre">PageEvents.LIFECYCLE_EVENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.NAVIGATED_WITHIN_DOCUMENT"><code class="docutils literal notranslate"><span class="pre">PageEvents.NAVIGATED_WITHIN_DOCUMENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.PAGE_LOADED"><code class="docutils literal notranslate"><span class="pre">PageEvents.PAGE_LOADED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.page.PageEvents.WINDOW_OPENED"><code class="docutils literal notranslate"><span class="pre">PageEvents.WINDOW_OPENED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.events">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.BrowserEvents"><code class="docutils literal notranslate"><span class="pre">BrowserEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.BrowserEvents.DOWNLOAD_PROGRESS"><code class="docutils literal notranslate"><span class="pre">BrowserEvents.DOWNLOAD_PROGRESS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.BrowserEvents.DOWNLOAD_WILL_BEGIN"><code class="docutils literal notranslate"><span class="pre">BrowserEvents.DOWNLOAD_WILL_BEGIN</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.DomEvents"><code class="docutils literal notranslate"><span class="pre">DomEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.ATTRIBUTE_MODIFIED"><code class="docutils literal notranslate"><span class="pre">DomEvents.ATTRIBUTE_MODIFIED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.ATTRIBUTE_REMOVED"><code class="docutils literal notranslate"><span class="pre">DomEvents.ATTRIBUTE_REMOVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.CHARACTER_DATA_MODIFIED"><code class="docutils literal notranslate"><span class="pre">DomEvents.CHARACTER_DATA_MODIFIED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.CHILD_NODE_COUNT_UPDATED"><code class="docutils literal notranslate"><span class="pre">DomEvents.CHILD_NODE_COUNT_UPDATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.CHILD_NODE_INSERTED"><code class="docutils literal notranslate"><span class="pre">DomEvents.CHILD_NODE_INSERTED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.CHILD_NODE_REMOVED"><code class="docutils literal notranslate"><span class="pre">DomEvents.CHILD_NODE_REMOVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.DOCUMENT_UPDATED"><code class="docutils literal notranslate"><span class="pre">DomEvents.DOCUMENT_UPDATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.SCROLLABLE_FLAG_UPDATED"><code class="docutils literal notranslate"><span class="pre">DomEvents.SCROLLABLE_FLAG_UPDATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.SHADOW_ROOT_POPPED"><code class="docutils literal notranslate"><span class="pre">DomEvents.SHADOW_ROOT_POPPED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.SHADOW_ROOT_PUSHED"><code class="docutils literal notranslate"><span class="pre">DomEvents.SHADOW_ROOT_PUSHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.DomEvents.TOP_LAYER_ELEMENTS_UPDATED"><code class="docutils literal notranslate"><span class="pre">DomEvents.TOP_LAYER_ELEMENTS_UPDATED</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.FetchEvents"><code class="docutils literal notranslate"><span class="pre">FetchEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.FetchEvents.AUTH_REQUIRED"><code class="docutils literal notranslate"><span class="pre">FetchEvents.AUTH_REQUIRED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.FetchEvents.REQUEST_PAUSED"><code class="docutils literal notranslate"><span class="pre">FetchEvents.REQUEST_PAUSED</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.NetworkEvents"><code class="docutils literal notranslate"><span class="pre">NetworkEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.DATA_RECEIVED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.DATA_RECEIVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.EVENT_SOURCE_MESSAGE_RECEIVED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.EVENT_SOURCE_MESSAGE_RECEIVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.LOADING_FAILED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.LOADING_FAILED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.LOADING_FINISHED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.LOADING_FINISHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.POLICY_UPDATED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.POLICY_UPDATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.REQUEST_INTERCEPTED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.REQUEST_INTERCEPTED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.REQUEST_SERVED_FROM_CACHE"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.REQUEST_SERVED_FROM_CACHE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.REQUEST_WILL_BE_SENT"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.REQUEST_WILL_BE_SENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.RESPONSE_RECEIVED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.RESPONSE_RECEIVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.WEB_SOCKET_CLOSED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_CLOSED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.WEB_SOCKET_CREATED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_CREATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_ERROR"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_FRAME_ERROR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_RECEIVED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_FRAME_RECEIVED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_SENT"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_SOCKET_FRAME_SENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.WEB_TRANSPORT_CLOSED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_TRANSPORT_CLOSED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.WEB_TRANSPORT_CONNECTION_ESTABLISHED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_TRANSPORT_CONNECTION_ESTABLISHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.NetworkEvents.WEB_TRANSPORT_CREATED"><code class="docutils literal notranslate"><span class="pre">NetworkEvents.WEB_TRANSPORT_CREATED</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.events.PageEvents"><code class="docutils literal notranslate"><span class="pre">PageEvents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.DOCUMENT_OPENED"><code class="docutils literal notranslate"><span class="pre">PageEvents.DOCUMENT_OPENED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.DOM_CONTENT_LOADED"><code class="docutils literal notranslate"><span class="pre">PageEvents.DOM_CONTENT_LOADED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.DOWNLOAD_PROGRESS"><code class="docutils literal notranslate"><span class="pre">PageEvents.DOWNLOAD_PROGRESS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.DOWNLOAD_WILL_BEGIN"><code class="docutils literal notranslate"><span class="pre">PageEvents.DOWNLOAD_WILL_BEGIN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.FILE_CHOOSER_OPENED"><code class="docutils literal notranslate"><span class="pre">PageEvents.FILE_CHOOSER_OPENED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.FRAME_ATTACHED"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_ATTACHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.FRAME_DETACHED"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_DETACHED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.FRAME_NAVIGATED"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_NAVIGATED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.FRAME_STARTED_LOADING"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_STARTED_LOADING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.FRAME_STOPPED_LOADING"><code class="docutils literal notranslate"><span class="pre">PageEvents.FRAME_STOPPED_LOADING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.JS_DIALOG_CLOSED"><code class="docutils literal notranslate"><span class="pre">PageEvents.JS_DIALOG_CLOSED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.JS_DIALOG_OPENING"><code class="docutils literal notranslate"><span class="pre">PageEvents.JS_DIALOG_OPENING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.LIFECYCLE_EVENT"><code class="docutils literal notranslate"><span class="pre">PageEvents.LIFECYCLE_EVENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.NAVIGATED_WITHIN_DOCUMENT"><code class="docutils literal notranslate"><span class="pre">PageEvents.NAVIGATED_WITHIN_DOCUMENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.PAGE_LOADED"><code class="docutils literal notranslate"><span class="pre">PageEvents.PAGE_LOADED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.events.PageEvents.WINDOW_OPENED"><code class="docutils literal notranslate"><span class="pre">PageEvents.WINDOW_OPENED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.mixins.html">pydoll.mixins package</a></li>
 </ul>
 
         </div>
@@ -59,6 +238,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pydoll.html">pydoll package</a></li>
       <li class="breadcrumb-item active">pydoll.events package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/pydoll.events.rst.txt" rel="nofollow"> View page source</a>
@@ -1055,7 +1235,10 @@ or new tabs.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pydoll.connection.html" class="btn btn-neutral float-left" title="pydoll.connection package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pydoll.mixins.html" class="btn btn-neutral float-right" title="pydoll.mixins package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

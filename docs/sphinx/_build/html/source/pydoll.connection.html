@@ -18,7 +18,9 @@
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pydoll.events package" href="pydoll.events.html" />
+    <link rel="prev" title="pydoll.commands package" href="pydoll.commands.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,8 +43,69 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">Pydoll API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pydoll.html">pydoll package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pydoll.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pydoll.browser.html">pydoll.browser package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.commands.html">pydoll.commands package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pydoll.connection package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.connection.connection">pydoll.connection.connection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.connection.managers">pydoll.connection.managers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pydoll.connection">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.events.html">pydoll.events package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydoll.mixins.html">pydoll.mixins package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.constants">pydoll.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.element">pydoll.element module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.exceptions">pydoll.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll.utils">pydoll.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydoll.html#module-pydoll">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.commands.html">pydoll.commands package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pydoll.connection package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.connection.connection">pydoll.connection.connection module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler.clear_callbacks"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler.clear_callbacks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler.close"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler.dialog"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler.dialog</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler.execute_command"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler.execute_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler.network_logs"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler.network_logs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler.ping"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler.ping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler.register_callback"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler.register_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.connection.ConnectionHandler.remove_callback"><code class="docutils literal notranslate"><span class="pre">ConnectionHandler.remove_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.connection.managers">pydoll.connection.managers module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.connection.managers.CommandManager"><code class="docutils literal notranslate"><span class="pre">CommandManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.managers.CommandManager.create_command_future"><code class="docutils literal notranslate"><span class="pre">CommandManager.create_command_future()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.managers.CommandManager.remove_pending_command"><code class="docutils literal notranslate"><span class="pre">CommandManager.remove_pending_command()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.managers.CommandManager.resolve_command"><code class="docutils literal notranslate"><span class="pre">CommandManager.resolve_command()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pydoll.connection.managers.EventsHandler"><code class="docutils literal notranslate"><span class="pre">EventsHandler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.managers.EventsHandler.clear_callbacks"><code class="docutils literal notranslate"><span class="pre">EventsHandler.clear_callbacks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.managers.EventsHandler.process_event"><code class="docutils literal notranslate"><span class="pre">EventsHandler.process_event()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.managers.EventsHandler.register_callback"><code class="docutils literal notranslate"><span class="pre">EventsHandler.register_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pydoll.connection.managers.EventsHandler.remove_callback"><code class="docutils literal notranslate"><span class="pre">EventsHandler.remove_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pydoll.connection">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.events.html">pydoll.events package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydoll.mixins.html">pydoll.mixins package</a></li>
 </ul>
 
         </div>
@@ -59,6 +122,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="pydoll.html">pydoll package</a></li>
       <li class="breadcrumb-item active">pydoll.connection package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/pydoll.connection.rst.txt" rel="nofollow"> View page source</a>
@@ -237,7 +301,10 @@ Defaults to 10.</p></li>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pydoll.commands.html" class="btn btn-neutral float-left" title="pydoll.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pydoll.events.html" class="btn btn-neutral float-right" title="pydoll.events package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
