@@ -3,6 +3,31 @@
 \usepackage{listings}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{pgf} % Required for true transparency
+
+
+\definecolor{keywordcolor}{rgb}{0,0,1}
+\definecolor{commentcolor}{rgb}{0.5,0.5,0.5}
+\definecolor{stringcolor}{rgb}{0.6,0,0}
+
+\lstdefinestyle{pythonstyle}{%
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    commentstyle=\color{commentcolor}\itshape,
+    stringstyle=\color{stringcolor},
+    showstringspaces=false,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{commentcolor},
+    breaklines=true,
+    tabsize=4,
+    morekeywords={self}
+}
+
+
+
 
 \title{Pydoll - Python Chrome DevTools Protocol Library}
 \author{Repo: thalissonvs, This doc: kgruiz}
@@ -23,6 +48,28 @@
 \tableofcontents
 
 \newpage
+
+Here is some Python code with custom syntax highlighting:
+
+\begin{lstlisting}[style=pythonstyle, caption=Example Python Code]
+class Fibonacci:
+    """Class to generate Fibonacci sequence"""
+
+    def __init__(self, n: int): # test
+        self.n = n
+
+    def generate(self):
+        """Generate Fibonacci sequence up to self.n"""
+        a, b = 0, 1
+        while a < self.n:
+            print(a, end=' ')
+            a, b = b, a + b
+        print()
+
+fib = Fibonacci(10)
+fib.generate()
+\end{lstlisting}
+
 
 \section{Conceptual Overview}
 
@@ -45,7 +92,7 @@
 \subsection{Installation}
 
 \begin{lstlisting}[language=bash]
-pip install pydoll # Replace with actual package name if available
+pip install pydoll
 \end{lstlisting}
 
 \subsection{Importing the main class}
