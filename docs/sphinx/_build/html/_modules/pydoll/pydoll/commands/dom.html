@@ -1,0 +1,453 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.commands.dom &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.commands.dom</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.pydoll.commands.dom</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">from</span> <span class="nn">pydoll.commands.runtime</span> <span class="kn">import</span> <span class="n">RuntimeCommands</span>
+<span class="kn">from</span> <span class="nn">pydoll.constants</span> <span class="kn">import</span> <span class="n">By</span><span class="p">,</span> <span class="n">Scripts</span>
+
+
+<div class="viewcode-block" id="DomCommands">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands">[docs]</a>
+<span class="k">class</span> <span class="nc">DomCommands</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for interacting with the Document Object Model (DOM) using the</span>
+<span class="sd">    Chrome DevTools Protocol.</span>
+
+<span class="sd">    This class provides methods to interact with DOM nodes through CDP</span>
+<span class="sd">    commands, including enabling the DOM domain, retrieving document</span>
+<span class="sd">    structure, querying elements, and manipulating DOM nodes.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        SelectorType (Literal): Supported selector types for finding elements</span>
+<span class="sd">            in the DOM.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SelectorType</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span>
+        <span class="n">By</span><span class="o">.</span><span class="n">CSS_SELECTOR</span><span class="p">,</span> <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">By</span><span class="o">.</span><span class="n">CLASS_NAME</span><span class="p">,</span> <span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="n">By</span><span class="o">.</span><span class="n">TAG_NAME</span>
+    <span class="p">]</span>
+
+    <span class="n">ENABLE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.enable&#39;</span><span class="p">}</span>
+    <span class="n">DOM_DOCUMENT</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.getDocument&#39;</span><span class="p">}</span>
+    <span class="n">DESCRIBE_NODE_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.describeNode&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">FIND_ELEMENT_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.querySelector&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">FIND_ALL_ELEMENTS_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.querySelectorAll&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">BOX_MODEL_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.getBoxModel&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">RESOLVE_NODE_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.resolveNode&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">REQUEST_NODE_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.requestNode&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">GET_OUTER_HTML</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.getOuterHTML&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">SCROLL_INTO_VIEW_IF_NEEDED</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;DOM.scrollIntoViewIfNeeded&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="DomCommands.scroll_into_view">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.scroll_into_view">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">scroll_into_view</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to scroll a specific DOM node into view.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_id (str): The object ID of the DOM node to scroll into view.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to scroll the node into view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">SCROLL_INTO_VIEW_IF_NEEDED</span><span class="p">)</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_id</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.get_outer_html">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.get_outer_html">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_outer_html</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to get the outer HTML of a DOM node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_id (int): The object ID of the DOM node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to retrieve the outer HTML.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">GET_OUTER_HTML</span><span class="p">)</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_id</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.dom_document">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.dom_document">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">dom_document</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to get the root DOM node of the current page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to retrieve the DOM document.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DOM_DOCUMENT</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.request_node">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.request_node">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">request_node</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to request a specific DOM node by its object ID.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_id (str): The object ID of the DOM node to request.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to request the node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">REQUEST_NODE_TEMPLATE</span><span class="p">)</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_id</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.describe_node">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.describe_node">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">describe_node</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to describe a specific DOM node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_id (str): The object ID of the DOM node to describe.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to describe the node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">DESCRIBE_NODE_TEMPLATE</span><span class="p">)</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_id</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.box_model">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.box_model">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">box_model</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to get the box model of a specific DOM node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_id (str): The object ID of the DOM node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to retrieve the box model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">BOX_MODEL_TEMPLATE</span><span class="p">)</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_id</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.enable_dom_events">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.enable_dom_events">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">enable_dom_events</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to enable the DOM domain in CDP.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to enable the DOM domain.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ENABLE</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.get_current_url">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.get_current_url">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_current_url</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to get the current URL of the page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to retrieve the current URL.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">evaluate_script</span><span class="p">(</span><span class="s1">&#39;window.location.href&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.find_element">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.find_element">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">find_element</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">by</span><span class="p">:</span> <span class="n">SelectorType</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to find a DOM element based on the specified</span>
+<span class="sd">        criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            by (SelectorType): The selector strategy to use</span>
+<span class="sd">                (CSS_SELECTOR, XPATH, etc.).</span>
+<span class="sd">            value (str): The selector value to search for.</span>
+<span class="sd">            object_id (str, optional): The object ID of a node to</span>
+<span class="sd">                search within. If provided, the search is relative to</span>
+<span class="sd">                this node. Defaults to empty string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to find the element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">escaped_value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="k">match</span> <span class="n">by</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">By</span><span class="o">.</span><span class="n">CLASS_NAME</span><span class="p">:</span>
+                <span class="n">selector</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">escaped_value</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">case</span> <span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">:</span>
+                <span class="n">selector</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;#</span><span class="si">{</span><span class="n">escaped_value</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">selector</span> <span class="o">=</span> <span class="n">escaped_value</span>
+        <span class="k">if</span> <span class="n">object_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">by</span> <span class="o">==</span> <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">:</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="n">Scripts</span><span class="o">.</span><span class="n">RELATIVE_QUERY_SELECTOR</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{selector}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">selector</span>
+            <span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">call_function_on</span><span class="p">(</span>
+                <span class="n">object_id</span><span class="p">,</span>
+                <span class="n">script</span><span class="p">,</span>
+                <span class="n">return_by_value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">by</span> <span class="o">==</span> <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_find_element_by_xpath</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">evaluate_script</span><span class="p">(</span>
+                <span class="n">Scripts</span><span class="o">.</span><span class="n">QUERY_SELECTOR</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{selector}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="DomCommands.find_elements">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.dom.DomCommands.find_elements">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">find_elements</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">by</span><span class="p">:</span> <span class="n">SelectorType</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to find multiple DOM elements based on the</span>
+<span class="sd">        specified criteria.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            by (SelectorType): The selector strategy to use</span>
+<span class="sd">                (CSS_SELECTOR, XPATH, etc.).</span>
+<span class="sd">            value (str): The selector value to search for.</span>
+<span class="sd">            object_id (str, optional): The object ID of a node to</span>
+<span class="sd">                search within. If provided, the search is relative to</span>
+<span class="sd">                this node. Defaults to empty string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to find the elements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">escaped_value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="k">match</span> <span class="n">by</span><span class="p">:</span>
+            <span class="k">case</span> <span class="n">By</span><span class="o">.</span><span class="n">CLASS_NAME</span><span class="p">:</span>
+                <span class="n">selector</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">escaped_value</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">case</span> <span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">:</span>
+                <span class="n">selector</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;#</span><span class="si">{</span><span class="n">escaped_value</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+                <span class="n">selector</span> <span class="o">=</span> <span class="n">escaped_value</span>
+        <span class="k">if</span> <span class="n">object_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">by</span> <span class="o">==</span> <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">:</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="n">Scripts</span><span class="o">.</span><span class="n">RELATIVE_QUERY_SELECTOR_ALL</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{selector}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">escaped_value</span>
+            <span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">call_function_on</span><span class="p">(</span>
+                <span class="n">object_id</span><span class="p">,</span>
+                <span class="n">script</span><span class="p">,</span>
+                <span class="n">return_by_value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">by</span> <span class="o">==</span> <span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_find_elements_by_xpath</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">object_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">evaluate_script</span><span class="p">(</span>
+                <span class="n">Scripts</span><span class="o">.</span><span class="n">QUERY_SELECTOR_ALL</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{selector}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">selector</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_find_element_by_xpath</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to find a DOM element by XPath.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xpath (str): The XPath expression to evaluate.</span>
+<span class="sd">            object_id (str): The object ID of a node to search within.</span>
+<span class="sd">                If provided, the search is relative to this node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to find the element using XPath.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">escaped_value</span> <span class="o">=</span> <span class="n">xpath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">object_id</span><span class="p">:</span>
+            <span class="n">escaped_value</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_ensure_relative_xpath</span><span class="p">(</span><span class="n">escaped_value</span><span class="p">)</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="n">Scripts</span><span class="o">.</span><span class="n">FIND_RELATIVE_XPATH_ELEMENT</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{escaped_value}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">escaped_value</span>
+            <span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">call_function_on</span><span class="p">(</span>
+                <span class="n">object_id</span><span class="p">,</span>
+                <span class="n">script</span><span class="p">,</span>
+                <span class="n">return_by_value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="n">Scripts</span><span class="o">.</span><span class="n">FIND_XPATH_ELEMENT</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{escaped_value}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">escaped_value</span>
+            <span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">evaluate_script</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">command</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_find_elements_by_xpath</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to find multiple DOM elements by XPath.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xpath (str): The XPath expression to evaluate.</span>
+<span class="sd">            object_id (str): The object ID of a node to search within.</span>
+<span class="sd">                If provided, the search is relative to this node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to find multiple elements using XPath.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">escaped_value</span> <span class="o">=</span> <span class="n">xpath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">object_id</span><span class="p">:</span>
+            <span class="n">escaped_value</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_ensure_relative_xpath</span><span class="p">(</span><span class="n">escaped_value</span><span class="p">)</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="n">Scripts</span><span class="o">.</span><span class="n">FIND_RELATIVE_XPATH_ELEMENTS</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{escaped_value}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">escaped_value</span>
+            <span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">call_function_on</span><span class="p">(</span>
+                <span class="n">object_id</span><span class="p">,</span>
+                <span class="n">script</span><span class="p">,</span>
+                <span class="n">return_by_value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="n">Scripts</span><span class="o">.</span><span class="n">FIND_XPATH_ELEMENTS</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{escaped_value}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">escaped_value</span>
+            <span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">evaluate_script</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">command</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_ensure_relative_xpath</span><span class="p">(</span><span class="n">xpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensures that the XPath expression is relative.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            xpath (str): The XPath expression to check and possibly modify.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The XPath expression with a prepended dot if necessary</span>
+<span class="sd">                to make it relative.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;.</span><span class="si">{</span><span class="n">xpath</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">xpath</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="n">xpath</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

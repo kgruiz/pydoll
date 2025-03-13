@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.browser.managers &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.browser.managers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.browser.managers</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+
+<span class="kn">from</span> <span class="nn">pydoll.browser.options</span> <span class="kn">import</span> <span class="n">Options</span>
+
+
+<div class="viewcode-block" id="ProxyManager">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.ProxyManager">[docs]</a>
+<span class="k">class</span> <span class="nc">ProxyManager</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
+
+<div class="viewcode-block" id="ProxyManager.get_proxy_credentials">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.ProxyManager.get_proxy_credentials">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_proxy_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Configura as configurações de proxy e extrai credenciais se presentes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[bool, tuple[str, str]]: (private_proxy, (username, password))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">private_proxy</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">proxy_arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_proxy_argument</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">proxy_arg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">index</span><span class="p">,</span> <span class="n">proxy_value</span> <span class="o">=</span> <span class="n">proxy_arg</span>
+            <span class="n">has_credentials</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">clean_proxy</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parse_proxy</span><span class="p">(</span><span class="n">proxy_value</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">has_credentials</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_proxy_argument</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">clean_proxy</span><span class="p">)</span>
+                <span class="n">private_proxy</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">credentials</span> <span class="o">=</span> <span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">private_proxy</span><span class="p">,</span> <span class="n">credentials</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_find_proxy_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Encontra o primeiro argumento --proxy-server válido&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">arguments</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;--proxy-server=&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">index</span><span class="p">,</span> <span class="n">arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_proxy</span><span class="p">(</span><span class="n">proxy_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extrai credenciais e limpa o valor do proxy&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;@&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">proxy_value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">proxy_value</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">creds_part</span><span class="p">,</span> <span class="n">server_part</span> <span class="o">=</span> <span class="n">proxy_value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="n">creds_part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">server_part</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">proxy_value</span>
+
+    <span class="k">def</span> <span class="nf">_update_proxy_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">clean_proxy</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Atualiza a lista de argumentos com proxy limpo&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">arguments</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;--proxy-server=</span><span class="si">{</span><span class="n">clean_proxy</span><span class="si">}</span><span class="s1">&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="BrowserProcessManager">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.BrowserProcessManager">[docs]</a>
+<span class="k">class</span> <span class="nc">BrowserProcessManager</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_creator</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process_creator</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">process_creator</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_process_creator</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="BrowserProcessManager.start_browser_process">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.BrowserProcessManager.start_browser_process">[docs]</a>
+    <span class="k">def</span> <span class="nf">start_browser_process</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">binary_location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arguments</span><span class="p">:</span> <span class="nb">list</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Inicia o processo do navegador&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_creator</span><span class="p">([</span>
+            <span class="n">binary_location</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;--remote-debugging-port=</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="o">*</span><span class="n">arguments</span><span class="p">,</span>
+        <span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_default_process_creator</span><span class="p">(</span><span class="n">command</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span>
+            <span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="BrowserProcessManager.stop_process">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.BrowserProcessManager.stop_process">[docs]</a>
+    <span class="k">def</span> <span class="nf">stop_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Para o processo do navegador se estiver em execução&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="TempDirectoryManager">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.TempDirectoryManager">[docs]</a>
+<span class="k">class</span> <span class="nc">TempDirectoryManager</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp_dir_factory</span><span class="o">=</span><span class="n">TemporaryDirectory</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp_dir_factory</span> <span class="o">=</span> <span class="n">temp_dir_factory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp_dirs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="TempDirectoryManager.create_temp_dir">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.TempDirectoryManager.create_temp_dir">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_temp_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cria um diretório temporário para a instância do navegador.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            TemporaryDirectory: O diretório temporário.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">temp_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_dir_factory</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">temp_dir</span></div>
+
+
+<div class="viewcode-block" id="TempDirectoryManager.cleanup">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.TempDirectoryManager.cleanup">[docs]</a>
+    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Limpa todos os diretórios temporários&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">temp_dir</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_dirs</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">OSError</span><span class="p">):</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BrowserOptionsManager">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.BrowserOptionsManager">[docs]</a>
+<span class="k">class</span> <span class="nc">BrowserOptionsManager</span><span class="p">:</span>
+<div class="viewcode-block" id="BrowserOptionsManager.initialize_options">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.BrowserOptionsManager.initialize_options">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">initialize_options</span><span class="p">(</span><span class="n">options</span><span class="p">:</span> <span class="n">Options</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Options</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa as opções para o navegador.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            options (Options | None): Uma instância da classe Options ou None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Options: A instância de opções inicializada.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Options</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="n">Options</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid options&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">options</span></div>
+
+
+<div class="viewcode-block" id="BrowserOptionsManager.add_default_arguments">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.BrowserOptionsManager.add_default_arguments">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">add_default_arguments</span><span class="p">(</span><span class="n">options</span><span class="p">:</span> <span class="n">Options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adiciona argumentos padrão aos argumentos fornecidos&quot;&quot;&quot;</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--no-first-run&#39;</span><span class="p">)</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--no-default-browser-check&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BrowserOptionsManager.validate_browser_path">
+<a class="viewcode-back" href="../../../source/pydoll.browser.html#pydoll.browser.managers.BrowserOptionsManager.validate_browser_path">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_browser_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Valida o caminho fornecido do navegador.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): O caminho do arquivo executável do navegador.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: O caminho do navegador validado.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Browser not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">path</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

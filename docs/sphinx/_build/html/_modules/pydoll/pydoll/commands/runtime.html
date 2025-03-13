@@ -1,0 +1,205 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.commands.runtime &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.commands.runtime</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.pydoll.commands.runtime</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+
+
+<div class="viewcode-block" id="RuntimeCommands">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.runtime.RuntimeCommands">[docs]</a>
+<span class="k">class</span> <span class="nc">RuntimeCommands</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for interacting with the JavaScript runtime using Chrome</span>
+<span class="sd">    DevTools Protocol.</span>
+
+<span class="sd">    This class provides methods to create commands for evaluating JavaScript</span>
+<span class="sd">    expressions, calling functions on JavaScript objects, and retrieving</span>
+<span class="sd">    object properties through CDP.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        EVALUATE_TEMPLATE (dict): Template for the Runtime.evaluate command.</span>
+<span class="sd">        CALL_FUNCTION_ON_TEMPLATE (dict): Template for the</span>
+<span class="sd">            Runtime.callFunctionOn command.</span>
+<span class="sd">        GET_PROPERTIES (dict): Template for the Runtime.getProperties command.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">EVALUATE_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">CALL_FUNCTION_ON_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Runtime.callFunctionOn&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">GET_PROPERTIES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Runtime.getProperties&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="RuntimeCommands.get_properties">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.runtime.RuntimeCommands.get_properties">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_properties</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to get the properties of a specific</span>
+<span class="sd">        JavaScript object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_id (str): The object ID of the JavaScript object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to retrieve the object&#39;s properties.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">GET_PROPERTIES</span><span class="p">)</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_id</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ownProperties&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="RuntimeCommands.call_function_on">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.runtime.RuntimeCommands.call_function_on">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">call_function_on</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">function_declaration</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">return_by_value</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to call a function on a specific</span>
+<span class="sd">        JavaScript object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_id (str): The object ID of the JavaScript object to call</span>
+<span class="sd">                the function on.</span>
+<span class="sd">            function_declaration (str): The JavaScript function to execute</span>
+<span class="sd">                on the object.</span>
+<span class="sd">            return_by_value (bool, optional): Whether to return the result by</span>
+<span class="sd">                value instead of as a remote object reference. Defaults to</span>
+<span class="sd">                False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to call the function on the specified object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">CALL_FUNCTION_ON_TEMPLATE</span><span class="p">)</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">object_id</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;functionDeclaration&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">function_declaration</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;returnByValue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">return_by_value</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="RuntimeCommands.evaluate_script">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.runtime.RuntimeCommands.evaluate_script">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">evaluate_script</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a command to evaluate JavaScript code in the browser context.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            expression (str): The JavaScript expression to evaluate.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The CDP command to evaluate the JavaScript expression.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">EVALUATE_TEMPLATE</span><span class="p">)</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;expression&#39;</span><span class="p">:</span> <span class="n">expression</span><span class="p">,</span>
+            <span class="s1">&#39;returnByValue&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

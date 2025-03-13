@@ -1,0 +1,436 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.commands.fetch &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.commands.fetch</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.commands.fetch</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="FetchCommands">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands">[docs]</a>
+<span></span><span class="k">class</span> <span class="nc">FetchCommands</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A collection of command templates for handling fetch events in the browser.</span>
+
+<span class="sd">    This class provides a structured way to create and manage commands related</span>
+<span class="sd">    to fetch operations intercepted by the Fetch API. Each command corresponds</span>
+<span class="sd">    to specific actions that can be performed on fetch requests, such as</span>
+<span class="sd">    continuing a fetch request, fulfilling a fetch response, or handling</span>
+<span class="sd">    authentication challenges.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        CONTINUE_REQUEST (dict): Template for continuing an intercepted fetch</span>
+<span class="sd">            request.</span>
+<span class="sd">        CONTINUE_REQUEST_WITH_AUTH (dict): Template for continuing a fetch</span>
+<span class="sd">            request that requires authentication.</span>
+<span class="sd">        DISABLE (dict): Template for disabling fetch interception.</span>
+<span class="sd">        ENABLE (dict): Template for enabling fetch interception.</span>
+<span class="sd">        FAIL_REQUEST (dict): Template for simulating a failure in a fetch</span>
+<span class="sd">            request.</span>
+<span class="sd">        FULFILL_REQUEST (dict): Template for fulfilling a fetch request with</span>
+<span class="sd">            custom responses.</span>
+<span class="sd">        GET_RESPONSE_BODY (dict): Template for retrieving the response body of</span>
+<span class="sd">            a fetch request.</span>
+<span class="sd">        CONTINUE_RESPONSE (dict): Template for continuing a fetch response for</span>
+<span class="sd">            an intercepted request.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CONTINUE_REQUEST</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Fetch.continueRequest&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">CONTINUE_REQUEST_WITH_AUTH</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Fetch.continueWithAuth&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">DISABLE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Fetch.disable&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">ENABLE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Fetch.enable&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">FAIL_REQUEST</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Fetch.failRequest&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">FULFILL_REQUEST</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Fetch.fulfillRequest&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">GET_RESPONSE_BODY</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Fetch.getResponseBody&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">CONTINUE_RESPONSE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Fetch.continueResponse&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+
+<div class="viewcode-block" id="FetchCommands.continue_request">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands.continue_request">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">continue_request</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913, PLR0917</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">post_data</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">headers</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="n">intercept_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to continue a paused fetch request.</span>
+
+<span class="sd">        This command allows the browser to resume a fetch operation that has</span>
+<span class="sd">        been intercepted. You can modify the fetch request URL, method,</span>
+<span class="sd">        headers, and body before continuing.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The ID of the fetch request to continue.</span>
+<span class="sd">            url (str, optional): The new URL for the fetch request. Defaults to</span>
+<span class="sd">                &#39;&#39;.</span>
+<span class="sd">            method (str, optional): The HTTP method to use (e.g., &#39;GET&#39;,</span>
+<span class="sd">                &#39;POST&#39;). Defaults to &#39;&#39;.</span>
+<span class="sd">            postData (str, optional): The body data to send with the fetch</span>
+<span class="sd">                request. Defaults to &#39;&#39;.</span>
+<span class="sd">            headers (dict, optional): A dictionary of HTTP headers to include</span>
+<span class="sd">              in the fetch request. Defaults to {}.</span>
+<span class="sd">            interceptResponse (bool, optional): Indicates if the response</span>
+<span class="sd">              should be intercepted. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command template for continuing the fetch request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">continue_request_template</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CONTINUE_REQUEST</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">continue_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+            <span class="n">continue_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="k">if</span> <span class="n">method</span><span class="p">:</span>
+            <span class="n">continue_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="k">if</span> <span class="n">post_data</span><span class="p">:</span>
+            <span class="n">continue_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;postData&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">post_data</span>
+        <span class="k">if</span> <span class="n">headers</span><span class="p">:</span>
+            <span class="n">continue_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;headers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">headers</span>
+        <span class="k">if</span> <span class="n">intercept_response</span><span class="p">:</span>
+            <span class="n">continue_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;interceptResponse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">intercept_response</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">continue_request_template</span></div>
+
+
+<div class="viewcode-block" id="FetchCommands.continue_request_with_auth">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands.continue_request_with_auth">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">continue_request_with_auth</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">proxy_username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">proxy_password</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to continue a paused fetch request with</span>
+<span class="sd">        authentication.</span>
+
+<span class="sd">        This command is used when the fetch operation requires authentication.</span>
+<span class="sd">        It provides the necessary credentials to continue the request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The ID of the fetch request to continue.</span>
+<span class="sd">            proxy_username (str): The username for proxy authentication.</span>
+<span class="sd">            proxy_password (str): The password for proxy authentication.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command template for continuing the fetch request with</span>
+<span class="sd">                authentication.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">continue_request_with_auth_template</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">CONTINUE_REQUEST_WITH_AUTH</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">continue_request_with_auth_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="n">continue_request_with_auth_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span>
+            <span class="s1">&#39;authChallengeResponse&#39;</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;response&#39;</span><span class="p">:</span> <span class="s1">&#39;ProvideCredentials&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">proxy_username</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="n">proxy_password</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">continue_request_with_auth_template</span></div>
+
+
+<div class="viewcode-block" id="FetchCommands.disable_fetch_events">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands.disable_fetch_events">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">disable_fetch_events</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to disable fetch interception.</span>
+
+<span class="sd">        This command stops the browser from intercepting fetch requests.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command template for disabling fetch interception.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DISABLE</span></div>
+
+
+<div class="viewcode-block" id="FetchCommands.enable_fetch_events">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands.enable_fetch_events">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">enable_fetch_events</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">handle_auth_requests</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">resource_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to enable fetch interception.</span>
+
+<span class="sd">        This command allows the browser to start intercepting fetch requests.</span>
+<span class="sd">        You can specify whether to handle authentication challenges and the</span>
+<span class="sd">        types of resources to intercept.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            handle_auth_requests (bool): Indicates if authentication requests</span>
+<span class="sd">                should be handled.</span>
+<span class="sd">            resource_type (str): The type of resource to intercept (e.g.,</span>
+<span class="sd">                &#39;Document&#39;, &#39;Image&#39;).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command template for enabling fetch interception.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">enable_fetch_events_template</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ENABLE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">enable_fetch_events_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;patterns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s1">&#39;urlPattern&#39;</span><span class="p">:</span> <span class="s1">&#39;*&#39;</span><span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">resource_type</span><span class="p">:</span>
+            <span class="n">enable_fetch_events_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;patterns&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span>
+                <span class="s1">&#39;resourceType&#39;</span>
+            <span class="p">]</span> <span class="o">=</span> <span class="n">resource_type</span>
+
+        <span class="n">enable_fetch_events_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;handleAuthRequests&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">handle_auth_requests</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">enable_fetch_events_template</span></div>
+
+
+<div class="viewcode-block" id="FetchCommands.fail_request">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands.fail_request">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">fail_request</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">error_reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to simulate a failure in a fetch request.</span>
+
+<span class="sd">        This command allows you to simulate a failure for a specific fetch</span>
+<span class="sd">        operation, providing a reason for the failure.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The ID of the fetch request to fail.</span>
+<span class="sd">            errorReason (str): A description of the failure reason.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command template for failing the fetch request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fail_request_template</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FAIL_REQUEST</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">fail_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="n">fail_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;errorReason&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_reason</span>
+        <span class="k">return</span> <span class="n">fail_request_template</span></div>
+
+
+<div class="viewcode-block" id="FetchCommands.fulfill_request">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands.fulfill_request">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">fulfill_request</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913, PLR0917</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">response_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">response_headers</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="n">binary_response_headers</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">body</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">response_phrase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to fulfill a fetch request with a custom response.</span>
+
+<span class="sd">        This command allows you to provide a custom response for a fetch</span>
+<span class="sd">        operation, including the HTTP status code, headers, and body content.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The ID of the fetch request to fulfill.</span>
+<span class="sd">            responseCode (int): The HTTP status code to return.</span>
+<span class="sd">            responseHeaders (dict, optional): A dictionary of response headers.</span>
+<span class="sd">                Defaults to {}.</span>
+<span class="sd">            binaryResponseHeaders (str, optional): Binary response headers.</span>
+<span class="sd">                Defaults to &#39;&#39;.</span>
+<span class="sd">            body (str, optional): The body content of the response. Defaults to</span>
+<span class="sd">                &#39;&#39;.</span>
+<span class="sd">            responsePhrase (str, optional): The response phrase (e.g., &#39;OK&#39;,</span>
+<span class="sd">                &#39;Not Found&#39;). Defaults to &#39;&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command template for fulfilling the fetch request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fulfill_request_template</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FULFILL_REQUEST</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">fulfill_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="k">if</span> <span class="n">response_code</span><span class="p">:</span>
+            <span class="n">fulfill_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;responseCode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response_code</span>
+        <span class="k">if</span> <span class="n">response_headers</span><span class="p">:</span>
+            <span class="n">fulfill_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;responseHeaders&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">response_headers</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">binary_response_headers</span><span class="p">:</span>
+            <span class="n">fulfill_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;binaryResponseHeaders&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">binary_response_headers</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">body</span><span class="p">:</span>
+            <span class="n">fulfill_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;body&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">body</span>
+        <span class="k">if</span> <span class="n">response_phrase</span><span class="p">:</span>
+            <span class="n">fulfill_request_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;responsePhrase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">response_phrase</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">fulfill_request_template</span></div>
+
+
+<div class="viewcode-block" id="FetchCommands.get_response_body">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands.get_response_body">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_response_body</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to retrieve the response body of a fetch request.</span>
+
+<span class="sd">        This command allows you to access the body of a completed fetch</span>
+<span class="sd">        operation, which can be useful for analyzing the response data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The ID of the fetch request to retrieve the body</span>
+<span class="sd">                from.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command template for getting the response body.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_response_body_template</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">GET_RESPONSE_BODY</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">get_response_body_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="k">return</span> <span class="n">get_response_body_template</span></div>
+
+
+<div class="viewcode-block" id="FetchCommands.continue_response">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.fetch.FetchCommands.continue_response">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">continue_response</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">response_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">response_headers</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="n">binary_response_headers</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">response_phrase</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to continue a fetch response for an intercepted</span>
+<span class="sd">        request.</span>
+
+<span class="sd">        This command allows the browser to continue the response flow for a</span>
+<span class="sd">        specific fetch request, including customizing the HTTP status code,</span>
+<span class="sd">        headers, and response phrase.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            requestId (str): The ID of the fetch request to continue the</span>
+<span class="sd">                response for.</span>
+<span class="sd">            responseCode (int, optional): The HTTP status code to send.</span>
+<span class="sd">                Defaults to &#39;&#39;.</span>
+<span class="sd">            responseHeaders (dict, optional): A dictionary of response headers.</span>
+<span class="sd">                Defaults to {}.</span>
+<span class="sd">            binaryResponseHeaders (str, optional): Binary response headers.</span>
+<span class="sd">                Defaults to &#39;&#39;.</span>
+<span class="sd">            responsePhrase (str, optional): The response phrase (e.g., &#39;OK&#39;).</span>
+<span class="sd">                Defaults to &#39;&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command template for continuing the fetch response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">continue_response_template</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CONTINUE_RESPONSE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">continue_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="k">if</span> <span class="n">response_code</span><span class="p">:</span>
+            <span class="n">continue_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;responseCode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">response_code</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">response_headers</span><span class="p">:</span>
+            <span class="n">continue_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;responseHeaders&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">response_headers</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">binary_response_headers</span><span class="p">:</span>
+            <span class="n">continue_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;binaryResponseHeaders&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">binary_response_headers</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">response_phrase</span><span class="p">:</span>
+            <span class="n">continue_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;responsePhrase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">response_phrase</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">continue_response_template</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

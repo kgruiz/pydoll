@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.connection.connection &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.connection.connection</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.pydoll.connection.connection</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="kn">import</span> <span class="nn">websockets</span>
+
+<span class="kn">from</span> <span class="nn">pydoll</span> <span class="kn">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">pydoll.connection.managers</span> <span class="kn">import</span> <span class="n">CommandManager</span><span class="p">,</span> <span class="n">EventsHandler</span>
+<span class="kn">from</span> <span class="nn">pydoll.utils</span> <span class="kn">import</span> <span class="n">get_browser_ws_address</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ConnectionHandler">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.connection.html#pydoll.pydoll.connection.connection.ConnectionHandler">[docs]</a>
+<span class="k">class</span> <span class="nc">ConnectionHandler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to handle WebSocket connections for browser automation.</span>
+
+<span class="sd">    This class manages the connection to the browser and the associated page,</span>
+<span class="sd">    providing methods to execute commands and register event callbacks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">connection_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">page_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;browser&#39;</span><span class="p">,</span>
+        <span class="n">ws_address_resolver</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_browser_ws_address</span><span class="p">,</span>
+        <span class="n">ws_connector</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">websockets</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the ConnectionHandler instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            connection_port (int): The port to connect to the browser.</span>
+<span class="sd">            page_id (str): The ID of the page to connect to. Use &#39;browser&#39;</span>
+<span class="sd">                for browser-level connections. Defaults to &#39;browser&#39;.</span>
+<span class="sd">            ws_address_resolver (Callable): Function to resolve WebSocket</span>
+<span class="sd">                address from port. Defaults to get_browser_ws_address.</span>
+<span class="sd">            ws_connector (Callable): Function to establish WebSocket</span>
+<span class="sd">                connections. Defaults to websockets.connect.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connection_port</span> <span class="o">=</span> <span class="n">connection_port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_page_id</span> <span class="o">=</span> <span class="n">page_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ws_address_resolver</span> <span class="o">=</span> <span class="n">ws_address_resolver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connector</span> <span class="o">=</span> <span class="n">ws_connector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_command_manager</span> <span class="o">=</span> <span class="n">CommandManager</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_events_handler</span> <span class="o">=</span> <span class="n">EventsHandler</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;ConnectionHandler initialized.&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">network_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets all network logs captured by the connection.</span>
+
+<span class="sd">        This property provides access to network request and response logs</span>
+<span class="sd">        that have been captured during the browser session.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of network log entries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_events_handler</span><span class="o">.</span><span class="n">network_logs</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets information about the current dialog in the page, if any.</span>
+
+<span class="sd">        This property provides access to any active dialog (alert, confirm,</span>
+<span class="sd">        prompt) that might be present in the page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict or None: Dialog information if a dialog is present,</span>
+<span class="sd">                None otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_events_handler</span><span class="o">.</span><span class="n">dialog</span>
+
+<div class="viewcode-block" id="ConnectionHandler.ping">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.connection.html#pydoll.pydoll.connection.connection.ConnectionHandler.ping">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">ping</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sends a ping message to the browser.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the ping was successful, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_active_connection</span><span class="p">()</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="ConnectionHandler.execute_command">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.connection.html#pydoll.pydoll.connection.connection.ConnectionHandler.execute_command">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">execute_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sends a command to the browser and awaits its response.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            command (dict): The command to send, structured as a dictionary.</span>
+<span class="sd">            timeout (int, optional): Time in seconds to wait for a response.</span>
+<span class="sd">                Defaults to 10.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The response from the browser.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            InvalidCommand: If the command is not a dictionary.</span>
+<span class="sd">            TimeoutError: If the command execution exceeds the timeout.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Command must be a dictionary.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCommand</span><span class="p">(</span><span class="s1">&#39;Command must be a dictionary&#39;</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_active_connection</span><span class="p">()</span>
+        <span class="n">future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command_manager</span><span class="o">.</span><span class="n">create_command_future</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="n">command_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">command_str</span><span class="p">)</span>
+            <span class="n">response</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">future</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_command_manager</span><span class="o">.</span><span class="n">remove_pending_command</span><span class="p">(</span><span class="n">command</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">exc</span>
+        <span class="k">except</span> <span class="n">websockets</span><span class="o">.</span><span class="n">ConnectionClosed</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_connection_loss</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">exc</span></div>
+
+
+<div class="viewcode-block" id="ConnectionHandler.register_callback">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.connection.html#pydoll.pydoll.connection.connection.ConnectionHandler.register_callback">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">register_callback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">temporary</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registers a callback function for a specific event.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_name (str): The name of the event to listen for.</span>
+<span class="sd">            callback (Callable): The function to call when the event occurs.</span>
+<span class="sd">            temporary (bool): If True, the callback will be removed after it&#39;s</span>
+<span class="sd">                triggered once. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The ID of the registered callback, which can be used to</span>
+<span class="sd">                remove the listener later.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_events_handler</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
+            <span class="n">event_name</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">temporary</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConnectionHandler.remove_callback">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.connection.html#pydoll.pydoll.connection.connection.ConnectionHandler.remove_callback">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">remove_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a registered event callback by its ID.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            callback_id (int): The ID of the callback to remove.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the callback was successfully removed,</span>
+<span class="sd">                False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_events_handler</span><span class="o">.</span><span class="n">remove_callback</span><span class="p">(</span><span class="n">callback_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConnectionHandler.clear_callbacks">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.connection.html#pydoll.pydoll.connection.connection.ConnectionHandler.clear_callbacks">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">clear_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes all registered event callbacks.</span>
+
+<span class="sd">        This method clears all event listeners that have been registered with</span>
+<span class="sd">        the register_callback method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_events_handler</span><span class="o">.</span><span class="n">clear_callbacks</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ConnectionHandler.close">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.connection.html#pydoll.pydoll.connection.connection.ConnectionHandler.close">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes the WebSocket connection.</span>
+
+<span class="sd">        Closes the WebSocket connection and clears all event callbacks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">clear_callbacks</span><span class="p">()</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;WebSocket connection closed.&#39;</span><span class="p">)</span></div>
+
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_ensure_active_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Guarantees that an active connection exists before proceeding.</span>
+
+<span class="sd">        This method checks if the WebSocket connection is established</span>
+<span class="sd">        and active. If not, it establishes a new connection.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_establish_new_connection</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_establish_new_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a fresh WebSocket connection and starts listening for events.</span>
+
+<span class="sd">        This method resolves the appropriate WebSocket address, establishes</span>
+<span class="sd">        a new connection, and initiates an asynchronous task to receive events.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ws_address</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_ws_address</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Connecting to </span><span class="si">{</span><span class="n">ws_address</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connector</span><span class="p">(</span><span class="n">ws_address</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_receive_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_receive_events</span><span class="p">())</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;WebSocket connection established&#39;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_resolve_ws_address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the correct WebSocket address based on the page ID.</span>
+
+<span class="sd">        This method resolves the WebSocket URL differently depending on whether</span>
+<span class="sd">        the connection is to the browser itself or a specific page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The WebSocket URL to connect to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;browser&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_page_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_address_resolver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection_port</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;ws://localhost:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection_port</span><span class="si">}</span><span class="s1">/devtools/page/&#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_page_id</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_handle_connection_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Cleans up resources after a WebSocket connection loss.</span>
+
+<span class="sd">        This method closes the connection if it&#39;s still open, nullifies the</span>
+<span class="sd">        connection reference, and cancels any ongoing receive tasks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_receive_task</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_receive_task</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_receive_task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Connection resources cleaned up&#39;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_receive_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Main loop for receiving and processing incoming WebSocket messages.</span>
+<span class="sd">        Delegates processing to specialized handlers based on message type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">raw_message</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_incoming_messages</span><span class="p">():</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_single_message</span><span class="p">(</span><span class="n">raw_message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">websockets</span><span class="o">.</span><span class="n">ConnectionClosed</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Connection closed gracefully: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unexpected error in event loop: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_incoming_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generator that yields raw messages from the WebSocket connection.</span>
+
+<span class="sd">        This asynchronous generator continuously receives messages from the</span>
+<span class="sd">        WebSocket connection as long as it remains open.</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            str: The raw message string received from the WebSocket.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ws_connection</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_process_single_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Orchestrates the processing of a single raw WebSocket message.</span>
+
+<span class="sd">        This method parses the raw message string into a JSON object and</span>
+<span class="sd">        routes it to the appropriate handler based on whether it&#39;s a command</span>
+<span class="sd">        response or an event notification.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_message (str): The raw message string to process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_message</span><span class="p">(</span><span class="n">raw_message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_command_response</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_command_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_handle_event_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_parse_message</span><span class="p">(</span><span class="n">raw_message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attempts to parse raw message string into JSON.</span>
+<span class="sd">        Returns parsed dict or None if parsing fails.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            raw_message (str): The raw message string to parse.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict | None: The parsed JSON object if successful, None otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Failed to parse message: </span><span class="si">{</span><span class="n">raw_message</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_is_command_response</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines if a message is a response to a previously sent command.</span>
+
+<span class="sd">        Command responses are identified by having an integer &#39;id&#39; field,</span>
+<span class="sd">        which corresponds to the ID of the original command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (dict): The message to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the message is a command response, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;id&#39;</span> <span class="ow">in</span> <span class="n">message</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_handle_command_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processes messages that are responses to previously sent commands.</span>
+
+<span class="sd">        This method resolves the future associated with the command ID,</span>
+<span class="sd">        allowing the calling code to continue execution with the response.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (dict): The command response message to process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processing command response: </span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_command_manager</span><span class="o">.</span><span class="n">resolve_command</span><span class="p">(</span>
+            <span class="n">message</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_handle_event_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processes messages that are spontaneous event notifications.</span>
+
+<span class="sd">        This method delegates event processing to the events handler,</span>
+<span class="sd">        which will invoke any registered callbacks for the event type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            message (dict): The event message to process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">event_type</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="s1">&#39;unknown-event&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processing </span><span class="si">{</span><span class="n">event_type</span><span class="si">}</span><span class="s1"> event&#39;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_events_handler</span><span class="o">.</span><span class="n">process_event</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a string representation of the ConnectionHandler for debugging.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of the ConnectionHandler.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ConnectionHandler(port=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection_port</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a user-friendly string representation of the ConnectionHandler.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of the ConnectionHandler.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ConnectionHandler(port=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_connection_port</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="fm">__aenter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Async context manager entry point.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ConnectionHandler: The ConnectionHandler instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="fm">__aexit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Async context manager exit point.</span>
+
+<span class="sd">        This method ensures the connection is properly closed when</span>
+<span class="sd">        exiting the context manager.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            exc_type: The exception type, if raised.</span>
+<span class="sd">            exc_val: The exception value, if raised.</span>
+<span class="sd">            exc_tb: The traceback, if an exception was raised.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

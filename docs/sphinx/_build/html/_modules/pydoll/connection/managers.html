@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.connection.managers &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.connection.managers</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.connection.managers</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span> <span class="nn">pydoll</span> <span class="kn">import</span> <span class="n">exceptions</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CommandManager">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.CommandManager">[docs]</a>
+<span class="k">class</span> <span class="nc">CommandManager</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pending_commands</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="CommandManager.create_command_future">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.CommandManager.create_command_future">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_command_future</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span>
+        <span class="n">future</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pending_commands</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">future</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">future</span></div>
+
+
+<div class="viewcode-block" id="CommandManager.resolve_command">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.CommandManager.resolve_command">[docs]</a>
+    <span class="k">def</span> <span class="nf">resolve_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">response_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_commands</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pending_commands</span><span class="p">[</span><span class="n">response_id</span><span class="p">]</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_commands</span><span class="p">[</span><span class="n">response_id</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="CommandManager.remove_pending_command">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.CommandManager.remove_pending_command">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_pending_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove um comando pendente sem resolvê-lo (útil para timeouts).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            command_id: ID do comando a ser removido</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">command_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_commands</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_commands</span><span class="p">[</span><span class="n">command_id</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EventsHandler">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.EventsHandler">[docs]</a>
+<span class="k">class</span> <span class="nc">EventsHandler</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gerencia registro de callbacks, processamento de eventos e logs de rede.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_event_callbacks</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_id</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network_logs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;EventsHandler initialized&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EventsHandler.register_callback">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.EventsHandler.register_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">register_callback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">temporary</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registra um callback para um tipo específico de evento.</span>
+
+<span class="sd">        Retorna:</span>
+<span class="sd">            int: ID do callback registrado</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Callback must be a callable function.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidCallback</span><span class="p">(</span><span class="s1">&#39;Callback must be callable&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_id</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_event_callbacks</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_callback_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;event&#39;</span><span class="p">:</span> <span class="n">event_name</span><span class="p">,</span>
+            <span class="s1">&#39;callback&#39;</span><span class="p">:</span> <span class="n">callback</span><span class="p">,</span>
+            <span class="s1">&#39;temporary&#39;</span><span class="p">:</span> <span class="n">temporary</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Registered callback &#39;</span><span class="si">{</span><span class="n">event_name</span><span class="si">}</span><span class="s2">&#39; with ID </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_callback_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback_id</span></div>
+
+
+<div class="viewcode-block" id="EventsHandler.remove_callback">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.EventsHandler.remove_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove um callback pelo ID.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">callback_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_callbacks</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Callback ID </span><span class="si">{</span><span class="n">callback_id</span><span class="si">}</span><span class="s1"> not found&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_event_callbacks</span><span class="p">[</span><span class="n">callback_id</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Removed callback ID </span><span class="si">{</span><span class="n">callback_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="EventsHandler.clear_callbacks">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.EventsHandler.clear_callbacks">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reseta todos os callbacks registrados.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_event_callbacks</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;All callbacks cleared&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EventsHandler.process_event">
+<a class="viewcode-back" href="../../../source/pydoll.connection.html#pydoll.connection.managers.EventsHandler.process_event">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">process_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Processa um evento recebido e dispara os callbacks correspondentes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_data: Dados do evento no formato dicionário</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">event_name</span> <span class="o">=</span> <span class="n">event_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;method&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processing event: </span><span class="si">{</span><span class="n">event_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Atualiza logs de rede se necessário</span>
+        <span class="k">if</span> <span class="s1">&#39;Network.requestWillBeSent&#39;</span> <span class="ow">in</span> <span class="n">event_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_network_logs</span><span class="p">(</span><span class="n">event_data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;Page.javascriptDialogOpening&#39;</span> <span class="ow">in</span> <span class="n">event_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="n">event_data</span>
+
+        <span class="k">if</span> <span class="s1">&#39;Page.javascriptDialogClosed&#39;</span> <span class="ow">in</span> <span class="n">event_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Processa callbacks</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trigger_callbacks</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">event_data</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_update_network_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mantém os logs de rede atualizados.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network_logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network_logs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_logs</span><span class="p">[</span><span class="o">-</span><span class="mi">10000</span><span class="p">:]</span>  <span class="c1"># Mantém tamanho máximo</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_trigger_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">event_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dispara todos os callbacks registrados para o evento.&quot;&quot;&quot;</span>
+        <span class="n">callbacks_to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">cb_id</span><span class="p">,</span> <span class="n">cb_data</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_event_callbacks</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">cb_data</span><span class="p">[</span><span class="s1">&#39;event&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">event_name</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">cb_data</span><span class="p">[</span><span class="s1">&#39;callback&#39;</span><span class="p">]):</span>
+                        <span class="k">await</span> <span class="n">cb_data</span><span class="p">[</span><span class="s1">&#39;callback&#39;</span><span class="p">](</span><span class="n">event_data</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">cb_data</span><span class="p">[</span><span class="s1">&#39;callback&#39;</span><span class="p">](</span><span class="n">event_data</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error in callback </span><span class="si">{</span><span class="n">cb_id</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">cb_data</span><span class="p">[</span><span class="s1">&#39;temporary&#39;</span><span class="p">]:</span>
+                    <span class="n">callbacks_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cb_id</span><span class="p">)</span>
+
+        <span class="c1"># Remove callbacks temporários após processamento</span>
+        <span class="k">for</span> <span class="n">cb_id</span> <span class="ow">in</span> <span class="n">callbacks_to_remove</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_callback</span><span class="p">(</span><span class="n">cb_id</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.mixins package &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.mixins package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/pydoll.pydoll.mixins.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pydoll-pydoll-mixins-package">
+<h1>pydoll.pydoll.mixins package<a class="headerlink" href="#pydoll-pydoll-mixins-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-pydoll.pydoll.mixins.find_elements">
+<span id="pydoll-pydoll-mixins-find-elements-module"></span><h2>pydoll.pydoll.mixins.find_elements module<a class="headerlink" href="#module-pydoll.pydoll.mixins.find_elements" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.pydoll.mixins.find_elements.FindElementsMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.pydoll.mixins.find_elements.</span></span><span class="sig-name descname"><span class="pre">FindElementsMixin</span></span><a class="reference internal" href="../_modules/pydoll/pydoll/mixins/find_elements.html#FindElementsMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.mixins.find_elements.FindElementsMixin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A mixin class that provides element finding and waiting capabilities.</p>
+<p>This mixin provides methods for finding elements in the DOM using various
+selector strategies, waiting for elements to appear, and interacting with
+elements. Classes that include this mixin will gain the ability to locate
+elements in web pages.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.mixins.find_elements.FindElementsMixin.find_element">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="pre">By.CSS_SELECTOR</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.XPATH</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.CLASS_NAME</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.ID</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.TAG_NAME</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/mixins/find_elements.html#FindElementsMixin.find_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.mixins.find_elements.FindElementsMixin.find_element" title="Link to this definition"></a></dt>
+<dd><p>Finds an element on the current page using the specified selector.</p>
+<p>This method locates the first element matching the given selector and
+returns a WebElement instance representing that element. If no element
+is found, it either raises an exception or returns None, depending on
+the raise_exc parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>by</strong> (<em>SelectorType</em>) – The type of selector to use
+(e.g., ‘css’, ‘xpath’).</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – The value of the selector to locate the element.</p></li>
+<li><p><strong>raise_exc</strong> (<em>bool</em>) – Whether to raise an exception if the element
+is not found. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The found element as a WebElement instance, or</dt><dd><p>None if no element is found and raise_exc is False.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pydoll.html#pydoll.element.WebElement" title="pydoll.element.WebElement">WebElement</a> or None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pydoll.html#pydoll.exceptions.ElementNotFound" title="pydoll.exceptions.ElementNotFound"><strong>ElementNotFound</strong></a> – If the element is not found and raise_exc is True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.mixins.find_elements.FindElementsMixin.find_elements">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="pre">By.CSS_SELECTOR</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.XPATH</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.CLASS_NAME</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.ID</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.TAG_NAME</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/mixins/find_elements.html#FindElementsMixin.find_elements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.mixins.find_elements.FindElementsMixin.find_elements" title="Link to this definition"></a></dt>
+<dd><p>Finds all elements on the current page using the specified selector.</p>
+<p>This method locates all elements matching the given selector and
+returns a list of WebElement instances. If no elements are found,
+it either raises an exception or returns an empty list, depending on
+the raise_exc parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>by</strong> (<em>SelectorType</em>) – The type of selector to use
+(e.g., ‘css’, ‘xpath’).</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – The value of the selector to locate the elements.</p></li>
+<li><p><strong>raise_exc</strong> (<em>bool</em>) – Whether to raise an exception if no elements are
+found. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A list of WebElement instances representing the</dt><dd><p>found elements. Returns an empty list if no elements are found
+and raise_exc is False.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[<a class="reference internal" href="pydoll.html#pydoll.element.WebElement" title="pydoll.element.WebElement">WebElement</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pydoll.html#pydoll.exceptions.ElementNotFound" title="pydoll.exceptions.ElementNotFound"><strong>ElementNotFound</strong></a> – If no elements are found and raise_exc is True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.mixins.find_elements.FindElementsMixin.wait_element">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="pre">By.CSS_SELECTOR</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.XPATH</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.CLASS_NAME</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.ID</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">By.TAG_NAME</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/mixins/find_elements.html#FindElementsMixin.wait_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.mixins.find_elements.FindElementsMixin.wait_element" title="Link to this definition"></a></dt>
+<dd><p>Waits for an element to be present in the DOM.</p>
+<p>This method repeatedly attempts to find an element until it is found or
+the timeout is reached. It is useful for handling dynamic content that
+may not be immediately available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>by</strong> (<em>SelectorType</em>) – The type of selector to use
+(e.g., ‘css’, ‘xpath’).</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – The value of the selector to locate the element.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – Maximum time in seconds to wait for the element.
+Defaults to 10 seconds.</p></li>
+<li><p><strong>raise_exc</strong> (<em>bool</em>) – Whether to raise an exception if the element
+is not found within the timeout. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The element found in the DOM, or None if</dt><dd><p>not found and raise_exc is False.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pydoll.html#pydoll.element.WebElement" title="pydoll.element.WebElement">WebElement</a> or None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TimeoutError</strong> – If the element is not found within the timeout and
+    raise_exc is True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pydoll.pydoll.mixins.find_elements.create_web_element">
+<span class="sig-prename descclassname"><span class="pre">pydoll.pydoll.mixins.find_elements.</span></span><span class="sig-name descname"><span class="pre">create_web_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/mixins/find_elements.html#create_web_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.mixins.find_elements.create_web_element" title="Link to this definition"></a></dt>
+<dd><p>Creates a WebElement instance while avoiding circular imports.</p>
+<p>This function is used as a factory to create WebElement instances
+by dynamically importing the WebElement class. This approach
+prevents circular import issues that would occur with direct imports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments to pass to the WebElement constructor.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments to pass to the WebElement constructor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new WebElement instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pydoll.html#pydoll.element.WebElement" title="pydoll.element.WebElement">WebElement</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pydoll.pydoll.mixins">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pydoll.pydoll.mixins" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

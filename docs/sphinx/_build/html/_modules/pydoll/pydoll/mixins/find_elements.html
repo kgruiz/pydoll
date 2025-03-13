@@ -1,0 +1,357 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.mixins.find_elements &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.mixins.find_elements</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.pydoll.mixins.find_elements</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="kn">from</span> <span class="nn">pydoll</span> <span class="kn">import</span> <span class="n">exceptions</span>
+<span class="kn">from</span> <span class="nn">pydoll.commands.dom</span> <span class="kn">import</span> <span class="n">DomCommands</span>
+<span class="kn">from</span> <span class="nn">pydoll.commands.runtime</span> <span class="kn">import</span> <span class="n">RuntimeCommands</span>
+
+
+<div class="viewcode-block" id="create_web_element">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.mixins.html#pydoll.pydoll.mixins.find_elements.create_web_element">[docs]</a>
+<span class="k">def</span> <span class="nf">create_web_element</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a WebElement instance while avoiding circular imports.</span>
+
+<span class="sd">    This function is used as a factory to create WebElement instances</span>
+<span class="sd">    by dynamically importing the WebElement class. This approach</span>
+<span class="sd">    prevents circular import issues that would occur with direct imports.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *args: Positional arguments to pass to the WebElement constructor.</span>
+<span class="sd">        **kwargs: Keyword arguments to pass to the WebElement constructor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        WebElement: A new WebElement instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">pydoll.element</span> <span class="kn">import</span> <span class="n">WebElement</span>  <span class="c1"># noqa: PLC0415</span>
+
+    <span class="k">return</span> <span class="n">WebElement</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="FindElementsMixin">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.mixins.html#pydoll.pydoll.mixins.find_elements.FindElementsMixin">[docs]</a>
+<span class="k">class</span> <span class="nc">FindElementsMixin</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mixin class that provides element finding and waiting capabilities.</span>
+
+<span class="sd">    This mixin provides methods for finding elements in the DOM using various</span>
+<span class="sd">    selector strategies, waiting for elements to appear, and interacting with</span>
+<span class="sd">    elements. Classes that include this mixin will gain the ability to locate</span>
+<span class="sd">    elements in web pages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="FindElementsMixin.wait_element">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.mixins.html#pydoll.pydoll.mixins.find_elements.FindElementsMixin.wait_element">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">wait_element</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">by</span><span class="p">:</span> <span class="n">DomCommands</span><span class="o">.</span><span class="n">SelectorType</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">raise_exc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Waits for an element to be present in the DOM.</span>
+
+<span class="sd">        This method repeatedly attempts to find an element until it is found or</span>
+<span class="sd">        the timeout is reached. It is useful for handling dynamic content that</span>
+<span class="sd">        may not be immediately available.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            by (SelectorType): The type of selector to use</span>
+<span class="sd">                (e.g., &#39;css&#39;, &#39;xpath&#39;).</span>
+<span class="sd">            value (str): The value of the selector to locate the element.</span>
+<span class="sd">            timeout (int): Maximum time in seconds to wait for the element.</span>
+<span class="sd">                Defaults to 10 seconds.</span>
+<span class="sd">            raise_exc (bool): Whether to raise an exception if the element</span>
+<span class="sd">                is not found within the timeout. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            WebElement or None: The element found in the DOM, or None if</span>
+<span class="sd">                not found and raise_exc is False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TimeoutError: If the element is not found within the timeout and</span>
+<span class="sd">                raise_exc is True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">element</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">by</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">raise_exc</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">element</span>
+            <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ElementNotFound</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">raise_exc</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s1">&#39;Element not found&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FindElementsMixin.find_element">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.mixins.html#pydoll.pydoll.mixins.find_elements.FindElementsMixin.find_element">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_element</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="n">DomCommands</span><span class="o">.</span><span class="n">SelectorType</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raise_exc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds an element on the current page using the specified selector.</span>
+
+<span class="sd">        This method locates the first element matching the given selector and</span>
+<span class="sd">        returns a WebElement instance representing that element. If no element</span>
+<span class="sd">        is found, it either raises an exception or returns None, depending on</span>
+<span class="sd">        the raise_exc parameter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            by (SelectorType): The type of selector to use</span>
+<span class="sd">                (e.g., &#39;css&#39;, &#39;xpath&#39;).</span>
+<span class="sd">            value (str): The value of the selector to locate the element.</span>
+<span class="sd">            raise_exc (bool): Whether to raise an exception if the element</span>
+<span class="sd">                is not found. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            WebElement or None: The found element as a WebElement instance, or</span>
+<span class="sd">                None if no element is found and raise_exc is False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ElementNotFound: If the element is not found and raise_exc is True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_object_id&#39;</span><span class="p">):</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">DomCommands</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">by</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">DomCommands</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">by</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;objectId&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">raise_exc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ElementNotFound</span><span class="p">(</span><span class="s1">&#39;Element not found&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">object_id</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span>
+        <span class="n">node_description</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_describe_node</span><span class="p">(</span><span class="n">object_id</span><span class="o">=</span><span class="n">object_id</span><span class="p">)</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="n">node_description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;attributes&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="n">tag_name</span> <span class="o">=</span> <span class="n">node_description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nodeName&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">attributes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;tag_name&#39;</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">create_web_element</span><span class="p">(</span>
+            <span class="n">object_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_handler</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attributes</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FindElementsMixin.find_elements">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.mixins.html#pydoll.pydoll.mixins.find_elements.FindElementsMixin.find_elements">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_elements</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="n">DomCommands</span><span class="o">.</span><span class="n">SelectorType</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">raise_exc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finds all elements on the current page using the specified selector.</span>
+
+<span class="sd">        This method locates all elements matching the given selector and</span>
+<span class="sd">        returns a list of WebElement instances. If no elements are found,</span>
+<span class="sd">        it either raises an exception or returns an empty list, depending on</span>
+<span class="sd">        the raise_exc parameter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            by (SelectorType): The type of selector to use</span>
+<span class="sd">                (e.g., &#39;css&#39;, &#39;xpath&#39;).</span>
+<span class="sd">            value (str): The value of the selector to locate the elements.</span>
+<span class="sd">            raise_exc (bool): Whether to raise an exception if no elements are</span>
+<span class="sd">                found. Defaults to True.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[WebElement]: A list of WebElement instances representing the</span>
+<span class="sd">                found elements. Returns an empty list if no elements are found</span>
+<span class="sd">                and raise_exc is False.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ElementNotFound: If no elements are found and raise_exc is True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_object_id&#39;</span><span class="p">):</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">DomCommands</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">by</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">DomCommands</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">by</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;objectId&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">raise_exc</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">ElementNotFound</span><span class="p">(</span><span class="s1">&#39;Element not found&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">object_id</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span>
+        <span class="n">query_response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span>
+            <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">get_properties</span><span class="p">(</span><span class="n">object_id</span><span class="o">=</span><span class="n">object_id</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">query_response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">]:</span>
+            <span class="n">query_value</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="k">if</span> <span class="n">query_value</span> <span class="ow">and</span> <span class="n">query_value</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;object&#39;</span><span class="p">:</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">query_value</span><span class="p">[</span><span class="s1">&#39;objectId&#39;</span><span class="p">])</span>
+
+        <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">object_id</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">node_description</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_describe_node</span><span class="p">(</span>
+                    <span class="n">object_id</span><span class="o">=</span><span class="n">object_id</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">attributes</span> <span class="o">=</span> <span class="n">node_description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;attributes&#39;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="n">tag_name</span> <span class="o">=</span> <span class="n">node_description</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nodeName&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">attributes</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;tag_name&#39;</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">])</span>
+
+            <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">create_web_element</span><span class="p">(</span>
+                    <span class="n">object_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_handler</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">attributes</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">elements</span></div>
+
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_describe_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides a detailed description of a specific node within the DOM.</span>
+
+<span class="sd">        This method retrieves detailed information about a DOM node using its</span>
+<span class="sd">        object ID. The information includes the node&#39;s attributes, properties,</span>
+<span class="sd">        and relationship to other nodes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_id (str): The unique object ID of the node to describe.</span>
+<span class="sd">                Defaults to an empty string, which typically refers to the</span>
+<span class="sd">                document node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary containing the detailed description of the node,</span>
+<span class="sd">                including its attributes, properties, and other</span>
+<span class="sd">                characteristics.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span>
+            <span class="n">DomCommands</span><span class="o">.</span><span class="n">describe_node</span><span class="p">(</span><span class="n">object_id</span><span class="o">=</span><span class="n">object_id</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;node&#39;</span><span class="p">]</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_execute_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes a DevTools Protocol command on the page.</span>
+
+<span class="sd">        This is an internal method used to send commands to the browser and</span>
+<span class="sd">        receive responses. It uses the connection handler to communicate with</span>
+<span class="sd">        the browser and has a longer timeout to accommodate potentially</span>
+<span class="sd">        time-consuming DOM operations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            command (dict): The DevTools Protocol command to execute.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The result of the command execution as returned by</span>
+<span class="sd">                the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_handler</span><span class="o">.</span><span class="n">execute_command</span><span class="p">(</span>
+            <span class="n">command</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

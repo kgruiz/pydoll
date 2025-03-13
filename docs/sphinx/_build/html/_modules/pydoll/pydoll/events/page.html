@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.events.page &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.events.page</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.pydoll.events.page</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="PageEvents">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.events.html#pydoll.pydoll.events.page.PageEvents">[docs]</a>
+<span></span><span class="k">class</span> <span class="nc">PageEvents</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class that defines constants for various page-related events.</span>
+
+<span class="sd">    These constants represent significant events in the lifecycle of a web</span>
+<span class="sd">    page, particularly in the context of web automation, testing,</span>
+<span class="sd">    or monitoring.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">PAGE_LOADED</span> <span class="o">=</span> <span class="s1">&#39;Page.loadEventFired&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when the page has fully loaded.</span>
+
+<span class="sd">    This includes the loading of all resources, such as images and stylesheets.</span>
+<span class="sd">    It is typically used to perform actions that require the entire page to be</span>
+<span class="sd">    ready for interaction or manipulation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DOM_CONTENT_LOADED</span> <span class="o">=</span> <span class="s1">&#39;Page.domContentEventFired&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired when the DOMContentLoaded event is fired.</span>
+
+<span class="sd">    This event indicates that the initial HTML document has been completely</span>
+<span class="sd">    loaded and parsed, which allows for immediate manipulation of the DOM</span>
+<span class="sd">    before external resources like images are fully loaded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FILE_CHOOSER_OPENED</span> <span class="o">=</span> <span class="s1">&#39;Page.fileChooserOpened&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event indicating that a file chooser dialog has been opened.</span>
+
+<span class="sd">    This event is crucial for applications that require user interaction for</span>
+<span class="sd">    file uploads, allowing for tracking when a user is prompted to select</span>
+<span class="sd">    files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FRAME_ATTACHED</span> <span class="o">=</span> <span class="s1">&#39;Page.frameAttached&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that occurs when a frame is attached to the page.</span>
+
+<span class="sd">    This event is significant in scenarios involving iframes or nested browsing</span>
+<span class="sd">    contexts, enabling developers to manage and interact with newly added</span>
+<span class="sd">    frames.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FRAME_DETACHED</span> <span class="o">=</span> <span class="s1">&#39;Page.frameDetached&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when a frame is detached from the page.</span>
+
+<span class="sd">    This can happen when iframes are removed or navigated away, and it’s</span>
+<span class="sd">    important for cleanup and managing resources associated with those frames.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FRAME_NAVIGATED</span> <span class="o">=</span> <span class="s1">&#39;Page.frameNavigated&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that indicates a frame has been navigated to a new URL.</span>
+
+<span class="sd">    This is essential for tracking navigation within iframes, allowing for</span>
+<span class="sd">    updates to the application state or user interface based on the content</span>
+<span class="sd">    of the frame.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">JS_DIALOG_CLOSED</span> <span class="o">=</span> <span class="s1">&#39;Page.javascriptDialogClosed&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired when a JavaScript dialog (such as an alert or confirmation)</span>
+<span class="sd">    is closed.</span>
+
+<span class="sd">    This is useful for managing user interactions with dialogs, allowing for</span>
+<span class="sd">    actions to be taken after a dialog has been dismissed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">JS_DIALOG_OPENING</span> <span class="o">=</span> <span class="s1">&#39;Page.javascriptDialogOpening&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when a JavaScript dialog is about to open.</span>
+
+<span class="sd">    This event can be used to intervene in the opening of the dialog, such as</span>
+<span class="sd">    providing automated responses or logging dialog interactions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">LIFECYCLE_EVENT</span> <span class="o">=</span> <span class="s1">&#39;Page.lifecycleEvent&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event representing a generic lifecycle event for the page.</span>
+
+<span class="sd">    This event is a catch-all for various lifecycle-related events and can be</span>
+<span class="sd">    used for monitoring changes in the page state throughout its lifetime.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WINDOW_OPENED</span> <span class="o">=</span> <span class="s1">&#39;Page.windowOpen&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that indicates a new window has been opened.</span>
+
+<span class="sd">    This is useful for applications that need to monitor or manage multiple</span>
+<span class="sd">    windows and their interactions, particularly in the context of pop-ups</span>
+<span class="sd">    or new tabs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DOCUMENT_OPENED</span> <span class="o">=</span> <span class="s1">&#39;Page.documentOpened&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that signifies a new document has been opened in the page.</span>
+
+<span class="sd">    This event is important for tracking changes in the document context,</span>
+<span class="sd">    particularly in environments where documents can be dynamically created</span>
+<span class="sd">    or loaded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FRAME_STARTED_LOADING</span> <span class="o">=</span> <span class="s1">&#39;Page.frameStartedLoading&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when a frame starts loading content.</span>
+
+<span class="sd">    This event is useful for tracking the loading state of frames,</span>
+<span class="sd">    enabling developers to manage loading indicators or perform actions when</span>
+<span class="sd">    frames begin loading resources.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FRAME_STOPPED_LOADING</span> <span class="o">=</span> <span class="s1">&#39;Page.frameStoppedLoading&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that indicates a frame has stopped loading content.</span>
+
+<span class="sd">    This can signify that a frame has successfully loaded or encountered an</span>
+<span class="sd">    error, allowing for appropriate handling of frame loading states.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DOWNLOAD_PROGRESS</span> <span class="o">=</span> <span class="s1">&#39;Page.downloadProgress&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired to indicate progress on a download operation.</span>
+
+<span class="sd">    This event provides updates on the download status, enabling the</span>
+<span class="sd">    application to inform users about ongoing downloads and their completion.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DOWNLOAD_WILL_BEGIN</span> <span class="o">=</span> <span class="s1">&#39;Page.downloadWillBegin&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that occurs when a download is about to start.</span>
+
+<span class="sd">    This event is significant for tracking the initiation of downloads,</span>
+<span class="sd">    allowing for pre-download actions such as logging or user notifications.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NAVIGATED_WITHIN_DOCUMENT</span> <span class="o">=</span> <span class="s1">&#39;Page.navigatedWithinDocument&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that indicates navigation within the same document.</span>
+
+<span class="sd">    This event is useful for tracking changes in the document state, such as</span>
+<span class="sd">    anchor links or in-page navigation, without requiring a full page reload.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.commands.input &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.commands.input</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.commands.input</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="InputCommands">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.input.InputCommands">[docs]</a>
+<span></span><span class="k">class</span> <span class="nc">InputCommands</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to define input commands for simulating user interactions</span>
+<span class="sd">    with the browser using the Chrome DevTools Protocol (CDP).</span>
+<span class="sd">    The commands allow for simulating mouse clicks and keyboard presses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CLICK_ELEMENT_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Input.dispatchMouseEvent&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">KEY_PRESS_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Input.dispatchKeyEvent&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">INSERT_TEXT_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Input.insertText&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+
+<div class="viewcode-block" id="InputCommands.mouse_press">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.input.InputCommands.mouse_press">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">mouse_press</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to simulate pressing the mouse button on a</span>
+<span class="sd">        specific location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (int): The x-coordinate of the mouse press.</span>
+<span class="sd">            y (int): The y-coordinate of the mouse press.</span>
+
+<span class="sd">        This command utilizes the CDP to simulate a mouse press event at</span>
+<span class="sd">        the specified coordinates.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CLICK_ELEMENT_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;mousePressed&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;button&#39;</span><span class="p">:</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+            <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+            <span class="s1">&#39;clickCount&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;modifiers&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="InputCommands.mouse_release">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.input.InputCommands.mouse_release">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">mouse_release</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to simulate releasing the mouse button.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (int): The x-coordinate of the mouse release.</span>
+<span class="sd">            y (int): The y-coordinate of the mouse release.</span>
+
+<span class="sd">        This command uses the CDP to simulate a mouse release event at</span>
+<span class="sd">        the specified coordinates.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CLICK_ELEMENT_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;mouseReleased&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;button&#39;</span><span class="p">:</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+            <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+            <span class="s1">&#39;clickCount&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;modifiers&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="InputCommands.key_press">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.input.InputCommands.key_press">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">key_press</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">char</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to simulate pressing a key on the keyboard.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            char (str): The character to be pressed.</span>
+
+<span class="sd">        This command utilizes the CDP to simulate a keyboard event for</span>
+<span class="sd">        the specified character.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">KEY_PRESS_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;char&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">char</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="InputCommands.insert_text">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.input.InputCommands.insert_text">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">insert_text</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to insert text into an input field.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): The text to be inserted.</span>
+
+<span class="sd">        This command uses the CDP to simulate typing text into an input field.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">INSERT_TEXT_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

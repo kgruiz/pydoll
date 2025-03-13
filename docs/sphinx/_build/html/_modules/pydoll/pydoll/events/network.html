@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.events.network &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.events.network</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.pydoll.events.network</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="NetworkEvents">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.events.html#pydoll.pydoll.events.network.NetworkEvents">[docs]</a>
+<span></span><span class="k">class</span> <span class="nc">NetworkEvents</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class that defines constants for various network-related events.</span>
+
+<span class="sd">    These constants can be used to identify and handle network interactions in</span>
+<span class="sd">    applications, particularly in event-driven architectures or APIs that</span>
+<span class="sd">    monitor network activity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DATA_RECEIVED</span> <span class="o">=</span> <span class="s1">&#39;Network.dataReceived&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when data is received over the network.</span>
+
+<span class="sd">    This can include responses from HTTP requests, incoming WebSocket messages,</span>
+<span class="sd">    or data from other network interactions. Useful for tracking incoming data</span>
+<span class="sd">    flow.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">EVENT_SOURCE_MESSAGE_RECEIVED</span> <span class="o">=</span> <span class="s1">&#39;Network.eventSourceMessageReceived&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired when a message is received from an EventSource.</span>
+
+<span class="sd">    Typically used for server-sent events (SSE), this event indicates that a</span>
+<span class="sd">    new message has been sent from the server to the client, enabling real-time</span>
+<span class="sd">    updates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">LOADING_FAILED</span> <span class="o">=</span> <span class="s1">&#39;Network.loadingFailed&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that indicates a failure in loading a network resource.</span>
+
+<span class="sd">    This can occur due to various reasons, such as network errors, resource</span>
+<span class="sd">    not found, or permission issues. This event is critical for error handling</span>
+<span class="sd">    and debugging.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">LOADING_FINISHED</span> <span class="o">=</span> <span class="s1">&#39;Network.loadingFinished&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired when a network loading operation is completed.</span>
+
+<span class="sd">    This event is triggered regardless of whether the loading was successful</span>
+<span class="sd">    or failed, making it useful for cleaning up or updating the user interface</span>
+<span class="sd">    after loading operations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">REQUEST_SERVED_FROM_CACHE</span> <span class="o">=</span> <span class="s1">&#39;Network.requestServedFromCache&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event indicating that a network request was fulfilled from the cache.</span>
+
+<span class="sd">    This helps identify when data is being retrieved from cache instead of</span>
+<span class="sd">    making a new network request, which can improve performance and reduce</span>
+<span class="sd">    latency.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">REQUEST_WILL_BE_SENT</span> <span class="o">=</span> <span class="s1">&#39;Network.requestWillBeSent&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered just before a network request is sent.</span>
+
+<span class="sd">    This is useful for logging, modifying request headers, or performing</span>
+<span class="sd">    actions before the actual request is made. It allows developers to</span>
+<span class="sd">    intercept and examine requests.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">RESPONSE_RECEIVED</span> <span class="o">=</span> <span class="s1">&#39;Network.responseReceived&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that indicates a response has been received from a network request.</span>
+
+<span class="sd">    This event contains details about the response, such as status codes,</span>
+<span class="sd">    headers, and the body of the response. It&#39;s crucial for processing the</span>
+<span class="sd">    results of network requests.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WEB_SOCKET_CLOSED</span> <span class="o">=</span> <span class="s1">&#39;Network.webSocketClosed&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that occurs when a WebSocket connection has been closed.</span>
+
+<span class="sd">    This can happen due to normal closure, errors, or network interruptions.</span>
+<span class="sd">    Handling this event is important for managing WebSocket connections and</span>
+<span class="sd">    reconnection logic.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WEB_SOCKET_CREATED</span> <span class="o">=</span> <span class="s1">&#39;Network.webSocketCreated&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired when a new WebSocket connection is established.</span>
+
+<span class="sd">    This indicates that a WebSocket connection is active and ready for</span>
+<span class="sd">    communication, allowing developers to set up message handlers or perform</span>
+<span class="sd">    other initialization tasks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WEB_SOCKET_FRAME_ERROR</span> <span class="o">=</span> <span class="s1">&#39;Network.webSocketFrameError&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event indicating that there was an error with a frame in a WebSocket</span>
+<span class="sd">    communication.</span>
+
+<span class="sd">    This can be used to handle specific frame-related errors and improve the</span>
+<span class="sd">    robustness of WebSocket implementations by allowing for error logging and</span>
+<span class="sd">    corrective actions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WEB_SOCKET_FRAME_RECEIVED</span> <span class="o">=</span> <span class="s1">&#39;Network.webSocketFrameReceived&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired when a frame is received through a WebSocket.</span>
+
+<span class="sd">    This is essential for processing incoming messages and performing actions</span>
+<span class="sd">    based on the content of those messages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WEB_SOCKET_FRAME_SENT</span> <span class="o">=</span> <span class="s1">&#39;Network.webSocketFrameSent&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event representing a frame that has been sent through a WebSocket.</span>
+
+<span class="sd">    This event can be used for logging sent messages, monitoring communication,</span>
+<span class="sd">    or performing actions after a message has been sent.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WEB_TRANSPORT_CLOSED</span> <span class="o">=</span> <span class="s1">&#39;Network.webTransportClosed&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event indicating that a web transport connection has been closed.</span>
+
+<span class="sd">    Web transport connections are often used for low-latency communication.</span>
+<span class="sd">    Handling this event is vital for ensuring that resources are properly</span>
+<span class="sd">    released and that the application can react to disconnections.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WEB_TRANSPORT_CONNECTION_ESTABLISHED</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;Network.webTransportConnectionEstablished&#39;</span>
+    <span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired when a web transport connection is successfully established.</span>
+
+<span class="sd">    This signifies that the connection is ready for use, allowing for</span>
+<span class="sd">    immediate data transmission and interaction.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">WEB_TRANSPORT_CREATED</span> <span class="o">=</span> <span class="s1">&#39;Network.webTransportCreated&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that signifies that a new web transport connection has been created.</span>
+
+<span class="sd">    This is useful for setting up communication channels and initializing</span>
+<span class="sd">    necessary resources for the newly created transport.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">POLICY_UPDATED</span> <span class="o">=</span> <span class="s1">&#39;Network.policyUpdated&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event that indicates that the network policy has been updated.</span>
+
+<span class="sd">    This might relate to security, access controls, or other network-related</span>
+<span class="sd">    policies that affect how requests and responses are handled. It’s important</span>
+<span class="sd">    for maintaining compliance and security in applications.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">REQUEST_INTERCEPTED</span> <span class="o">=</span> <span class="s1">&#39;Network.requestIntercepted&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event fired when a network request has been intercepted.</span>
+
+<span class="sd">    This is often used in service workers or other intermediary layers to</span>
+<span class="sd">    modify or block requests before they reach the network. Handling this event</span>
+<span class="sd">    is crucial for implementing custom request logic or caching strategies.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

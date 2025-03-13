@@ -1,0 +1,248 @@
+\contentsline {section}{\numberline {1}Conceptual Overview}{3}{section.1}%
+\contentsline {section}{\numberline {2}Basic Usage}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Installation}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Importing the main class}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Starting and stopping a browser}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Customizing browser options}{4}{subsection.2.4}%
+\contentsline {section}{\numberline {3}API Reference}{4}{section.3}%
+\contentsline {paragraph}{Arguments}{4}{section*.5}%
+\contentsline {paragraph}{Raises}{5}{section*.6}%
+\contentsline {paragraph}{Asynchronous Context Manager Methods}{5}{section*.7}%
+\contentsline {paragraph}{Methods}{5}{section*.10}%
+\contentsline {paragraph}{Raises}{5}{section*.12}%
+\contentsline {paragraph}{Raises}{5}{section*.14}%
+\contentsline {paragraph}{Arguments}{5}{section*.16}%
+\contentsline {paragraph}{Arguments}{5}{section*.18}%
+\contentsline {paragraph}{Returns}{6}{section*.19}%
+\contentsline {paragraph}{Returns}{6}{section*.21}%
+\contentsline {paragraph}{Arguments}{6}{section*.24}%
+\contentsline {paragraph}{Returns}{6}{section*.26}%
+\contentsline {paragraph}{Arguments}{6}{section*.28}%
+\contentsline {paragraph}{Returns}{7}{section*.29}%
+\contentsline {paragraph}{Arguments}{7}{section*.31}%
+\contentsline {paragraph}{Returns}{7}{section*.32}%
+\contentsline {paragraph}{Returns}{7}{section*.34}%
+\contentsline {paragraph}{Returns}{7}{section*.36}%
+\contentsline {paragraph}{Arguments}{7}{section*.38}%
+\contentsline {paragraph}{Arguments}{8}{section*.44}%
+\contentsline {paragraph}{Arguments}{8}{section*.49}%
+\contentsline {paragraph}{Static Methods}{9}{section*.51}%
+\contentsline {paragraph}{Arguments}{9}{section*.53}%
+\contentsline {paragraph}{Returns}{9}{section*.54}%
+\contentsline {paragraph}{Raises}{9}{section*.55}%
+\contentsline {paragraph}{Arguments}{9}{section*.57}%
+\contentsline {paragraph}{Arguments}{9}{section*.59}%
+\contentsline {paragraph}{Returns}{9}{section*.60}%
+\contentsline {paragraph}{Raises}{9}{section*.61}%
+\contentsline {paragraph}{Arguments}{10}{section*.64}%
+\contentsline {paragraph}{Methods}{10}{section*.65}%
+\contentsline {paragraph}{Arguments}{10}{section*.67}%
+\contentsline {paragraph}{Returns}{10}{section*.68}%
+\contentsline {paragraph}{Arguments}{10}{section*.72}%
+\contentsline {paragraph}{Methods}{10}{section*.73}%
+\contentsline {paragraph}{Returns}{10}{section*.75}%
+\contentsline {paragraph}{Arguments}{11}{section*.78}%
+\contentsline {paragraph}{Methods}{11}{section*.79}%
+\contentsline {paragraph}{Returns}{11}{section*.81}%
+\contentsline {paragraph}{Properties}{11}{section*.85}%
+\contentsline {paragraph}{Returns}{11}{section*.87}%
+\contentsline {paragraph}{Returns}{12}{section*.89}%
+\contentsline {paragraph}{Methods}{12}{section*.90}%
+\contentsline {paragraph}{Arguments}{12}{section*.92}%
+\contentsline {paragraph}{Raises}{12}{section*.93}%
+\contentsline {paragraph}{Class Attributes}{12}{section*.97}%
+\contentsline {paragraph}{Class Methods}{12}{section*.98}%
+\contentsline {paragraph}{Arguments}{12}{section*.100}%
+\contentsline {paragraph}{Returns}{13}{section*.101}%
+\contentsline {paragraph}{Returns}{13}{section*.103}%
+\contentsline {paragraph}{Returns}{13}{section*.105}%
+\contentsline {paragraph}{Arguments}{13}{section*.107}%
+\contentsline {paragraph}{Returns}{13}{section*.108}%
+\contentsline {paragraph}{Arguments}{13}{section*.110}%
+\contentsline {paragraph}{Returns}{13}{section*.111}%
+\contentsline {paragraph}{Arguments}{14}{section*.113}%
+\contentsline {paragraph}{Returns}{14}{section*.114}%
+\contentsline {paragraph}{Class Attributes}{14}{section*.117}%
+\contentsline {paragraph}{Class Methods}{14}{section*.118}%
+\contentsline {paragraph}{Arguments}{14}{section*.120}%
+\contentsline {paragraph}{Returns}{15}{section*.121}%
+\contentsline {paragraph}{Arguments}{15}{section*.123}%
+\contentsline {paragraph}{Returns}{15}{section*.124}%
+\contentsline {paragraph}{Returns}{15}{section*.126}%
+\contentsline {paragraph}{Arguments}{15}{section*.128}%
+\contentsline {paragraph}{Returns}{15}{section*.129}%
+\contentsline {paragraph}{Arguments}{15}{section*.131}%
+\contentsline {paragraph}{Returns}{15}{section*.132}%
+\contentsline {paragraph}{Arguments}{16}{section*.134}%
+\contentsline {paragraph}{Returns}{16}{section*.135}%
+\contentsline {paragraph}{Returns}{16}{section*.137}%
+\contentsline {paragraph}{Returns}{16}{section*.139}%
+\contentsline {paragraph}{Arguments}{16}{section*.141}%
+\contentsline {paragraph}{Returns}{16}{section*.142}%
+\contentsline {paragraph}{Arguments}{17}{section*.144}%
+\contentsline {paragraph}{Returns}{17}{section*.145}%
+\contentsline {paragraph}{Class Attributes}{17}{section*.148}%
+\contentsline {paragraph}{Class Methods}{17}{section*.149}%
+\contentsline {paragraph}{Arguments}{18}{section*.151}%
+\contentsline {paragraph}{Returns}{18}{section*.152}%
+\contentsline {paragraph}{Arguments}{18}{section*.154}%
+\contentsline {paragraph}{Returns}{18}{section*.155}%
+\contentsline {paragraph}{Returns}{18}{section*.157}%
+\contentsline {paragraph}{Arguments}{19}{section*.159}%
+\contentsline {paragraph}{Returns}{19}{section*.160}%
+\contentsline {paragraph}{Arguments}{19}{section*.162}%
+\contentsline {paragraph}{Returns}{19}{section*.163}%
+\contentsline {paragraph}{Arguments}{19}{section*.165}%
+\contentsline {paragraph}{Returns}{19}{section*.166}%
+\contentsline {paragraph}{Arguments}{20}{section*.168}%
+\contentsline {paragraph}{Returns}{20}{section*.169}%
+\contentsline {paragraph}{Arguments}{20}{section*.171}%
+\contentsline {paragraph}{Returns}{20}{section*.172}%
+\contentsline {paragraph}{Class Attributes}{20}{section*.175}%
+\contentsline {paragraph}{Class Methods}{20}{section*.176}%
+\contentsline {paragraph}{Arguments}{20}{section*.178}%
+\contentsline {paragraph}{Returns}{21}{section*.179}%
+\contentsline {paragraph}{Arguments}{21}{section*.181}%
+\contentsline {paragraph}{Returns}{21}{section*.182}%
+\contentsline {paragraph}{Arguments}{21}{section*.184}%
+\contentsline {paragraph}{Returns}{21}{section*.185}%
+\contentsline {paragraph}{Arguments}{21}{section*.187}%
+\contentsline {paragraph}{Returns}{21}{section*.188}%
+\contentsline {paragraph}{Class Attributes}{22}{section*.191}%
+\contentsline {paragraph}{Class Methods}{22}{section*.192}%
+\contentsline {paragraph}{Returns}{22}{section*.194}%
+\contentsline {paragraph}{Returns}{22}{section*.196}%
+\contentsline {paragraph}{Arguments}{23}{section*.198}%
+\contentsline {paragraph}{Returns}{23}{section*.199}%
+\contentsline {paragraph}{Returns}{23}{section*.201}%
+\contentsline {paragraph}{Returns}{23}{section*.203}%
+\contentsline {paragraph}{Arguments}{23}{section*.205}%
+\contentsline {paragraph}{Returns}{23}{section*.206}%
+\contentsline {paragraph}{Arguments}{23}{section*.208}%
+\contentsline {paragraph}{Returns}{24}{section*.209}%
+\contentsline {paragraph}{Arguments}{24}{section*.211}%
+\contentsline {paragraph}{Returns}{24}{section*.212}%
+\contentsline {paragraph}{Arguments}{24}{section*.214}%
+\contentsline {paragraph}{Returns}{24}{section*.215}%
+\contentsline {paragraph}{Arguments}{24}{section*.217}%
+\contentsline {paragraph}{Returns}{24}{section*.218}%
+\contentsline {paragraph}{Arguments}{25}{section*.220}%
+\contentsline {paragraph}{Returns}{25}{section*.221}%
+\contentsline {paragraph}{Arguments}{25}{section*.223}%
+\contentsline {paragraph}{Returns}{25}{section*.224}%
+\contentsline {paragraph}{Arguments}{25}{section*.226}%
+\contentsline {paragraph}{Returns}{25}{section*.227}%
+\contentsline {paragraph}{Returns}{25}{section*.229}%
+\contentsline {paragraph}{Arguments}{26}{section*.231}%
+\contentsline {paragraph}{Returns}{26}{section*.232}%
+\contentsline {paragraph}{Arguments}{26}{section*.234}%
+\contentsline {paragraph}{Returns}{26}{section*.235}%
+\contentsline {paragraph}{Class Attributes}{26}{section*.238}%
+\contentsline {paragraph}{Class Methods}{26}{section*.239}%
+\contentsline {paragraph}{Arguments}{27}{section*.241}%
+\contentsline {paragraph}{Returns}{27}{section*.242}%
+\contentsline {paragraph}{Arguments}{27}{section*.244}%
+\contentsline {paragraph}{Returns}{27}{section*.245}%
+\contentsline {paragraph}{Arguments}{27}{section*.247}%
+\contentsline {paragraph}{Returns}{27}{section*.248}%
+\contentsline {paragraph}{Arguments}{28}{section*.250}%
+\contentsline {paragraph}{Returns}{28}{section*.251}%
+\contentsline {paragraph}{Arguments}{28}{section*.253}%
+\contentsline {paragraph}{Returns}{28}{section*.254}%
+\contentsline {paragraph}{Arguments}{28}{section*.256}%
+\contentsline {paragraph}{Returns}{28}{section*.257}%
+\contentsline {paragraph}{Returns}{28}{section*.259}%
+\contentsline {paragraph}{Returns}{29}{section*.261}%
+\contentsline {paragraph}{Returns}{29}{section*.263}%
+\contentsline {paragraph}{Class Attributes}{29}{section*.266}%
+\contentsline {paragraph}{Class Methods}{29}{section*.267}%
+\contentsline {paragraph}{Arguments}{29}{section*.269}%
+\contentsline {paragraph}{Returns}{29}{section*.270}%
+\contentsline {paragraph}{Arguments}{30}{section*.272}%
+\contentsline {paragraph}{Returns}{30}{section*.273}%
+\contentsline {paragraph}{Arguments}{30}{section*.275}%
+\contentsline {paragraph}{Returns}{30}{section*.276}%
+\contentsline {paragraph}{Class Attributes}{30}{section*.279}%
+\contentsline {paragraph}{Class Methods}{30}{section*.280}%
+\contentsline {paragraph}{Returns}{30}{section*.282}%
+\contentsline {paragraph}{Arguments}{31}{section*.284}%
+\contentsline {paragraph}{Returns}{31}{section*.285}%
+\contentsline {paragraph}{Returns}{31}{section*.287}%
+\contentsline {paragraph}{Class Attributes}{31}{section*.290}%
+\contentsline {paragraph}{Class Methods}{31}{section*.291}%
+\contentsline {paragraph}{Arguments}{31}{section*.293}%
+\contentsline {paragraph}{Returns}{31}{section*.294}%
+\contentsline {paragraph}{Arguments}{32}{section*.296}%
+\contentsline {paragraph}{Returns}{32}{section*.297}%
+\contentsline {paragraph}{Arguments}{32}{section*.299}%
+\contentsline {paragraph}{Returns}{32}{section*.300}%
+\contentsline {paragraph}{Arguments}{32}{section*.302}%
+\contentsline {paragraph}{Returns}{32}{section*.303}%
+\contentsline {paragraph}{Returns}{32}{section*.305}%
+\contentsline {paragraph}{Arguments}{33}{section*.309}%
+\contentsline {paragraph}{Properties}{33}{section*.310}%
+\contentsline {paragraph}{Methods}{33}{section*.313}%
+\contentsline {paragraph}{Returns}{33}{section*.315}%
+\contentsline {paragraph}{Arguments}{33}{section*.317}%
+\contentsline {paragraph}{Returns}{33}{section*.318}%
+\contentsline {paragraph}{Raises}{34}{section*.319}%
+\contentsline {paragraph}{Arguments}{34}{section*.321}%
+\contentsline {paragraph}{Returns}{34}{section*.322}%
+\contentsline {paragraph}{Arguments}{34}{section*.324}%
+\contentsline {paragraph}{Returns}{34}{section*.325}%
+\contentsline {paragraph}{Asynchronous Context Manager Methods}{34}{section*.328}%
+\contentsline {paragraph}{Methods}{35}{section*.332}%
+\contentsline {paragraph}{Arguments}{35}{section*.334}%
+\contentsline {paragraph}{Returns}{35}{section*.335}%
+\contentsline {paragraph}{Arguments}{35}{section*.337}%
+\contentsline {paragraph}{Arguments}{35}{section*.339}%
+\contentsline {paragraph}{Properties}{35}{section*.341}%
+\contentsline {paragraph}{Methods}{36}{section*.344}%
+\contentsline {paragraph}{Arguments}{36}{section*.346}%
+\contentsline {paragraph}{Returns}{36}{section*.347}%
+\contentsline {paragraph}{Raises}{36}{section*.348}%
+\contentsline {paragraph}{Arguments}{36}{section*.350}%
+\contentsline {paragraph}{Returns}{36}{section*.351}%
+\contentsline {paragraph}{Arguments}{36}{section*.354}%
+\contentsline {paragraph}{Enum Members}{37}{section*.357}%
+\contentsline {paragraph}{Class Attributes}{37}{section*.359}%
+\contentsline {paragraph}{Arguments}{38}{section*.363}%
+\contentsline {paragraph}{Properties}{38}{section*.364}%
+\contentsline {paragraph}{Returns}{38}{section*.366}%
+\contentsline {paragraph}{Returns}{38}{section*.368}%
+\contentsline {paragraph}{Returns}{38}{section*.370}%
+\contentsline {paragraph}{Returns}{38}{section*.372}%
+\contentsline {paragraph}{Returns}{39}{section*.374}%
+\contentsline {paragraph}{Returns}{39}{section*.376}%
+\contentsline {paragraph}{Methods}{39}{section*.377}%
+\contentsline {paragraph}{Returns}{39}{section*.379}%
+\contentsline {paragraph}{Arguments}{39}{section*.381}%
+\contentsline {paragraph}{Returns}{39}{section*.383}%
+\contentsline {paragraph}{Arguments}{39}{section*.385}%
+\contentsline {paragraph}{Returns}{40}{section*.386}%
+\contentsline {paragraph}{Raises}{40}{section*.389}%
+\contentsline {paragraph}{Arguments}{40}{section*.391}%
+\contentsline {paragraph}{Raises}{40}{section*.392}%
+\contentsline {paragraph}{Arguments}{40}{section*.395}%
+\contentsline {paragraph}{Arguments}{41}{section*.397}%
+\contentsline {paragraph}{Class Attributes}{41}{section*.401}%
+\contentsline {paragraph}{Class Attributes}{41}{section*.404}%
+\contentsline {paragraph}{Class Attributes}{42}{section*.407}%
+\contentsline {paragraph}{Class Attributes}{42}{section*.410}%
+\contentsline {paragraph}{Class Attributes}{43}{section*.413}%
+\contentsline {paragraph}{Exceptions}{43}{section*.415}%
+\contentsline {paragraph}{Methods}{44}{section*.419}%
+\contentsline {paragraph}{Arguments}{44}{section*.421}%
+\contentsline {paragraph}{Returns}{44}{section*.422}%
+\contentsline {paragraph}{Raises}{44}{section*.423}%
+\contentsline {paragraph}{Arguments}{44}{section*.425}%
+\contentsline {paragraph}{Returns}{44}{section*.426}%
+\contentsline {paragraph}{Raises}{44}{section*.427}%
+\contentsline {paragraph}{Arguments}{45}{section*.429}%
+\contentsline {paragraph}{Returns}{45}{section*.430}%
+\contentsline {paragraph}{Raises}{45}{section*.431}%
+\contentsline {paragraph}{Arguments}{45}{section*.434}%
+\contentsline {paragraph}{Returns}{45}{section*.435}%
+\contentsline {paragraph}{Arguments}{45}{section*.437}%
+\contentsline {paragraph}{Returns}{45}{section*.438}%
+\contentsline {paragraph}{Raises}{45}{section*.439}%

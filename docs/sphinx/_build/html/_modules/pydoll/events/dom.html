@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.events.dom &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.events.dom</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.events.dom</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="DomEvents">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.events.html#pydoll.events.dom.DomEvents">[docs]</a>
+<span></span><span class="k">class</span> <span class="nc">DomEvents</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to define the DOM events available through the</span>
+<span class="sd">    Chrome DevTools Protocol (CDP). These events allow for monitoring</span>
+<span class="sd">    changes and updates within the Document Object Model (DOM)</span>
+<span class="sd">    of a web page, enabling developers to react to specific</span>
+<span class="sd">    modifications and interactions with the DOM elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ATTRIBUTE_MODIFIED</span> <span class="o">=</span> <span class="s1">&#39;DOM.attributeModified&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when an attribute of a DOM node is modified.</span>
+
+<span class="sd">    This event provides information about the node affected and the</span>
+<span class="sd">    attribute that was changed. It is part of the CDP&#39;s capabilities</span>
+<span class="sd">    for tracking DOM changes and allows developers to respond</span>
+<span class="sd">    to attribute modifications in real time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ATTRIBUTE_REMOVED</span> <span class="o">=</span> <span class="s1">&#39;DOM.attributeRemoved&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when an attribute of a DOM node is removed.</span>
+
+<span class="sd">    This event indicates that an attribute has been deleted from a</span>
+<span class="sd">    node, allowing developers to manage state or perform cleanup</span>
+<span class="sd">    based on the changes. It is supported by the CDP to ensure</span>
+<span class="sd">    developers can monitor DOM manipulations effectively.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CHARACTER_DATA_MODIFIED</span> <span class="o">=</span> <span class="s1">&#39;DOM.characterDataModified&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when the character data of a DOM node is modified.</span>
+
+<span class="sd">    This event informs listeners about changes in the text content</span>
+<span class="sd">    of a node, which is essential for applications that need to</span>
+<span class="sd">    reflect real-time updates in the UI based on data changes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CHILD_NODE_COUNT_UPDATED</span> <span class="o">=</span> <span class="s1">&#39;DOM.childNodeCountUpdated&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when the number of child nodes of a DOM node is updated.</span>
+
+<span class="sd">    This event alerts developers when the number of children changes,</span>
+<span class="sd">    allowing them to react to structural changes in the DOM tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CHILD_NODE_INSERTED</span> <span class="o">=</span> <span class="s1">&#39;DOM.childNodeInserted&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when a new child node is inserted into a DOM node.</span>
+
+<span class="sd">    This event notifies listeners of new additions to the DOM,</span>
+<span class="sd">    enabling actions such as updating UI components or handling</span>
+<span class="sd">    related data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CHILD_NODE_REMOVED</span> <span class="o">=</span> <span class="s1">&#39;DOM.childNodeRemoved&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when a child node is removed from a DOM node.</span>
+
+<span class="sd">    This event indicates that a child has been deleted, allowing</span>
+<span class="sd">    developers to manage their state or trigger updates based on</span>
+<span class="sd">    the removal of elements in the DOM.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DOCUMENT_UPDATED</span> <span class="o">=</span> <span class="s1">&#39;DOM.documentUpdated&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when the DOM document is updated.</span>
+
+<span class="sd">    This event signifies that changes have occurred at the document</span>
+<span class="sd">    level, prompting developers to refresh or update their views</span>
+<span class="sd">    accordingly.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SCROLLABLE_FLAG_UPDATED</span> <span class="o">=</span> <span class="s1">&#39;DOM.scrollableFlagUpdated&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when the scrollable flag of a DOM node is updated.</span>
+
+<span class="sd">    This event is useful for determining which elements in the DOM</span>
+<span class="sd">    can be scrolled, allowing for enhanced user interactions and</span>
+<span class="sd">    responsive designs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SHADOW_ROOT_POPPED</span> <span class="o">=</span> <span class="s1">&#39;DOM.shadowRootPopped&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when a shadow root is popped from the stack.</span>
+
+<span class="sd">    This event indicates that a shadow DOM context has been removed,</span>
+<span class="sd">    which is relevant for applications utilizing shadow DOM features</span>
+<span class="sd">    for encapsulated styling and markup.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SHADOW_ROOT_PUSHED</span> <span class="o">=</span> <span class="s1">&#39;DOM.shadowRootPushed&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when a shadow root is pushed onto the stack.</span>
+
+<span class="sd">    This event signifies that a new shadow DOM context has been</span>
+<span class="sd">    created, allowing developers to manage and respond to changes</span>
+<span class="sd">    in encapsulated DOM structures.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">TOP_LAYER_ELEMENTS_UPDATED</span> <span class="o">=</span> <span class="s1">&#39;DOM.topLayerElementsUpdated&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event triggered when the top layer elements in the DOM are updated.</span>
+
+<span class="sd">    This event allows for monitoring changes in the most visible</span>
+<span class="sd">    elements in the DOM, which is essential for managing UI states</span>
+<span class="sd">    and rendering updates.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

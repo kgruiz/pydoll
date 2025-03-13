@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.connection package &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.connection package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/pydoll.pydoll.connection.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pydoll-pydoll-connection-package">
+<h1>pydoll.pydoll.connection package<a class="headerlink" href="#pydoll-pydoll-connection-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-pydoll.pydoll.connection.connection">
+<span id="pydoll-pydoll-connection-connection-module"></span><h2>pydoll.pydoll.connection.connection module<a class="headerlink" href="#module-pydoll.pydoll.connection.connection" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.pydoll.connection.connection.</span></span><span class="sig-name descname"><span class="pre">ConnectionHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">connection_port:</span> <span class="pre">int,</span> <span class="pre">page_id:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'browser',</span> <span class="pre">ws_address_resolver:</span> <span class="pre">~typing.Callable[[int],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">get_browser_ws_address&gt;,</span> <span class="pre">ws_connector:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'websockets.legacy.client.Connect'&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/connection.html#ConnectionHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to handle WebSocket connections for browser automation.</p>
+<p>This class manages the connection to the browser and the associated page,
+providing methods to execute commands and register event callbacks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler.clear_callbacks">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear_callbacks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/connection.html#ConnectionHandler.clear_callbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler.clear_callbacks" title="Link to this definition"></a></dt>
+<dd><p>Removes all registered event callbacks.</p>
+<p>This method clears all event listeners that have been registered with
+the register_callback method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/connection.html#ConnectionHandler.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler.close" title="Link to this definition"></a></dt>
+<dd><p>Closes the WebSocket connection.</p>
+<p>Closes the WebSocket connection and clears all event callbacks.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler.dialog">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dialog</span></span><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler.dialog" title="Link to this definition"></a></dt>
+<dd><p>Gets information about the current dialog in the page, if any.</p>
+<p>This property provides access to any active dialog (alert, confirm,
+prompt) that might be present in the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Dialog information if a dialog is present,</dt><dd><p>None otherwise.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler.execute_command">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/connection.html#ConnectionHandler.execute_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler.execute_command" title="Link to this definition"></a></dt>
+<dd><p>Sends a command to the browser and awaits its response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<em>dict</em>) – The command to send, structured as a dictionary.</p></li>
+<li><p><strong>timeout</strong> (<em>int</em><em>, </em><em>optional</em>) – Time in seconds to wait for a response.
+Defaults to 10.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response from the browser.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="pydoll.html#pydoll.exceptions.InvalidCommand" title="pydoll.exceptions.InvalidCommand"><strong>InvalidCommand</strong></a> – If the command is not a dictionary.</p></li>
+<li><p><strong>TimeoutError</strong> – If the command execution exceeds the timeout.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler.network_logs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">network_logs</span></span><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler.network_logs" title="Link to this definition"></a></dt>
+<dd><p>Gets all network logs captured by the connection.</p>
+<p>This property provides access to network request and response logs
+that have been captured during the browser session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of network log entries.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler.ping">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/connection.html#ConnectionHandler.ping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler.ping" title="Link to this definition"></a></dt>
+<dd><p>Sends a ping message to the browser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the ping was successful, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler.register_callback">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/connection.html#ConnectionHandler.register_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler.register_callback" title="Link to this definition"></a></dt>
+<dd><p>Registers a callback function for a specific event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_name</strong> (<em>str</em>) – The name of the event to listen for.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – The function to call when the event occurs.</p></li>
+<li><p><strong>temporary</strong> (<em>bool</em>) – If True, the callback will be removed after it’s
+triggered once. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The ID of the registered callback, which can be used to</dt><dd><p>remove the listener later.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.connection.ConnectionHandler.remove_callback">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/connection.html#ConnectionHandler.remove_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.connection.ConnectionHandler.remove_callback" title="Link to this definition"></a></dt>
+<dd><p>Removes a registered event callback by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callback_id</strong> (<em>int</em>) – The ID of the callback to remove.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>True if the callback was successfully removed,</dt><dd><p>False otherwise.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.pydoll.connection.managers">
+<span id="pydoll-pydoll-connection-managers-module"></span><h2>pydoll.pydoll.connection.managers module<a class="headerlink" href="#module-pydoll.pydoll.connection.managers" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.CommandManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.pydoll.connection.managers.</span></span><span class="sig-name descname"><span class="pre">CommandManager</span></span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#CommandManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.CommandManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages the lifecycle of commands sent to the browser.</p>
+<p>This class handles the creation of command futures, command ID generation,
+and resolution of command responses. It maintains a mapping of command IDs
+to their corresponding futures, allowing asynchronous command execution.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.CommandManager.create_command_future">
+<span class="sig-name descname"><span class="pre">create_command_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Future</span></span></span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#CommandManager.create_command_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.CommandManager.create_command_future" title="Link to this definition"></a></dt>
+<dd><p>Creates a future for a command and assigns it a unique ID.</p>
+<p>This method assigns a unique ID to the command, creates a future
+to track its completion, and stores the future in the pending
+commands dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command</strong> (<em>dict</em>) – The command to prepare for execution.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A future that will be resolved when the command</dt><dd><p>completes.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>asyncio.Future</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.CommandManager.remove_pending_command">
+<span class="sig-name descname"><span class="pre">remove_pending_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#CommandManager.remove_pending_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.CommandManager.remove_pending_command" title="Link to this definition"></a></dt>
+<dd><p>Removes a pending command without resolving it.</p>
+<p>This method is useful for handling timeouts or cancellations,
+allowing cleanup of command futures that will never be resolved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command_id</strong> (<em>int</em>) – The ID of the command to remove.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.CommandManager.resolve_command">
+<span class="sig-name descname"><span class="pre">resolve_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#CommandManager.resolve_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.CommandManager.resolve_command" title="Link to this definition"></a></dt>
+<dd><p>Resolves a pending command with its result.</p>
+<p>This method sets the result for the future associated with the
+command ID and removes it from the pending commands dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response_id</strong> (<em>int</em>) – The ID of the command to resolve.</p></li>
+<li><p><strong>result</strong> (<em>str</em>) – The result data for the command.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.EventsHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.pydoll.connection.managers.</span></span><span class="sig-name descname"><span class="pre">EventsHandler</span></span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#EventsHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.EventsHandler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages event callbacks, event processing, and network logs.</p>
+<p>This class is responsible for registering event callbacks, triggering them
+when events are received, and maintaining state related to events such as
+network logs and dialog information.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.EventsHandler.clear_callbacks">
+<span class="sig-name descname"><span class="pre">clear_callbacks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#EventsHandler.clear_callbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.EventsHandler.clear_callbacks" title="Link to this definition"></a></dt>
+<dd><p>Removes all registered callbacks.</p>
+<p>This method clears all event listeners that have been registered,
+effectively resetting the event handler to its initial state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.EventsHandler.process_event">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">process_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#EventsHandler.process_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.EventsHandler.process_event" title="Link to this definition"></a></dt>
+<dd><p>Processes a received event and triggers corresponding callbacks.</p>
+<p>This method handles special events like network requests and dialogs,
+updating internal state accordingly, and then triggers any callbacks
+registered for the event type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event_data</strong> (<em>dict</em>) – The event data in dictionary format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.EventsHandler.register_callback">
+<span class="sig-name descname"><span class="pre">register_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#EventsHandler.register_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.EventsHandler.register_callback" title="Link to this definition"></a></dt>
+<dd><p>Registers a callback for a specific event type.</p>
+<p>This method associates a callback function with an event name,
+allowing the function to be called whenever that event occurs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_name</strong> (<em>str</em>) – The name of the event to listen for.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – The function to call when the event occurs.</p></li>
+<li><p><strong>temporary</strong> (<em>bool</em>) – If True, the callback will be removed after it’s
+triggered once. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>The ID of the registered callback, which can be used to</dt><dd><p>remove it later.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="pydoll.html#pydoll.exceptions.InvalidCallback" title="pydoll.exceptions.InvalidCallback"><strong>InvalidCallback</strong></a> – If the callback is not callable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.pydoll.connection.managers.EventsHandler.remove_callback">
+<span class="sig-name descname"><span class="pre">remove_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydoll/pydoll/connection/managers.html#EventsHandler.remove_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.pydoll.connection.managers.EventsHandler.remove_callback" title="Link to this definition"></a></dt>
+<dd><p>Removes a callback by its ID.</p>
+<p>This method removes a previously registered callback from the
+event handler, preventing it from being triggered in the future.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callback_id</strong> (<em>int</em>) – The ID of the callback to remove.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>True if the callback was successfully removed, False if</dt><dd><p>the callback ID was not found.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.pydoll.connection">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pydoll.pydoll.connection" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,732 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.browser.page &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.browser.page</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.pydoll.browser.page</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">aiofiles</span>
+
+<span class="kn">from</span> <span class="nn">pydoll.commands.dom</span> <span class="kn">import</span> <span class="n">DomCommands</span>
+<span class="kn">from</span> <span class="nn">pydoll.commands.fetch</span> <span class="kn">import</span> <span class="n">FetchCommands</span>
+<span class="kn">from</span> <span class="nn">pydoll.commands.network</span> <span class="kn">import</span> <span class="n">NetworkCommands</span>
+<span class="kn">from</span> <span class="nn">pydoll.commands.page</span> <span class="kn">import</span> <span class="n">PageCommands</span>
+<span class="kn">from</span> <span class="nn">pydoll.commands.runtime</span> <span class="kn">import</span> <span class="n">RuntimeCommands</span>
+<span class="kn">from</span> <span class="nn">pydoll.commands.storage</span> <span class="kn">import</span> <span class="n">StorageCommands</span>
+<span class="kn">from</span> <span class="nn">pydoll.connection.connection</span> <span class="kn">import</span> <span class="n">ConnectionHandler</span>
+<span class="kn">from</span> <span class="nn">pydoll.element</span> <span class="kn">import</span> <span class="n">WebElement</span>
+<span class="kn">from</span> <span class="nn">pydoll.exceptions</span> <span class="kn">import</span> <span class="n">InvalidFileExtension</span>
+<span class="kn">from</span> <span class="nn">pydoll.mixins.find_elements</span> <span class="kn">import</span> <span class="n">FindElementsMixin</span>
+<span class="kn">from</span> <span class="nn">pydoll.utils</span> <span class="kn">import</span> <span class="n">decode_image_to_bytes</span>
+
+
+<div class="viewcode-block" id="Page">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page">[docs]</a>
+<span class="k">class</span> <span class="nc">Page</span><span class="p">(</span><span class="n">FindElementsMixin</span><span class="p">):</span>  <span class="c1"># noqa: PLR0904</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">page_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Page instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            connection_port (int): The port number for the connection to the</span>
+<span class="sd">                browser.</span>
+<span class="sd">            page_id (str): The ID of the page, obtained via the DevTools</span>
+<span class="sd">                Protocol.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connection_handler</span> <span class="o">=</span> <span class="n">ConnectionHandler</span><span class="p">(</span><span class="n">connection_port</span><span class="p">,</span> <span class="n">page_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_page_events_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_network_events_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_events_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dom_events_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">page_events_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether page events are enabled or not.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if page events are enabled, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_page_events_enabled</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">network_events_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether network events are enabled or not.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if network events are enabled, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_network_events_enabled</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fetch_events_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether fetch events are enabled or not.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if fetch events are enabled, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_events_enabled</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dom_events_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns whether DOM events are enabled or not.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if DOM events are enabled, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dom_events_enabled</span>
+
+    <span class="nd">@property</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">current_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the current URL of the page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The current URL of the page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">DomCommands</span><span class="o">.</span><span class="n">get_current_url</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">page_source</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the source code of the page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The source code of the page.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span>
+            <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">evaluate_script</span><span class="p">(</span>
+                <span class="s1">&#39;document.documentElement.outerHTML&#39;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Page.close">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.close">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes the page.</span>
+
+<span class="sd">        This method closes the current page in the browser.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">close</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Page.get_cookies">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.get_cookies">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_cookies</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the cookies of the page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[dict]: A list of dictionaries containing cookie data from</span>
+<span class="sd">                the current page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span>
+            <span class="n">NetworkCommands</span><span class="o">.</span><span class="n">get_all_cookies</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;cookies&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Page.set_cookies">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.set_cookies">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">set_cookies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cookies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets cookies for the page.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cookies (list[dict]): A list of dictionaries containing cookie</span>
+<span class="sd">                data to set for the current page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">StorageCommands</span><span class="o">.</span><span class="n">set_cookies</span><span class="p">(</span><span class="n">cookies</span><span class="p">))</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">NetworkCommands</span><span class="o">.</span><span class="n">set_cookies</span><span class="p">(</span><span class="n">cookies</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Page.delete_all_cookies">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.delete_all_cookies">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_all_cookies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes all cookies from the browser.</span>
+
+<span class="sd">        This clears both storage cookies and browser cookies associated with</span>
+<span class="sd">        the current page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">StorageCommands</span><span class="o">.</span><span class="n">clear_cookies</span><span class="p">())</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">NetworkCommands</span><span class="o">.</span><span class="n">clear_browser_cookies</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Page.has_dialog">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.has_dialog">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">has_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if a dialog is present on the page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if a dialog is present, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_handler</span><span class="o">.</span><span class="n">dialog</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Page.get_dialog_message">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.get_dialog_message">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_dialog_message</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the message of the dialog on the page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The message of the dialog.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_dialog</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="s1">&#39;No dialog present on the page&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_handler</span><span class="o">.</span><span class="n">dialog</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;message&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Page.accept_dialog">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.accept_dialog">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">accept_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Accepts the dialog on the page.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            LookupError: If no dialog is present on the page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_dialog</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="s1">&#39;No dialog present on the page&#39;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">handle_dialog</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Page.go_to">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.go_to">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">go_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Navigates to a URL in the page.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url (str): The URL to navigate to.</span>
+<span class="sd">            timeout (int): Maximum time in seconds to wait for page to load.</span>
+<span class="sd">                Defaults to 300 seconds.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TimeoutError: If the page fails to load within the specified</span>
+<span class="sd">                timeout.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_if_url_not_changed</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">go_to</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_page_load</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s1">&#39;Page load timed out&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Page.refresh">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.refresh">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refreshes the page.</span>
+
+<span class="sd">        This method reloads the current page and waits for it to finish</span>
+<span class="sd">        loading.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TimeoutError: If the page does not finish loading within the</span>
+<span class="sd">                default timeout period (300 seconds).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">refresh</span><span class="p">())</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_page_load</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TimeoutError</span><span class="p">(</span><span class="s1">&#39;Page load timed out&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Page.get_screenshot">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.get_screenshot">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_screenshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Captures a screenshot of the page.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): The file path to save the screenshot to.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fmt</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">fmt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;jpeg&#39;</span><span class="p">,</span> <span class="s1">&#39;jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">}:</span>
+            <span class="k">raise</span> <span class="n">InvalidFileExtension</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s1"> extension is not supported.&#39;</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span>
+            <span class="n">PageCommands</span><span class="o">.</span><span class="n">screenshot</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">screenshot_b64</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">screenshot_bytes</span> <span class="o">=</span> <span class="n">decode_image_to_bytes</span><span class="p">(</span><span class="n">screenshot_b64</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">aiofiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">screenshot_bytes</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Page.get_screenshot_base64">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.get_screenshot_base64">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_screenshot_base64</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the screenshot of the page as a base64 encoded string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The base64 encoded screenshot.</span>
+
+<span class="sd">        # TODO: remove the duplicated logic</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">screenshot</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Page.set_download_path">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.set_download_path">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">set_download_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the download path for the page.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): The path where the downloaded files should be saved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">set_download_path</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Page.get_pdf_base64">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.get_pdf_base64">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_pdf_base64</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the PDF data of the page.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The PDF data of the page.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">print_to_pdf</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Page.print_to_pdf">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.print_to_pdf">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">print_to_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints the page to a PDF file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): The file path to save the PDF file to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">print_to_pdf</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">pdf_b64</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="n">pdf_bytes</span> <span class="o">=</span> <span class="n">decode_image_to_bytes</span><span class="p">(</span><span class="n">pdf_b64</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">aiofiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pdf_bytes</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Page.get_network_logs">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.get_network_logs">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_network_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves network logs from the page.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            matches (list[str]): A list of URL patterns to match network logs</span>
+<span class="sd">                against. If empty, all logs are returned.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of network logs that match the specified patterns.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            LookupError: If no network logs match the specified patterns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">network_logs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_handler</span><span class="o">.</span><span class="n">network_logs</span>
+        <span class="n">logs_matched</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">network_logs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">log</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;params&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">log</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;request&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]:</span>
+                    <span class="n">logs_matched</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">logs_matched</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="s1">&#39;No network logs matched the specified pattern&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">logs_matched</span></div>
+
+
+<div class="viewcode-block" id="Page.get_network_response_bodies">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.get_network_response_bodies">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_network_response_bodies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">matches</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the response bodies of network requests that match the</span>
+<span class="sd">        specified pattern.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            matches (list): The URL patterns to match network requests against.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of response bodies from network requests that match</span>
+<span class="sd">                the specified patterns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logs_matched</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_network_logs</span><span class="p">(</span><span class="n">matches</span><span class="p">)</span>
+        <span class="n">responses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">logs_matched</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">body</span><span class="p">,</span> <span class="n">base64encoded</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_network_response_body</span><span class="p">(</span>
+                    <span class="n">log</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">body</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">base64encoded</span> <span class="k">else</span> <span class="n">body</span>
+            <span class="n">responses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">responses</span></div>
+
+
+<div class="viewcode-block" id="Page.get_network_response_body">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.get_network_response_body">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_network_response_body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the response body of a network request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The ID of the network request.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: A tuple containing:</span>
+<span class="sd">                - str: The response body content</span>
+<span class="sd">                - bool: Flag indicating if the body is base64 encoded</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span>
+            <span class="n">NetworkCommands</span><span class="o">.</span><span class="n">get_response_body</span><span class="p">(</span><span class="n">request_id</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;body&#39;</span><span class="p">],</span>
+            <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;base64Encoded&#39;</span><span class="p">],</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Page.enable_page_events">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.enable_page_events">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">enable_page_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables page events for the page.</span>
+
+<span class="sd">        This allows listening for page-related events such as load, navigate,</span>
+<span class="sd">        and content change events. These events can be captured with the `on`</span>
+<span class="sd">        method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">enable_page</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_page_events_enabled</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Page.enable_network_events">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.enable_network_events">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">enable_network_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables network events for the page.</span>
+
+<span class="sd">        This allows listening for network-related events such as request and</span>
+<span class="sd">        response events. These events can be captured with the `on` method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">NetworkCommands</span><span class="o">.</span><span class="n">enable_network_events</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_network_events_enabled</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Page.enable_fetch_events">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.enable_fetch_events">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">enable_fetch_events</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">handle_auth</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">resource_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;Document&#39;</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables fetch events for the page.</span>
+
+<span class="sd">        This allows interception of network requests before they are sent.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            handle_auth (bool): Whether to handle authentication requests.</span>
+<span class="sd">                Defaults to False.</span>
+<span class="sd">            resource_type (str): The type of resource to intercept.</span>
+<span class="sd">                Defaults to &#39;Document&#39;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span>
+            <span class="n">FetchCommands</span><span class="o">.</span><span class="n">enable_fetch_events</span><span class="p">(</span><span class="n">handle_auth</span><span class="p">,</span> <span class="n">resource_type</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_events_enabled</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Page.enable_dom_events">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.enable_dom_events">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">enable_dom_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Enables DOM events for the page.</span>
+
+<span class="sd">        This allows listening for DOM-related events such as node creation,</span>
+<span class="sd">        attribute modification, and node removal events. These events can be</span>
+<span class="sd">        captured with the `on` method.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">DomCommands</span><span class="o">.</span><span class="n">enable_dom_events</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dom_events_enabled</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Page.disable_fetch_events">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.disable_fetch_events">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">disable_fetch_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disables fetch events for the page.</span>
+
+<span class="sd">        This stops the interception of network requests that was previously</span>
+<span class="sd">        enabled with enable_fetch_events().</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">FetchCommands</span><span class="o">.</span><span class="n">disable_fetch_events</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_events_enabled</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Page.disable_page_events">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.disable_page_events">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">disable_page_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disables page events for the page.</span>
+
+<span class="sd">        This stops listening for page-related events that were previously</span>
+<span class="sd">        enabled with enable_page_events().</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">PageCommands</span><span class="o">.</span><span class="n">disable_page</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_page_events_enabled</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Page.on">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.on">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">on</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">event_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="nb">callable</span><span class="p">,</span> <span class="n">temporary</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registers an event listener for the page.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_name (str): The event name to listen for.</span>
+<span class="sd">            callback (callable): The callback function to execute when the</span>
+<span class="sd">                event is triggered.</span>
+<span class="sd">            temporary (bool): If True, the callback will be removed after it&#39;s</span>
+<span class="sd">                triggered once. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The ID of the registered callback, which can be used to</span>
+<span class="sd">                remove the listener later.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">callback_wrapper</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">callback</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
+            <span class="n">function_to_register</span> <span class="o">=</span> <span class="n">callback_wrapper</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">function_to_register</span> <span class="o">=</span> <span class="n">callback</span>
+
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_handler</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span>
+            <span class="n">event_name</span><span class="p">,</span> <span class="n">function_to_register</span><span class="p">,</span> <span class="n">temporary</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Page.execute_script">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.browser.html#pydoll.pydoll.browser.page.Page.execute_script">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">execute_script</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">script</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">WebElement</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes a JavaScript script in the page.</span>
+<span class="sd">        If an element is provided, the script will be executed in the context</span>
+<span class="sd">        of that element. To provide the element context, use the &#39;argument&#39;</span>
+<span class="sd">        keyword in the script.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        await page.execute_script(&#39;argument.click()&#39;, element)</span>
+<span class="sd">        await page.execute_script(&#39;argument.value = &quot;Hello, World!&quot;&#39;, element)</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            script (str): The JavaScript script to execute.</span>
+<span class="sd">            element (WebElement, optional): The element to execute the script</span>
+<span class="sd">                on. Use &#39;argument&#39; in your script to refer to this element.</span>
+<span class="sd">                Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The result of the script execution from the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="n">script</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;argument&#39;</span><span class="p">,</span> <span class="s1">&#39;this&#39;</span><span class="p">)</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;function()</span><span class="se">{{</span><span class="s1"> </span><span class="si">{</span><span class="n">script</span><span class="si">}</span><span class="s1"> </span><span class="se">}}</span><span class="s1">&#39;</span>
+            <span class="n">object_id</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">_object_id</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">call_function_on</span><span class="p">(</span>
+                <span class="n">object_id</span><span class="p">,</span> <span class="n">script</span><span class="p">,</span> <span class="n">return_by_value</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">evaluate_script</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_refresh_if_url_not_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refreshes the page if the URL has not changed.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url (str): The URL to compare against.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_url</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_url</span>
+        <span class="k">if</span> <span class="n">current_url</span> <span class="o">==</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_wait_page_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Waits for the page to finish loading.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timeout (int): Maximum time in seconds to wait for the page</span>
+<span class="sd">                to load. Defaults to 300 seconds.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            asyncio.TimeoutError: If the page does not finish loading within</span>
+<span class="sd">                the specified timeout.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_execute_command</span><span class="p">(</span>
+                <span class="n">RuntimeCommands</span><span class="o">.</span><span class="n">evaluate_script</span><span class="p">(</span><span class="s1">&#39;document.readyState&#39;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;complete&#39;</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="k">if</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span> <span class="o">&gt;</span> <span class="n">timeout</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimeoutError</span><span class="p">(</span><span class="s1">&#39;Page load timed out&#39;</span><span class="p">)</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

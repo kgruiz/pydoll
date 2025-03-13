@@ -1,0 +1,1083 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.events package &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pydoll.events package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/pydoll.events.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pydoll-events-package">
+<h1>pydoll.events package<a class="headerlink" href="#pydoll-events-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-pydoll.events.browser">
+<span id="pydoll-events-browser-module"></span><h2>pydoll.events.browser module<a class="headerlink" href="#module-pydoll.events.browser" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.browser.BrowserEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.browser.</span></span><span class="sig-name descname"><span class="pre">BrowserEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/browser.html#BrowserEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.browser.BrowserEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to define the browser events available through the
+Chrome DevTools Protocol (CDP). These events allow for monitoring
+specific actions and states within the browser, such as downloads.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.browser.BrowserEvents.DOWNLOAD_PROGRESS">
+<span class="sig-name descname"><span class="pre">DOWNLOAD_PROGRESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Browser.downloadProgress'</span></em><a class="headerlink" href="#pydoll.events.browser.BrowserEvents.DOWNLOAD_PROGRESS" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the download progress updates.</p>
+<p>This event provides details about the ongoing download,
+including the amount downloaded and the total size.
+It is part of the CDP’s capabilities for monitoring
+download activities in the browser.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.browser.BrowserEvents.DOWNLOAD_WILL_BEGIN">
+<span class="sig-name descname"><span class="pre">DOWNLOAD_WILL_BEGIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Browser.downloadWillBegin'</span></em><a class="headerlink" href="#pydoll.events.browser.BrowserEvents.DOWNLOAD_WILL_BEGIN" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a download is about to start.</p>
+<p>This event notifies listeners before the download begins,
+providing an opportunity to handle or react to download events.
+This is part of the CDP’s support for download management
+in the browser.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.events.dom">
+<span id="pydoll-events-dom-module"></span><h2>pydoll.events.dom module<a class="headerlink" href="#module-pydoll.events.dom" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.dom.</span></span><span class="sig-name descname"><span class="pre">DomEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/dom.html#DomEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.dom.DomEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to define the DOM events available through the
+Chrome DevTools Protocol (CDP). These events allow for monitoring
+changes and updates within the Document Object Model (DOM)
+of a web page, enabling developers to react to specific
+modifications and interactions with the DOM elements.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.ATTRIBUTE_MODIFIED">
+<span class="sig-name descname"><span class="pre">ATTRIBUTE_MODIFIED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.attributeModified'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.ATTRIBUTE_MODIFIED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when an attribute of a DOM node is modified.</p>
+<p>This event provides information about the node affected and the
+attribute that was changed. It is part of the CDP’s capabilities
+for tracking DOM changes and allows developers to respond
+to attribute modifications in real time.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.ATTRIBUTE_REMOVED">
+<span class="sig-name descname"><span class="pre">ATTRIBUTE_REMOVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.attributeRemoved'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.ATTRIBUTE_REMOVED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when an attribute of a DOM node is removed.</p>
+<p>This event indicates that an attribute has been deleted from a
+node, allowing developers to manage state or perform cleanup
+based on the changes. It is supported by the CDP to ensure
+developers can monitor DOM manipulations effectively.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.CHARACTER_DATA_MODIFIED">
+<span class="sig-name descname"><span class="pre">CHARACTER_DATA_MODIFIED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.characterDataModified'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.CHARACTER_DATA_MODIFIED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the character data of a DOM node is modified.</p>
+<p>This event informs listeners about changes in the text content
+of a node, which is essential for applications that need to
+reflect real-time updates in the UI based on data changes.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.CHILD_NODE_COUNT_UPDATED">
+<span class="sig-name descname"><span class="pre">CHILD_NODE_COUNT_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.childNodeCountUpdated'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.CHILD_NODE_COUNT_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the number of child nodes of a DOM node is updated.</p>
+<p>This event alerts developers when the number of children changes,
+allowing them to react to structural changes in the DOM tree.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.CHILD_NODE_INSERTED">
+<span class="sig-name descname"><span class="pre">CHILD_NODE_INSERTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.childNodeInserted'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.CHILD_NODE_INSERTED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a new child node is inserted into a DOM node.</p>
+<p>This event notifies listeners of new additions to the DOM,
+enabling actions such as updating UI components or handling
+related data.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.CHILD_NODE_REMOVED">
+<span class="sig-name descname"><span class="pre">CHILD_NODE_REMOVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.childNodeRemoved'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.CHILD_NODE_REMOVED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a child node is removed from a DOM node.</p>
+<p>This event indicates that a child has been deleted, allowing
+developers to manage their state or trigger updates based on
+the removal of elements in the DOM.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.DOCUMENT_UPDATED">
+<span class="sig-name descname"><span class="pre">DOCUMENT_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.documentUpdated'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.DOCUMENT_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the DOM document is updated.</p>
+<p>This event signifies that changes have occurred at the document
+level, prompting developers to refresh or update their views
+accordingly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.SCROLLABLE_FLAG_UPDATED">
+<span class="sig-name descname"><span class="pre">SCROLLABLE_FLAG_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.scrollableFlagUpdated'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.SCROLLABLE_FLAG_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the scrollable flag of a DOM node is updated.</p>
+<p>This event is useful for determining which elements in the DOM
+can be scrolled, allowing for enhanced user interactions and
+responsive designs.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.SHADOW_ROOT_POPPED">
+<span class="sig-name descname"><span class="pre">SHADOW_ROOT_POPPED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.shadowRootPopped'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.SHADOW_ROOT_POPPED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a shadow root is popped from the stack.</p>
+<p>This event indicates that a shadow DOM context has been removed,
+which is relevant for applications utilizing shadow DOM features
+for encapsulated styling and markup.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.SHADOW_ROOT_PUSHED">
+<span class="sig-name descname"><span class="pre">SHADOW_ROOT_PUSHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.shadowRootPushed'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.SHADOW_ROOT_PUSHED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a shadow root is pushed onto the stack.</p>
+<p>This event signifies that a new shadow DOM context has been
+created, allowing developers to manage and respond to changes
+in encapsulated DOM structures.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.dom.DomEvents.TOP_LAYER_ELEMENTS_UPDATED">
+<span class="sig-name descname"><span class="pre">TOP_LAYER_ELEMENTS_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.topLayerElementsUpdated'</span></em><a class="headerlink" href="#pydoll.events.dom.DomEvents.TOP_LAYER_ELEMENTS_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the top layer elements in the DOM are updated.</p>
+<p>This event allows for monitoring changes in the most visible
+elements in the DOM, which is essential for managing UI states
+and rendering updates.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.events.fetch">
+<span id="pydoll-events-fetch-module"></span><h2>pydoll.events.fetch module<a class="headerlink" href="#module-pydoll.events.fetch" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.fetch.FetchEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.fetch.</span></span><span class="sig-name descname"><span class="pre">FetchEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/fetch.html#FetchEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.fetch.FetchEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to define the Fetch events available through the
+Chrome DevTools Protocol (CDP). These events are related to
+the management of network requests, allowing developers to
+intercept, modify, and monitor HTTP requests and responses
+made by the browser.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.fetch.FetchEvents.AUTH_REQUIRED">
+<span class="sig-name descname"><span class="pre">AUTH_REQUIRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Fetch.authRequired'</span></em><a class="headerlink" href="#pydoll.events.fetch.FetchEvents.AUTH_REQUIRED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when authentication is required for a network
+request.</p>
+<p>This event allows developers to respond to authentication
+challenges, enabling them to provide credentials or take
+appropriate actions when the requested resource requires
+authentication.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.fetch.FetchEvents.REQUEST_PAUSED">
+<span class="sig-name descname"><span class="pre">REQUEST_PAUSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Fetch.requestPaused'</span></em><a class="headerlink" href="#pydoll.events.fetch.FetchEvents.REQUEST_PAUSED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a network request is paused.</p>
+<p>This event is particularly useful for developers who want to
+analyze or modify requests before they are sent. When a request
+is paused, it gives the opportunity to inspect the request data
+or alter headers before resuming it.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.events.network">
+<span id="pydoll-events-network-module"></span><h2>pydoll.events.network module<a class="headerlink" href="#module-pydoll.events.network" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.network.</span></span><span class="sig-name descname"><span class="pre">NetworkEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/network.html#NetworkEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.network.NetworkEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines constants for various network-related events.</p>
+<p>These constants can be used to identify and handle network interactions in
+applications, particularly in event-driven architectures or APIs that
+monitor network activity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.DATA_RECEIVED">
+<span class="sig-name descname"><span class="pre">DATA_RECEIVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.dataReceived'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.DATA_RECEIVED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when data is received over the network.</p>
+<p>This can include responses from HTTP requests, incoming WebSocket messages,
+or data from other network interactions. Useful for tracking incoming data
+flow.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.EVENT_SOURCE_MESSAGE_RECEIVED">
+<span class="sig-name descname"><span class="pre">EVENT_SOURCE_MESSAGE_RECEIVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.eventSourceMessageReceived'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.EVENT_SOURCE_MESSAGE_RECEIVED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a message is received from an EventSource.</p>
+<p>Typically used for server-sent events (SSE), this event indicates that a
+new message has been sent from the server to the client, enabling real-time
+updates.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.LOADING_FAILED">
+<span class="sig-name descname"><span class="pre">LOADING_FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.loadingFailed'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.LOADING_FAILED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a failure in loading a network resource.</p>
+<p>This can occur due to various reasons, such as network errors, resource
+not found, or permission issues. This event is critical for error handling
+and debugging.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.LOADING_FINISHED">
+<span class="sig-name descname"><span class="pre">LOADING_FINISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.loadingFinished'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.LOADING_FINISHED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a network loading operation is completed.</p>
+<p>This event is triggered regardless of whether the loading was successful
+or failed, making it useful for cleaning up or updating the user interface
+after loading operations.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.POLICY_UPDATED">
+<span class="sig-name descname"><span class="pre">POLICY_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.policyUpdated'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.POLICY_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates that the network policy has been updated.</p>
+<p>This might relate to security, access controls, or other network-related
+policies that affect how requests and responses are handled. It’s important
+for maintaining compliance and security in applications.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.REQUEST_INTERCEPTED">
+<span class="sig-name descname"><span class="pre">REQUEST_INTERCEPTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.requestIntercepted'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.REQUEST_INTERCEPTED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a network request has been intercepted.</p>
+<p>This is often used in service workers or other intermediary layers to
+modify or block requests before they reach the network. Handling this event
+is crucial for implementing custom request logic or caching strategies.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.REQUEST_SERVED_FROM_CACHE">
+<span class="sig-name descname"><span class="pre">REQUEST_SERVED_FROM_CACHE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.requestServedFromCache'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.REQUEST_SERVED_FROM_CACHE" title="Link to this definition"></a></dt>
+<dd><p>Event indicating that a network request was fulfilled from the cache.</p>
+<p>This helps identify when data is being retrieved from cache instead of
+making a new network request, which can improve performance and reduce
+latency.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.REQUEST_WILL_BE_SENT">
+<span class="sig-name descname"><span class="pre">REQUEST_WILL_BE_SENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.requestWillBeSent'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.REQUEST_WILL_BE_SENT" title="Link to this definition"></a></dt>
+<dd><p>Event triggered just before a network request is sent.</p>
+<p>This is useful for logging, modifying request headers, or performing
+actions before the actual request is made. It allows developers to
+intercept and examine requests.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.RESPONSE_RECEIVED">
+<span class="sig-name descname"><span class="pre">RESPONSE_RECEIVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.responseReceived'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.RESPONSE_RECEIVED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a response has been received from a network request.</p>
+<p>This event contains details about the response, such as status codes,
+headers, and the body of the response. It’s crucial for processing the
+results of network requests.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.WEB_SOCKET_CLOSED">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_CLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketClosed'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_CLOSED" title="Link to this definition"></a></dt>
+<dd><p>Event that occurs when a WebSocket connection has been closed.</p>
+<p>This can happen due to normal closure, errors, or network interruptions.
+Handling this event is important for managing WebSocket connections and
+reconnection logic.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.WEB_SOCKET_CREATED">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_CREATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketCreated'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_CREATED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a new WebSocket connection is established.</p>
+<p>This indicates that a WebSocket connection is active and ready for
+communication, allowing developers to set up message handlers or perform
+other initialization tasks.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_ERROR">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_FRAME_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketFrameError'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_ERROR" title="Link to this definition"></a></dt>
+<dd><p>Event indicating that there was an error with a frame in a WebSocket
+communication.</p>
+<p>This can be used to handle specific frame-related errors and improve the
+robustness of WebSocket implementations by allowing for error logging and
+corrective actions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_RECEIVED">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_FRAME_RECEIVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketFrameReceived'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_RECEIVED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a frame is received through a WebSocket.</p>
+<p>This is essential for processing incoming messages and performing actions
+based on the content of those messages.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_SENT">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_FRAME_SENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketFrameSent'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.WEB_SOCKET_FRAME_SENT" title="Link to this definition"></a></dt>
+<dd><p>Event representing a frame that has been sent through a WebSocket.</p>
+<p>This event can be used for logging sent messages, monitoring communication,
+or performing actions after a message has been sent.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CLOSED">
+<span class="sig-name descname"><span class="pre">WEB_TRANSPORT_CLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webTransportClosed'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CLOSED" title="Link to this definition"></a></dt>
+<dd><p>Event indicating that a web transport connection has been closed.</p>
+<p>Web transport connections are often used for low-latency communication.
+Handling this event is vital for ensuring that resources are properly
+released and that the application can react to disconnections.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CONNECTION_ESTABLISHED">
+<span class="sig-name descname"><span class="pre">WEB_TRANSPORT_CONNECTION_ESTABLISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webTransportConnectionEstablished'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CONNECTION_ESTABLISHED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a web transport connection is successfully established.</p>
+<p>This signifies that the connection is ready for use, allowing for
+immediate data transmission and interaction.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CREATED">
+<span class="sig-name descname"><span class="pre">WEB_TRANSPORT_CREATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webTransportCreated'</span></em><a class="headerlink" href="#pydoll.events.network.NetworkEvents.WEB_TRANSPORT_CREATED" title="Link to this definition"></a></dt>
+<dd><p>Event that signifies that a new web transport connection has been created.</p>
+<p>This is useful for setting up communication channels and initializing
+necessary resources for the newly created transport.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.events.page">
+<span id="pydoll-events-page-module"></span><h2>pydoll.events.page module<a class="headerlink" href="#module-pydoll.events.page" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.page.</span></span><span class="sig-name descname"><span class="pre">PageEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/page.html#PageEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.page.PageEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines constants for various page-related events.</p>
+<p>These constants represent significant events in the lifecycle of a web
+page, particularly in the context of web automation, testing,
+or monitoring.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.DOCUMENT_OPENED">
+<span class="sig-name descname"><span class="pre">DOCUMENT_OPENED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.documentOpened'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.DOCUMENT_OPENED" title="Link to this definition"></a></dt>
+<dd><p>Event that signifies a new document has been opened in the page.</p>
+<p>This event is important for tracking changes in the document context,
+particularly in environments where documents can be dynamically created
+or loaded.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.DOM_CONTENT_LOADED">
+<span class="sig-name descname"><span class="pre">DOM_CONTENT_LOADED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.domContentEventFired'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.DOM_CONTENT_LOADED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when the DOMContentLoaded event is fired.</p>
+<p>This event indicates that the initial HTML document has been completely
+loaded and parsed, which allows for immediate manipulation of the DOM
+before external resources like images are fully loaded.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.DOWNLOAD_PROGRESS">
+<span class="sig-name descname"><span class="pre">DOWNLOAD_PROGRESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.downloadProgress'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.DOWNLOAD_PROGRESS" title="Link to this definition"></a></dt>
+<dd><p>Event fired to indicate progress on a download operation.</p>
+<p>This event provides updates on the download status, enabling the
+application to inform users about ongoing downloads and their completion.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.DOWNLOAD_WILL_BEGIN">
+<span class="sig-name descname"><span class="pre">DOWNLOAD_WILL_BEGIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.downloadWillBegin'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.DOWNLOAD_WILL_BEGIN" title="Link to this definition"></a></dt>
+<dd><p>Event that occurs when a download is about to start.</p>
+<p>This event is significant for tracking the initiation of downloads,
+allowing for pre-download actions such as logging or user notifications.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.FILE_CHOOSER_OPENED">
+<span class="sig-name descname"><span class="pre">FILE_CHOOSER_OPENED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.fileChooserOpened'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.FILE_CHOOSER_OPENED" title="Link to this definition"></a></dt>
+<dd><p>Event indicating that a file chooser dialog has been opened.</p>
+<p>This event is crucial for applications that require user interaction for
+file uploads, allowing for tracking when a user is prompted to select
+files.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.FRAME_ATTACHED">
+<span class="sig-name descname"><span class="pre">FRAME_ATTACHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameAttached'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.FRAME_ATTACHED" title="Link to this definition"></a></dt>
+<dd><p>Event that occurs when a frame is attached to the page.</p>
+<p>This event is significant in scenarios involving iframes or nested browsing
+contexts, enabling developers to manage and interact with newly added
+frames.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.FRAME_DETACHED">
+<span class="sig-name descname"><span class="pre">FRAME_DETACHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameDetached'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.FRAME_DETACHED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a frame is detached from the page.</p>
+<p>This can happen when iframes are removed or navigated away, and it’s
+important for cleanup and managing resources associated with those frames.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.FRAME_NAVIGATED">
+<span class="sig-name descname"><span class="pre">FRAME_NAVIGATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameNavigated'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.FRAME_NAVIGATED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a frame has been navigated to a new URL.</p>
+<p>This is essential for tracking navigation within iframes, allowing for
+updates to the application state or user interface based on the content
+of the frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.FRAME_STARTED_LOADING">
+<span class="sig-name descname"><span class="pre">FRAME_STARTED_LOADING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameStartedLoading'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.FRAME_STARTED_LOADING" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a frame starts loading content.</p>
+<p>This event is useful for tracking the loading state of frames,
+enabling developers to manage loading indicators or perform actions when
+frames begin loading resources.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.FRAME_STOPPED_LOADING">
+<span class="sig-name descname"><span class="pre">FRAME_STOPPED_LOADING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameStoppedLoading'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.FRAME_STOPPED_LOADING" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a frame has stopped loading content.</p>
+<p>This can signify that a frame has successfully loaded or encountered an
+error, allowing for appropriate handling of frame loading states.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.JS_DIALOG_CLOSED">
+<span class="sig-name descname"><span class="pre">JS_DIALOG_CLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.javascriptDialogClosed'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.JS_DIALOG_CLOSED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a JavaScript dialog (such as an alert or confirmation)
+is closed.</p>
+<p>This is useful for managing user interactions with dialogs, allowing for
+actions to be taken after a dialog has been dismissed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.JS_DIALOG_OPENING">
+<span class="sig-name descname"><span class="pre">JS_DIALOG_OPENING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.javascriptDialogOpening'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.JS_DIALOG_OPENING" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a JavaScript dialog is about to open.</p>
+<p>This event can be used to intervene in the opening of the dialog, such as
+providing automated responses or logging dialog interactions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.LIFECYCLE_EVENT">
+<span class="sig-name descname"><span class="pre">LIFECYCLE_EVENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.lifecycleEvent'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.LIFECYCLE_EVENT" title="Link to this definition"></a></dt>
+<dd><p>Event representing a generic lifecycle event for the page.</p>
+<p>This event is a catch-all for various lifecycle-related events and can be
+used for monitoring changes in the page state throughout its lifetime.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.NAVIGATED_WITHIN_DOCUMENT">
+<span class="sig-name descname"><span class="pre">NAVIGATED_WITHIN_DOCUMENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.navigatedWithinDocument'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.NAVIGATED_WITHIN_DOCUMENT" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates navigation within the same document.</p>
+<p>This event is useful for tracking changes in the document state, such as
+anchor links or in-page navigation, without requiring a full page reload.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.PAGE_LOADED">
+<span class="sig-name descname"><span class="pre">PAGE_LOADED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.loadEventFired'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.PAGE_LOADED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the page has fully loaded.</p>
+<p>This includes the loading of all resources, such as images and stylesheets.
+It is typically used to perform actions that require the entire page to be
+ready for interaction or manipulation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.page.PageEvents.WINDOW_OPENED">
+<span class="sig-name descname"><span class="pre">WINDOW_OPENED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.windowOpen'</span></em><a class="headerlink" href="#pydoll.events.page.PageEvents.WINDOW_OPENED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a new window has been opened.</p>
+<p>This is useful for applications that need to monitor or manage multiple
+windows and their interactions, particularly in the context of pop-ups
+or new tabs.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.events">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pydoll.events" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.BrowserEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.</span></span><span class="sig-name descname"><span class="pre">BrowserEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/browser.html#BrowserEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.BrowserEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to define the browser events available through the
+Chrome DevTools Protocol (CDP). These events allow for monitoring
+specific actions and states within the browser, such as downloads.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.BrowserEvents.DOWNLOAD_PROGRESS">
+<span class="sig-name descname"><span class="pre">DOWNLOAD_PROGRESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Browser.downloadProgress'</span></em><a class="headerlink" href="#pydoll.events.BrowserEvents.DOWNLOAD_PROGRESS" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the download progress updates.</p>
+<p>This event provides details about the ongoing download,
+including the amount downloaded and the total size.
+It is part of the CDP’s capabilities for monitoring
+download activities in the browser.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.BrowserEvents.DOWNLOAD_WILL_BEGIN">
+<span class="sig-name descname"><span class="pre">DOWNLOAD_WILL_BEGIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Browser.downloadWillBegin'</span></em><a class="headerlink" href="#pydoll.events.BrowserEvents.DOWNLOAD_WILL_BEGIN" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a download is about to start.</p>
+<p>This event notifies listeners before the download begins,
+providing an opportunity to handle or react to download events.
+This is part of the CDP’s support for download management
+in the browser.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.</span></span><span class="sig-name descname"><span class="pre">DomEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/dom.html#DomEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.DomEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to define the DOM events available through the
+Chrome DevTools Protocol (CDP). These events allow for monitoring
+changes and updates within the Document Object Model (DOM)
+of a web page, enabling developers to react to specific
+modifications and interactions with the DOM elements.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.ATTRIBUTE_MODIFIED">
+<span class="sig-name descname"><span class="pre">ATTRIBUTE_MODIFIED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.attributeModified'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.ATTRIBUTE_MODIFIED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when an attribute of a DOM node is modified.</p>
+<p>This event provides information about the node affected and the
+attribute that was changed. It is part of the CDP’s capabilities
+for tracking DOM changes and allows developers to respond
+to attribute modifications in real time.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.ATTRIBUTE_REMOVED">
+<span class="sig-name descname"><span class="pre">ATTRIBUTE_REMOVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.attributeRemoved'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.ATTRIBUTE_REMOVED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when an attribute of a DOM node is removed.</p>
+<p>This event indicates that an attribute has been deleted from a
+node, allowing developers to manage state or perform cleanup
+based on the changes. It is supported by the CDP to ensure
+developers can monitor DOM manipulations effectively.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.CHARACTER_DATA_MODIFIED">
+<span class="sig-name descname"><span class="pre">CHARACTER_DATA_MODIFIED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.characterDataModified'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.CHARACTER_DATA_MODIFIED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the character data of a DOM node is modified.</p>
+<p>This event informs listeners about changes in the text content
+of a node, which is essential for applications that need to
+reflect real-time updates in the UI based on data changes.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.CHILD_NODE_COUNT_UPDATED">
+<span class="sig-name descname"><span class="pre">CHILD_NODE_COUNT_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.childNodeCountUpdated'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.CHILD_NODE_COUNT_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the number of child nodes of a DOM node is updated.</p>
+<p>This event alerts developers when the number of children changes,
+allowing them to react to structural changes in the DOM tree.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.CHILD_NODE_INSERTED">
+<span class="sig-name descname"><span class="pre">CHILD_NODE_INSERTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.childNodeInserted'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.CHILD_NODE_INSERTED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a new child node is inserted into a DOM node.</p>
+<p>This event notifies listeners of new additions to the DOM,
+enabling actions such as updating UI components or handling
+related data.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.CHILD_NODE_REMOVED">
+<span class="sig-name descname"><span class="pre">CHILD_NODE_REMOVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.childNodeRemoved'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.CHILD_NODE_REMOVED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a child node is removed from a DOM node.</p>
+<p>This event indicates that a child has been deleted, allowing
+developers to manage their state or trigger updates based on
+the removal of elements in the DOM.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.DOCUMENT_UPDATED">
+<span class="sig-name descname"><span class="pre">DOCUMENT_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.documentUpdated'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.DOCUMENT_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the DOM document is updated.</p>
+<p>This event signifies that changes have occurred at the document
+level, prompting developers to refresh or update their views
+accordingly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.SCROLLABLE_FLAG_UPDATED">
+<span class="sig-name descname"><span class="pre">SCROLLABLE_FLAG_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.scrollableFlagUpdated'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.SCROLLABLE_FLAG_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the scrollable flag of a DOM node is updated.</p>
+<p>This event is useful for determining which elements in the DOM
+can be scrolled, allowing for enhanced user interactions and
+responsive designs.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.SHADOW_ROOT_POPPED">
+<span class="sig-name descname"><span class="pre">SHADOW_ROOT_POPPED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.shadowRootPopped'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.SHADOW_ROOT_POPPED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a shadow root is popped from the stack.</p>
+<p>This event indicates that a shadow DOM context has been removed,
+which is relevant for applications utilizing shadow DOM features
+for encapsulated styling and markup.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.SHADOW_ROOT_PUSHED">
+<span class="sig-name descname"><span class="pre">SHADOW_ROOT_PUSHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.shadowRootPushed'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.SHADOW_ROOT_PUSHED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a shadow root is pushed onto the stack.</p>
+<p>This event signifies that a new shadow DOM context has been
+created, allowing developers to manage and respond to changes
+in encapsulated DOM structures.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.DomEvents.TOP_LAYER_ELEMENTS_UPDATED">
+<span class="sig-name descname"><span class="pre">TOP_LAYER_ELEMENTS_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'DOM.topLayerElementsUpdated'</span></em><a class="headerlink" href="#pydoll.events.DomEvents.TOP_LAYER_ELEMENTS_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the top layer elements in the DOM are updated.</p>
+<p>This event allows for monitoring changes in the most visible
+elements in the DOM, which is essential for managing UI states
+and rendering updates.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.FetchEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.</span></span><span class="sig-name descname"><span class="pre">FetchEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/fetch.html#FetchEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.FetchEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to define the Fetch events available through the
+Chrome DevTools Protocol (CDP). These events are related to
+the management of network requests, allowing developers to
+intercept, modify, and monitor HTTP requests and responses
+made by the browser.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.FetchEvents.AUTH_REQUIRED">
+<span class="sig-name descname"><span class="pre">AUTH_REQUIRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Fetch.authRequired'</span></em><a class="headerlink" href="#pydoll.events.FetchEvents.AUTH_REQUIRED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when authentication is required for a network
+request.</p>
+<p>This event allows developers to respond to authentication
+challenges, enabling them to provide credentials or take
+appropriate actions when the requested resource requires
+authentication.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.FetchEvents.REQUEST_PAUSED">
+<span class="sig-name descname"><span class="pre">REQUEST_PAUSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Fetch.requestPaused'</span></em><a class="headerlink" href="#pydoll.events.FetchEvents.REQUEST_PAUSED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a network request is paused.</p>
+<p>This event is particularly useful for developers who want to
+analyze or modify requests before they are sent. When a request
+is paused, it gives the opportunity to inspect the request data
+or alter headers before resuming it.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.</span></span><span class="sig-name descname"><span class="pre">NetworkEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/network.html#NetworkEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.NetworkEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines constants for various network-related events.</p>
+<p>These constants can be used to identify and handle network interactions in
+applications, particularly in event-driven architectures or APIs that
+monitor network activity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.DATA_RECEIVED">
+<span class="sig-name descname"><span class="pre">DATA_RECEIVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.dataReceived'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.DATA_RECEIVED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when data is received over the network.</p>
+<p>This can include responses from HTTP requests, incoming WebSocket messages,
+or data from other network interactions. Useful for tracking incoming data
+flow.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.EVENT_SOURCE_MESSAGE_RECEIVED">
+<span class="sig-name descname"><span class="pre">EVENT_SOURCE_MESSAGE_RECEIVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.eventSourceMessageReceived'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.EVENT_SOURCE_MESSAGE_RECEIVED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a message is received from an EventSource.</p>
+<p>Typically used for server-sent events (SSE), this event indicates that a
+new message has been sent from the server to the client, enabling real-time
+updates.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.LOADING_FAILED">
+<span class="sig-name descname"><span class="pre">LOADING_FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.loadingFailed'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.LOADING_FAILED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a failure in loading a network resource.</p>
+<p>This can occur due to various reasons, such as network errors, resource
+not found, or permission issues. This event is critical for error handling
+and debugging.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.LOADING_FINISHED">
+<span class="sig-name descname"><span class="pre">LOADING_FINISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.loadingFinished'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.LOADING_FINISHED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a network loading operation is completed.</p>
+<p>This event is triggered regardless of whether the loading was successful
+or failed, making it useful for cleaning up or updating the user interface
+after loading operations.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.POLICY_UPDATED">
+<span class="sig-name descname"><span class="pre">POLICY_UPDATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.policyUpdated'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.POLICY_UPDATED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates that the network policy has been updated.</p>
+<p>This might relate to security, access controls, or other network-related
+policies that affect how requests and responses are handled. It’s important
+for maintaining compliance and security in applications.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.REQUEST_INTERCEPTED">
+<span class="sig-name descname"><span class="pre">REQUEST_INTERCEPTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.requestIntercepted'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.REQUEST_INTERCEPTED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a network request has been intercepted.</p>
+<p>This is often used in service workers or other intermediary layers to
+modify or block requests before they reach the network. Handling this event
+is crucial for implementing custom request logic or caching strategies.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.REQUEST_SERVED_FROM_CACHE">
+<span class="sig-name descname"><span class="pre">REQUEST_SERVED_FROM_CACHE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.requestServedFromCache'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.REQUEST_SERVED_FROM_CACHE" title="Link to this definition"></a></dt>
+<dd><p>Event indicating that a network request was fulfilled from the cache.</p>
+<p>This helps identify when data is being retrieved from cache instead of
+making a new network request, which can improve performance and reduce
+latency.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.REQUEST_WILL_BE_SENT">
+<span class="sig-name descname"><span class="pre">REQUEST_WILL_BE_SENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.requestWillBeSent'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.REQUEST_WILL_BE_SENT" title="Link to this definition"></a></dt>
+<dd><p>Event triggered just before a network request is sent.</p>
+<p>This is useful for logging, modifying request headers, or performing
+actions before the actual request is made. It allows developers to
+intercept and examine requests.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.RESPONSE_RECEIVED">
+<span class="sig-name descname"><span class="pre">RESPONSE_RECEIVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.responseReceived'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.RESPONSE_RECEIVED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a response has been received from a network request.</p>
+<p>This event contains details about the response, such as status codes,
+headers, and the body of the response. It’s crucial for processing the
+results of network requests.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.WEB_SOCKET_CLOSED">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_CLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketClosed'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.WEB_SOCKET_CLOSED" title="Link to this definition"></a></dt>
+<dd><p>Event that occurs when a WebSocket connection has been closed.</p>
+<p>This can happen due to normal closure, errors, or network interruptions.
+Handling this event is important for managing WebSocket connections and
+reconnection logic.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.WEB_SOCKET_CREATED">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_CREATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketCreated'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.WEB_SOCKET_CREATED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a new WebSocket connection is established.</p>
+<p>This indicates that a WebSocket connection is active and ready for
+communication, allowing developers to set up message handlers or perform
+other initialization tasks.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_ERROR">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_FRAME_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketFrameError'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_ERROR" title="Link to this definition"></a></dt>
+<dd><p>Event indicating that there was an error with a frame in a WebSocket
+communication.</p>
+<p>This can be used to handle specific frame-related errors and improve the
+robustness of WebSocket implementations by allowing for error logging and
+corrective actions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_RECEIVED">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_FRAME_RECEIVED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketFrameReceived'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_RECEIVED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a frame is received through a WebSocket.</p>
+<p>This is essential for processing incoming messages and performing actions
+based on the content of those messages.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_SENT">
+<span class="sig-name descname"><span class="pre">WEB_SOCKET_FRAME_SENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webSocketFrameSent'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.WEB_SOCKET_FRAME_SENT" title="Link to this definition"></a></dt>
+<dd><p>Event representing a frame that has been sent through a WebSocket.</p>
+<p>This event can be used for logging sent messages, monitoring communication,
+or performing actions after a message has been sent.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.WEB_TRANSPORT_CLOSED">
+<span class="sig-name descname"><span class="pre">WEB_TRANSPORT_CLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webTransportClosed'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.WEB_TRANSPORT_CLOSED" title="Link to this definition"></a></dt>
+<dd><p>Event indicating that a web transport connection has been closed.</p>
+<p>Web transport connections are often used for low-latency communication.
+Handling this event is vital for ensuring that resources are properly
+released and that the application can react to disconnections.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.WEB_TRANSPORT_CONNECTION_ESTABLISHED">
+<span class="sig-name descname"><span class="pre">WEB_TRANSPORT_CONNECTION_ESTABLISHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webTransportConnectionEstablished'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.WEB_TRANSPORT_CONNECTION_ESTABLISHED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a web transport connection is successfully established.</p>
+<p>This signifies that the connection is ready for use, allowing for
+immediate data transmission and interaction.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.NetworkEvents.WEB_TRANSPORT_CREATED">
+<span class="sig-name descname"><span class="pre">WEB_TRANSPORT_CREATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Network.webTransportCreated'</span></em><a class="headerlink" href="#pydoll.events.NetworkEvents.WEB_TRANSPORT_CREATED" title="Link to this definition"></a></dt>
+<dd><p>Event that signifies that a new web transport connection has been created.</p>
+<p>This is useful for setting up communication channels and initializing
+necessary resources for the newly created transport.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.events.</span></span><span class="sig-name descname"><span class="pre">PageEvents</span></span><a class="reference internal" href="../_modules/pydoll/events/page.html#PageEvents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.events.PageEvents" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class that defines constants for various page-related events.</p>
+<p>These constants represent significant events in the lifecycle of a web
+page, particularly in the context of web automation, testing,
+or monitoring.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.DOCUMENT_OPENED">
+<span class="sig-name descname"><span class="pre">DOCUMENT_OPENED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.documentOpened'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.DOCUMENT_OPENED" title="Link to this definition"></a></dt>
+<dd><p>Event that signifies a new document has been opened in the page.</p>
+<p>This event is important for tracking changes in the document context,
+particularly in environments where documents can be dynamically created
+or loaded.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.DOM_CONTENT_LOADED">
+<span class="sig-name descname"><span class="pre">DOM_CONTENT_LOADED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.domContentEventFired'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.DOM_CONTENT_LOADED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when the DOMContentLoaded event is fired.</p>
+<p>This event indicates that the initial HTML document has been completely
+loaded and parsed, which allows for immediate manipulation of the DOM
+before external resources like images are fully loaded.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.DOWNLOAD_PROGRESS">
+<span class="sig-name descname"><span class="pre">DOWNLOAD_PROGRESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.downloadProgress'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.DOWNLOAD_PROGRESS" title="Link to this definition"></a></dt>
+<dd><p>Event fired to indicate progress on a download operation.</p>
+<p>This event provides updates on the download status, enabling the
+application to inform users about ongoing downloads and their completion.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.DOWNLOAD_WILL_BEGIN">
+<span class="sig-name descname"><span class="pre">DOWNLOAD_WILL_BEGIN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.downloadWillBegin'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.DOWNLOAD_WILL_BEGIN" title="Link to this definition"></a></dt>
+<dd><p>Event that occurs when a download is about to start.</p>
+<p>This event is significant for tracking the initiation of downloads,
+allowing for pre-download actions such as logging or user notifications.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.FILE_CHOOSER_OPENED">
+<span class="sig-name descname"><span class="pre">FILE_CHOOSER_OPENED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.fileChooserOpened'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.FILE_CHOOSER_OPENED" title="Link to this definition"></a></dt>
+<dd><p>Event indicating that a file chooser dialog has been opened.</p>
+<p>This event is crucial for applications that require user interaction for
+file uploads, allowing for tracking when a user is prompted to select
+files.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.FRAME_ATTACHED">
+<span class="sig-name descname"><span class="pre">FRAME_ATTACHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameAttached'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.FRAME_ATTACHED" title="Link to this definition"></a></dt>
+<dd><p>Event that occurs when a frame is attached to the page.</p>
+<p>This event is significant in scenarios involving iframes or nested browsing
+contexts, enabling developers to manage and interact with newly added
+frames.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.FRAME_DETACHED">
+<span class="sig-name descname"><span class="pre">FRAME_DETACHED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameDetached'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.FRAME_DETACHED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a frame is detached from the page.</p>
+<p>This can happen when iframes are removed or navigated away, and it’s
+important for cleanup and managing resources associated with those frames.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.FRAME_NAVIGATED">
+<span class="sig-name descname"><span class="pre">FRAME_NAVIGATED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameNavigated'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.FRAME_NAVIGATED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a frame has been navigated to a new URL.</p>
+<p>This is essential for tracking navigation within iframes, allowing for
+updates to the application state or user interface based on the content
+of the frame.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.FRAME_STARTED_LOADING">
+<span class="sig-name descname"><span class="pre">FRAME_STARTED_LOADING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameStartedLoading'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.FRAME_STARTED_LOADING" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a frame starts loading content.</p>
+<p>This event is useful for tracking the loading state of frames,
+enabling developers to manage loading indicators or perform actions when
+frames begin loading resources.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.FRAME_STOPPED_LOADING">
+<span class="sig-name descname"><span class="pre">FRAME_STOPPED_LOADING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.frameStoppedLoading'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.FRAME_STOPPED_LOADING" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a frame has stopped loading content.</p>
+<p>This can signify that a frame has successfully loaded or encountered an
+error, allowing for appropriate handling of frame loading states.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.JS_DIALOG_CLOSED">
+<span class="sig-name descname"><span class="pre">JS_DIALOG_CLOSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.javascriptDialogClosed'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.JS_DIALOG_CLOSED" title="Link to this definition"></a></dt>
+<dd><p>Event fired when a JavaScript dialog (such as an alert or confirmation)
+is closed.</p>
+<p>This is useful for managing user interactions with dialogs, allowing for
+actions to be taken after a dialog has been dismissed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.JS_DIALOG_OPENING">
+<span class="sig-name descname"><span class="pre">JS_DIALOG_OPENING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.javascriptDialogOpening'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.JS_DIALOG_OPENING" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when a JavaScript dialog is about to open.</p>
+<p>This event can be used to intervene in the opening of the dialog, such as
+providing automated responses or logging dialog interactions.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.LIFECYCLE_EVENT">
+<span class="sig-name descname"><span class="pre">LIFECYCLE_EVENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.lifecycleEvent'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.LIFECYCLE_EVENT" title="Link to this definition"></a></dt>
+<dd><p>Event representing a generic lifecycle event for the page.</p>
+<p>This event is a catch-all for various lifecycle-related events and can be
+used for monitoring changes in the page state throughout its lifetime.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.NAVIGATED_WITHIN_DOCUMENT">
+<span class="sig-name descname"><span class="pre">NAVIGATED_WITHIN_DOCUMENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.navigatedWithinDocument'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.NAVIGATED_WITHIN_DOCUMENT" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates navigation within the same document.</p>
+<p>This event is useful for tracking changes in the document state, such as
+anchor links or in-page navigation, without requiring a full page reload.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.PAGE_LOADED">
+<span class="sig-name descname"><span class="pre">PAGE_LOADED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.loadEventFired'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.PAGE_LOADED" title="Link to this definition"></a></dt>
+<dd><p>Event triggered when the page has fully loaded.</p>
+<p>This includes the loading of all resources, such as images and stylesheets.
+It is typically used to perform actions that require the entire page to be
+ready for interaction or manipulation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydoll.events.PageEvents.WINDOW_OPENED">
+<span class="sig-name descname"><span class="pre">WINDOW_OPENED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Page.windowOpen'</span></em><a class="headerlink" href="#pydoll.events.PageEvents.WINDOW_OPENED" title="Link to this definition"></a></dt>
+<dd><p>Event that indicates a new window has been opened.</p>
+<p>This is useful for applications that need to monitor or manage multiple
+windows and their interactions, particularly in the context of pop-ups
+or new tabs.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

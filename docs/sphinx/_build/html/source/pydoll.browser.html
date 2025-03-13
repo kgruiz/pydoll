@@ -1,0 +1,942 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.browser package &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pydoll.browser package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/pydoll.browser.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pydoll-browser-package">
+<h1>pydoll.browser package<a class="headerlink" href="#pydoll-browser-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-pydoll.browser.base">
+<span id="pydoll-browser-base-module"></span><h2>pydoll.browser.base module<a class="headerlink" href="#module-pydoll.browser.base" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.browser.base.</span></span><span class="sig-name descname"><span class="pre">Browser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydoll.browser.options.Options" title="pydoll.browser.options.Options"><span class="pre">Options</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>A class to manage a browser instance for automated interactions.</p>
+<p>This class allows users to start and stop a browser, take screenshots,
+and register event callbacks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.delete_all_cookies">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_all_cookies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.delete_all_cookies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.delete_all_cookies" title="Link to this definition"></a></dt>
+<dd><p>Deletes all cookies from the browser.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.disable_fetch_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disable_fetch_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.disable_fetch_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.disable_fetch_events" title="Link to this definition"></a></dt>
+<dd><p>Deactivates the Fetch domain, stopping the interception of network
+requests for the websocket connection. Once this method is called,
+the connection will no longer monitor or pause any network requests,
+allowing normal network operations to resume. This can be useful when
+you want to halt the monitoring of network activity.</p>
+<p>This method has a global scope and can be used to disable fetch events
+across all pages in the browser. Each Page instance also has a
+<cite>disable_fetch_events</cite> method that allows for disabling fetch events
+on a specific page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.enable_dom_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_dom_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.enable_dom_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.enable_dom_events" title="Link to this definition"></a></dt>
+<dd><p>Enables DOM-related events for the websocket connection. When invoked,
+this method allows the connection to listen for changes in the DOM,
+including node additions, removals, and attribute changes. This feature
+is vital for applications that need to react to dynamic changes in
+the page structure. For a full list of available DOM events, refer to
+the DomCommands class documentation.</p>
+<p>This method has a global scope and can be used to listen
+for events across all pages in the browser. Each Page instance also has
+an <cite>enable_dom_events</cite> method that allows for listening to events on
+a specific page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.enable_fetch_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_fetch_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle_auth_requests</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.enable_fetch_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.enable_fetch_events" title="Link to this definition"></a></dt>
+<dd><p>Enables the Fetch domain for intercepting network requests before they
+are sent. This method allows you to modify, pause, or continue requests
+as needed. If handle_auth_requests is set to True, the connection will
+emit an event when an authentication is required during a request.
+The resource_type parameter specifies which type of requests to
+intercept; if omitted, all requests will be intercepted. Use the
+_continue_request method to resume any paused requests. This is
+especially useful for monitoring and controlling network interactions.</p>
+<p>This method has a global scope and can be used to intercept request
+across all pages in the browser. Each Page instance also has an
+<cite>enable_fetch_events</cite> method that allows for intercepting requests
+on a specific page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle_auth_requests</strong> (<em>bool</em>) – Whether to handle authentication</p></li>
+<li><p><strong>credentials.</strong> (<em>requests that require user</em>)</p></li>
+<li><p><strong>resource_type</strong> (<em>str</em>) – The type of resource to intercept (e.g.,</p></li>
+<li><p><strong>'XHR'</strong></p></li>
+<li><p><strong>specified</strong> (<em>'Script'</em><em>)</em><em>. If not</em>)</p></li>
+<li><p><strong>will</strong> (<em>all requests</em>)</p></li>
+<li><p><strong>intercepted.</strong> (<em>be</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.enable_network_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_network_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.enable_network_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.enable_network_events" title="Link to this definition"></a></dt>
+<dd><p>Activates listening for network events through the websocket
+connection. After calling this method, the connection will emit
+events related to network activities, such as resource loading and
+response status, to any registered event callbacks. This is essential
+for debugging network interactions and analyzing resource requests.
+For details on available network events, consult the NetworkEvents
+class documentation.</p>
+<p>This method has a global scope and can be used to listen
+for events across all pages in the browser. Each Page instance also
+has an <cite>enable_network_events</cite> method that allows for listening to
+events on a specific page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.enable_page_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_page_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.enable_page_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.enable_page_events" title="Link to this definition"></a></dt>
+<dd><p>Enables listening for page-related events over the websocket
+connection. Once this method is invoked, the connection will emit
+events pertaining to page activities, such as loading, navigation,
+and DOM updates, to any registered event callbacks. For a comprehensive
+list of available page events and their purposes, refer to the
+PageEvents class documentation.
+This functionality is crucial for monitoring and reacting to changes
+in the page state in real-time.</p>
+<p>This method has a global scope and can be used to listen
+for events across all pages in the browser. Each Page instance also
+has an <cite>enable_page_events</cite> method that allows for listening to events
+on a specific page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.get_cookies">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_cookies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.get_cookies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.get_cookies" title="Link to this definition"></a></dt>
+<dd><p>Retrieves all cookies from the browser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of dictionaries containing the cookie data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.get_page">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_page</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydoll.browser.page.Page" title="pydoll.browser.page.Page"><span class="pre">Page</span></a></span></span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.get_page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.get_page" title="Link to this definition"></a></dt>
+<dd><p>Retrieves a Page instance for an existing page in the browser.
+If no pages are open, a new page will be created.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.get_page_by_id">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_page_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydoll.browser.page.Page" title="pydoll.browser.page.Page"><span class="pre">Page</span></a></span></span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.get_page_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.get_page_by_id" title="Link to this definition"></a></dt>
+<dd><p>Retrieves a Page instance by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>page_id</strong> (<em>str</em>) – The ID of the page to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Page instance corresponding to the specified ID.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydoll.browser.page.Page" title="pydoll.browser.page.Page">Page</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.get_targets">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_targets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.get_targets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.get_targets" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the list of open pages in the browser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The list of open pages in the browser.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.get_window_id">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_window_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.get_window_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.get_window_id" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the ID of the current browser window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ID of the current browser window.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.new_page">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.new_page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.new_page" title="Link to this definition"></a></dt>
+<dd><p>Opens a new page in the browser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The new page instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pydoll.browser.page.Page" title="pydoll.browser.page.Page">Page</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.on">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.on" title="Link to this definition"></a></dt>
+<dd><p>Registers an event callback for a specific event. This method has
+a global scope and can be used to listen for events across all pages
+in the browser. Each <cite>Page</cite> instance also has an <cite>on</cite> method that
+allows for listening to events on a specific page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_name</strong> (<em>str</em>) – Name of the event to listen for.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em>) – function to be called when the event occurs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ID of the registered callback.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.set_cookies">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_cookies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cookies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.set_cookies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.set_cookies" title="Link to this definition"></a></dt>
+<dd><p>Sets cookies in the browser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cookies</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – A list of dictionaries containing
+the cookie data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.set_download_path">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_download_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.set_download_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.set_download_path" title="Link to this definition"></a></dt>
+<dd><p>Sets the download path for the browser.
+:param path: The path to the download directory.
+:type path: str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.set_window_bounds">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_window_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.set_window_bounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.set_window_bounds" title="Link to this definition"></a></dt>
+<dd><p>Sets the bounds of the specified window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bounds</strong> (<em>dict</em>) – The bounds to set for the window.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.set_window_maximized">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_window_maximized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.set_window_maximized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.set_window_maximized" title="Link to this definition"></a></dt>
+<dd><p>Maximizes the specified window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.set_window_minimized">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_window_minimized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.set_window_minimized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.set_window_minimized" title="Link to this definition"></a></dt>
+<dd><p>Minimizes the specified window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.start">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.start" title="Link to this definition"></a></dt>
+<dd><p>Método principal para iniciar o navegador.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.base.Browser.stop">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/base.html#Browser.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.base.Browser.stop" title="Link to this definition"></a></dt>
+<dd><p>Stops the running browser process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the browser is not currently running.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.browser.chrome">
+<span id="pydoll-browser-chrome-module"></span><h2>pydoll.browser.chrome module<a class="headerlink" href="#module-pydoll.browser.chrome" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.browser.chrome.Chrome">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.browser.chrome.</span></span><span class="sig-name descname"><span class="pre">Chrome</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydoll.browser.options.Options" title="pydoll.browser.options.Options"><span class="pre">Options</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/chrome.html#Chrome"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.chrome.Chrome" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydoll.browser.base.Browser" title="pydoll.browser.base.Browser"><code class="xref py py-class docutils literal notranslate"><span class="pre">Browser</span></code></a></p>
+</dd></dl>
+
+</section>
+<section id="module-pydoll.browser.managers">
+<span id="pydoll-browser-managers-module"></span><h2>pydoll.browser.managers module<a class="headerlink" href="#module-pydoll.browser.managers" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.browser.managers.BrowserOptionsManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.browser.managers.</span></span><span class="sig-name descname"><span class="pre">BrowserOptionsManager</span></span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#BrowserOptionsManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.BrowserOptionsManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.managers.BrowserOptionsManager.add_default_arguments">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_default_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydoll.browser.options.Options" title="pydoll.browser.options.Options"><span class="pre">Options</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#BrowserOptionsManager.add_default_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.BrowserOptionsManager.add_default_arguments" title="Link to this definition"></a></dt>
+<dd><p>Adiciona argumentos padrão aos argumentos fornecidos</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.managers.BrowserOptionsManager.initialize_options">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialize_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pydoll.browser.options.Options" title="pydoll.browser.options.Options"><span class="pre">Options</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydoll.browser.options.Options" title="pydoll.browser.options.Options"><span class="pre">Options</span></a></span></span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#BrowserOptionsManager.initialize_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.BrowserOptionsManager.initialize_options" title="Link to this definition"></a></dt>
+<dd><p>Inicializa as opções para o navegador.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>options</strong> (<a class="reference internal" href="#pydoll.browser.options.Options" title="pydoll.browser.options.Options"><em>Options</em></a><em> | </em><em>None</em>) – Uma instância da classe Options ou None.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A instância de opções inicializada.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydoll.browser.options.Options" title="pydoll.browser.options.Options">Options</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.managers.BrowserOptionsManager.validate_browser_path">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_browser_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#BrowserOptionsManager.validate_browser_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.BrowserOptionsManager.validate_browser_path" title="Link to this definition"></a></dt>
+<dd><p>Valida o caminho fornecido do navegador.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – O caminho do arquivo executável do navegador.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>O caminho do navegador validado.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.browser.managers.BrowserProcessManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.browser.managers.</span></span><span class="sig-name descname"><span class="pre">BrowserProcessManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_creator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#BrowserProcessManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.BrowserProcessManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.managers.BrowserProcessManager.start_browser_process">
+<span class="sig-name descname"><span class="pre">start_browser_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">binary_location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#BrowserProcessManager.start_browser_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.BrowserProcessManager.start_browser_process" title="Link to this definition"></a></dt>
+<dd><p>Inicia o processo do navegador</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.managers.BrowserProcessManager.stop_process">
+<span class="sig-name descname"><span class="pre">stop_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#BrowserProcessManager.stop_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.BrowserProcessManager.stop_process" title="Link to this definition"></a></dt>
+<dd><p>Para o processo do navegador se estiver em execução</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.browser.managers.ProxyManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.browser.managers.</span></span><span class="sig-name descname"><span class="pre">ProxyManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#ProxyManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.ProxyManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.managers.ProxyManager.get_proxy_credentials">
+<span class="sig-name descname"><span class="pre">get_proxy_credentials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#ProxyManager.get_proxy_credentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.ProxyManager.get_proxy_credentials" title="Link to this definition"></a></dt>
+<dd><p>Configura as configurações de proxy e extrai credenciais se presentes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(private_proxy, (username, password))</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[bool, tuple[str, str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.browser.managers.TempDirectoryManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.browser.managers.</span></span><span class="sig-name descname"><span class="pre">TempDirectoryManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">temp_dir_factory=&lt;class</span> <span class="pre">'tempfile.TemporaryDirectory'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#TempDirectoryManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.TempDirectoryManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.managers.TempDirectoryManager.cleanup">
+<span class="sig-name descname"><span class="pre">cleanup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#TempDirectoryManager.cleanup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.TempDirectoryManager.cleanup" title="Link to this definition"></a></dt>
+<dd><p>Limpa todos os diretórios temporários</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.managers.TempDirectoryManager.create_temp_dir">
+<span class="sig-name descname"><span class="pre">create_temp_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/managers.html#TempDirectoryManager.create_temp_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.managers.TempDirectoryManager.create_temp_dir" title="Link to this definition"></a></dt>
+<dd><p>Cria um diretório temporário para a instância do navegador.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>O diretório temporário.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>TemporaryDirectory</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.browser.options">
+<span id="pydoll-browser-options-module"></span><h2>pydoll.browser.options module<a class="headerlink" href="#module-pydoll.browser.options" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.browser.options.Options">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.browser.options.</span></span><span class="sig-name descname"><span class="pre">Options</span></span><a class="reference internal" href="../_modules/pydoll/browser/options.html#Options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.options.Options" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to manage command-line options for a browser instance.</p>
+<p>This class allows the user to specify command-line arguments and
+the binary location of the browser executable.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.options.Options.add_argument">
+<span class="sig-name descname"><span class="pre">add_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argument</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/options.html#Options.add_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.options.Options.add_argument" title="Link to this definition"></a></dt>
+<dd><p>Adds a command-line argument to the options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>argument</strong> (<em>str</em>) – The command-line argument to be added.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the argument is already in the list of arguments.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.browser.options.Options.arguments">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">arguments</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#pydoll.browser.options.Options.arguments" title="Link to this definition"></a></dt>
+<dd><p>Gets the list of command-line arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of command-line arguments added to the options.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.browser.options.Options.binary_location">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">binary_location</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pydoll.browser.options.Options.binary_location" title="Link to this definition"></a></dt>
+<dd><p>Gets the location of the browser binary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The file path to the browser executable.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.browser.page">
+<span id="pydoll-browser-page-module"></span><h2>pydoll.browser.page module<a class="headerlink" href="#module-pydoll.browser.page" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydoll.browser.page.</span></span><span class="sig-name descname"><span class="pre">Page</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="pydoll.mixins.html#pydoll.mixins.find_elements.FindElementsMixin" title="pydoll.mixins.find_elements.FindElementsMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">FindElementsMixin</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.accept_dialog">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accept_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.accept_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.accept_dialog" title="Link to this definition"></a></dt>
+<dd><p>Accepts the dialog on the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>LookupError</strong> – If no dialog is present on the page.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.close" title="Link to this definition"></a></dt>
+<dd><p>Closes the page.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.current_url">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">current_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pydoll.browser.page.Page.current_url" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the current URL of the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current URL of the page.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.delete_all_cookies">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_all_cookies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.delete_all_cookies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.delete_all_cookies" title="Link to this definition"></a></dt>
+<dd><p>Deletes all cookies from the browser.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.disable_fetch_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disable_fetch_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.disable_fetch_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.disable_fetch_events" title="Link to this definition"></a></dt>
+<dd><p>Disables fetch events for the page.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.disable_page_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disable_page_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.disable_page_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.disable_page_events" title="Link to this definition"></a></dt>
+<dd><p>Disables page events for the page.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.dom_events_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dom_events_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pydoll.browser.page.Page.dom_events_enabled" title="Link to this definition"></a></dt>
+<dd><p>Returns whether DOM events are enabled or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if DOM events are enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.enable_dom_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_dom_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.enable_dom_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.enable_dom_events" title="Link to this definition"></a></dt>
+<dd><p>Enables DOM events for the page.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.enable_fetch_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_fetch_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handle_auth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Document'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.enable_fetch_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.enable_fetch_events" title="Link to this definition"></a></dt>
+<dd><p>Enables fetch events for the page.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.enable_network_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_network_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.enable_network_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.enable_network_events" title="Link to this definition"></a></dt>
+<dd><p>Enables network events for the page.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.enable_page_events">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enable_page_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.enable_page_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.enable_page_events" title="Link to this definition"></a></dt>
+<dd><p>Enables page events for the page.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.execute_script">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_script</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pydoll.html#pydoll.element.WebElement" title="pydoll.element.WebElement"><span class="pre">WebElement</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.execute_script"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.execute_script" title="Link to this definition"></a></dt>
+<dd><p>Executes a JavaScript script in the page.
+If an element is provided, the script will be executed in the context
+of that element. To provide the element context, use the ‘argument’
+keyword in the script.</p>
+<p>Examples:
+<code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">await</span> <span class="pre">page.execute_script('argument.click()',</span> <span class="pre">element)</span>
+<span class="pre">await</span> <span class="pre">page.execute_script('argument.value</span> <span class="pre">=</span> <span class="pre">&quot;Hello,</span> <span class="pre">World!&quot;',</span> <span class="pre">element)</span>
+<span class="pre">`</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>script</strong> (<em>str</em>) – The JavaScript script to execute.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.fetch_events_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fetch_events_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pydoll.browser.page.Page.fetch_events_enabled" title="Link to this definition"></a></dt>
+<dd><p>Returns whether fetch events are enabled or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if fetch events are enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.get_cookies">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_cookies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.get_cookies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.get_cookies" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the cookies of the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of cookies.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.get_dialog_message">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_dialog_message</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.get_dialog_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.get_dialog_message" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the message of the dialog on the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The message of the dialog.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.get_network_logs">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_network_logs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matches</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.get_network_logs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.get_network_logs" title="Link to this definition"></a></dt>
+<dd><p>Retrieves network logs from the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matches</strong> (<em>str</em>) – The URL pattern to match network logs against.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of network logs that match the specified pattern.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.get_network_response_bodies">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_network_response_bodies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matches</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.get_network_response_bodies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.get_network_response_bodies" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the response bodies of network requests that match the
+specified pattern.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>matches</strong> (<em>list</em>) – The URL patterns to match network requests against.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A list of response bodies from network requests that match</dt><dd><p>the specified patterns.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.get_network_response_body">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_network_response_body</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.get_network_response_body"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.get_network_response_body" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the response body of a network request.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request_id</strong> (<em>str</em>) – The ID of the network request.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response body of the network request.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.get_pdf_base64">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pdf_base64</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.get_pdf_base64"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.get_pdf_base64" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the PDF data of the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The PDF data of the page.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.get_screenshot">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_screenshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.get_screenshot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.get_screenshot" title="Link to this definition"></a></dt>
+<dd><p>Captures a screenshot of the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The file path to save the screenshot to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.go_to">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">go_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.go_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.go_to" title="Link to this definition"></a></dt>
+<dd><p>Navigates to a URL in the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>url</strong> (<em>str</em>) – The URL to navigate to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.has_dialog">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.has_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.has_dialog" title="Link to this definition"></a></dt>
+<dd><p>Checks if a dialog is present on the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if a dialog is present, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.network_events_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">network_events_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pydoll.browser.page.Page.network_events_enabled" title="Link to this definition"></a></dt>
+<dd><p>Returns whether network events are enabled or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if network events are enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.on">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temporary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.on" title="Link to this definition"></a></dt>
+<dd><p>Registers an event listener for the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event</strong> (<em>str</em>) – The event to listen for.</p></li>
+<li><p><strong>callback</strong> (<em>callable</em>) – The callback function to execute when the
+event is triggered.</p></li>
+<li><p><strong>temporary</strong> (<em>bool</em>) – Whether the event listener is temporary or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.page_events_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">page_events_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#pydoll.browser.page.Page.page_events_enabled" title="Link to this definition"></a></dt>
+<dd><p>Returns whether page events are enabled or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if page events are enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.page_source">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">page_source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#pydoll.browser.page.Page.page_source" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the source code of the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The source code of the page.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.print_to_pdf">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">print_to_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.print_to_pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.print_to_pdf" title="Link to this definition"></a></dt>
+<dd><p>Prints the page to a PDF file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The file path to save the PDF file to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.refresh">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.refresh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.refresh" title="Link to this definition"></a></dt>
+<dd><p>Refreshes the page.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.set_cookies">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_cookies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cookies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.set_cookies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.set_cookies" title="Link to this definition"></a></dt>
+<dd><p>Sets cookies for the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cookies</strong> (<em>list</em>) – A list of cookies to set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydoll.browser.page.Page.set_download_path">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_download_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydoll/browser/page.html#Page.set_download_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydoll.browser.page.Page.set_download_path" title="Link to this definition"></a></dt>
+<dd><p>Sets the download path for the page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The path where the downloaded files should be saved.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pydoll.browser">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pydoll.browser" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

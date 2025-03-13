@@ -1,0 +1,230 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.pydoll.commands.browser &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.pydoll.commands.browser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.pydoll.commands.browser</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="BrowserCommands">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.browser.BrowserCommands">[docs]</a>
+<span></span><span class="k">class</span> <span class="nc">BrowserCommands</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    BrowserCommands class provides a set of commands to interact with the</span>
+<span class="sd">    browser&#39;s main functionality based on CDP. These commands allow for</span>
+<span class="sd">    managing browser windows, such as closing windows, retrieving window IDs,</span>
+<span class="sd">    and adjusting window bounds (size and state).</span>
+
+<span class="sd">    The following operations can be performed:</span>
+<span class="sd">    - Close the browser.</span>
+<span class="sd">    - Get the ID of the current window.</span>
+<span class="sd">    - Set the size and position of a specific window.</span>
+<span class="sd">    - Maximize or minimize a specific window.</span>
+
+<span class="sd">    Each method generates a command that can be sent to the browser</span>
+<span class="sd">    as part of the communication with the browser&#39;s underlying API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CLOSE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Browser.close&#39;</span><span class="p">}</span>
+    <span class="n">GET_WINDOW_ID</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Browser.WindowID&#39;</span><span class="p">}</span>
+    <span class="n">SET_WINDOW_BOUNDS_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Browser.setWindowBounds&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">SET_DOWNLOAD_BEHAVIOR</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Browser.setDownloadBehavior&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="BrowserCommands.set_download_path">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.browser.BrowserCommands.set_download_path">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_download_path</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to set the download path for the browser.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            path (str): The path to set for downloads.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">SET_DOWNLOAD_BEHAVIOR</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;behavior&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;allow&#39;</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;downloadPath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="BrowserCommands.close">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.browser.BrowserCommands.close">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to close the browser.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CLOSE</span></div>
+
+
+<div class="viewcode-block" id="BrowserCommands.get_window_id">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.browser.BrowserCommands.get_window_id">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_window_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to get the ID of the current window.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">GET_WINDOW_ID</span></div>
+
+
+<div class="viewcode-block" id="BrowserCommands.set_window_bounds">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.browser.BrowserCommands.set_window_bounds">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_window_bounds</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">window_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">bounds</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to set the bounds of a window.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            window_id (int): The ID of the window to set the bounds for.</span>
+<span class="sd">            bounds (dict): The bounds to set for the window,</span>
+<span class="sd">                           which should include width, height,</span>
+<span class="sd">                           and optionally x and y coordinates.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">SET_WINDOW_BOUNDS_TEMPLATE</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;windowId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">window_id</span>
+        <span class="n">command</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;bounds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bounds</span>
+        <span class="k">return</span> <span class="n">command</span></div>
+
+
+<div class="viewcode-block" id="BrowserCommands.set_window_maximized">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.browser.BrowserCommands.set_window_maximized">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_window_maximized</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">window_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to maximize a window.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            window_id (int): The ID of the window to maximize.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">set_window_bounds</span><span class="p">(</span><span class="n">window_id</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;windowState&#39;</span><span class="p">:</span> <span class="s1">&#39;maximized&#39;</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="BrowserCommands.set_window_minimized">
+<a class="viewcode-back" href="../../../../source/pydoll.pydoll.commands.html#pydoll.pydoll.commands.browser.BrowserCommands.set_window_minimized">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_window_minimized</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">window_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the command to minimize a window.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            window_id (int): The ID of the window to minimize.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The command to be sent to the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">set_window_bounds</span><span class="p">(</span><span class="n">window_id</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;windowState&#39;</span><span class="p">:</span> <span class="s1">&#39;minimized&#39;</span><span class="p">})</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

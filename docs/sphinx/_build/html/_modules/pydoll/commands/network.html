@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pydoll.commands.network &mdash; Pydoll 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Pydoll
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Pydoll API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pydoll</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pydoll.commands.network</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pydoll.commands.network</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+
+
+<div class="viewcode-block" id="NetworkCommands">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands">[docs]</a>
+<span class="k">class</span> <span class="nc">NetworkCommands</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class encapsulates the network commands of the</span>
+<span class="sd">    Chrome DevTools Protocol (CDP).</span>
+
+<span class="sd">    CDP allows developers to interact with the Chrome browser&#39;s internal</span>
+<span class="sd">    mechanisms to inspect, manipulate, and monitor network operations,</span>
+<span class="sd">    which can be invaluable for debugging web applications, testing network</span>
+<span class="sd">    behaviors, and optimizing performance.</span>
+
+<span class="sd">    The commands defined in this class provide functionality for:</span>
+<span class="sd">    - Managing browser cache and cookies.</span>
+<span class="sd">    - Enabling and disabling network events.</span>
+<span class="sd">    - Retrieving and modifying request and response data.</span>
+<span class="sd">    - Customizing HTTP headers and user agent strings.</span>
+<span class="sd">    - Blocking specific URLs to prevent unwanted network traffic.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">CLEAR_BROWSER_CACHE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.clearBrowserCache&#39;</span><span class="p">}</span>
+    <span class="n">CLEAR_BROWSER_COOKIES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.clearBrowserCookies&#39;</span><span class="p">}</span>
+    <span class="n">DELETE_COOKIES_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.deleteCookies&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">DISABLE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.disable&#39;</span><span class="p">}</span>
+    <span class="n">ENABLE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.enable&#39;</span><span class="p">}</span>
+    <span class="n">GET_COOKIES_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.getCookies&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">GET_REQUEST_POST_DATA_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.getRequestPostData&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">GET_RESPONSE_BODY_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.getResponseBody&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">SET_CACHE_DISABLED_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.setCacheDisabled&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">SET_COOKIE_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.setCookie&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">SET_COOKIES_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.setCookies&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+    <span class="n">SET_EXTRA_HTTP_HEADERS_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.setExtraHTTPHeaders&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">SET_USERAGENT_OVERRIDE_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.setUserAgentOverride&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">GET_ALL_COOKIES</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.getAllCookies&#39;</span><span class="p">}</span>
+    <span class="n">SEARCH_IN_RESPONSE_TEMPLATE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.searchInResponseBody&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+    <span class="n">SET_BLOCKED_URLS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Network.setBlockedURLs&#39;</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">{}}</span>
+
+<div class="viewcode-block" id="NetworkCommands.clear_browser_cache">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.clear_browser_cache">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">clear_browser_cache</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Command to clear the browser&#39;s cache.</span>
+
+<span class="sd">        This is useful when you want to ensure that your application retrieves</span>
+<span class="sd">        the most up-to-date resources from the server instead of loading</span>
+<span class="sd">        potentially stale data from the cache.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CLEAR_BROWSER_CACHE</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.clear_browser_cookies">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.clear_browser_cookies">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">clear_browser_cookies</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Command to clear all cookies stored in the browser.</span>
+
+<span class="sd">        This can be beneficial for testing scenarios where you need</span>
+<span class="sd">        to simulate a fresh user session without any previously stored</span>
+<span class="sd">        cookies that might affect the application&#39;s behavior.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">CLEAR_BROWSER_COOKIES</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.delete_cookies">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.delete_cookies">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">delete_cookies</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to delete a specific cookie by name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): The name of the cookie to delete.</span>
+<span class="sd">            url (str, optional): The URL associated with the cookie.</span>
+<span class="sd">            If specified, only the cookie matching both the name and</span>
+<span class="sd">            URL will be deleted. If omitted, all cookies with the given</span>
+<span class="sd">            name will be deleted regardless of URL.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to delete the specified cookie.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delete_cookies_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">DELETE_COOKIES_TEMPLATE</span><span class="p">)</span>
+        <span class="n">delete_cookies_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+            <span class="n">delete_cookies_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="k">return</span> <span class="n">delete_cookies_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.disable_network_events">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.disable_network_events">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">disable_network_events</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Command to disable network event notifications.</span>
+
+<span class="sd">        Use this command when you want to temporarily suspend the emission of</span>
+<span class="sd">        network events, which can be useful during specific operations</span>
+<span class="sd">        where you don&#39;t want to be notified about every network request</span>
+<span class="sd">        and response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DISABLE</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.enable_network_events">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.enable_network_events">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">enable_network_events</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Command to enable network event notifications.</span>
+
+<span class="sd">        This allows you to start receiving network-related events again after</span>
+<span class="sd">        they have been disabled. It&#39;s essential to call this before you expect</span>
+<span class="sd">        to receive network events.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ENABLE</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.get_cookies">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.get_cookies">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_cookies</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to retrieve cookies from specified URLs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            urls (list[str], optional): A list of URLs for which to retrieve</span>
+<span class="sd">                cookies. If not provided, cookies from all URLs will</span>
+<span class="sd">                be fetched.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to get cookies associated with the specified URLs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_cookies_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">GET_COOKIES_TEMPLATE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="n">get_cookies_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;urls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">urls</span>
+        <span class="k">return</span> <span class="n">get_cookies_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.get_request_post_data">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.get_request_post_data">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_request_post_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to retrieve POST data associated with a specific</span>
+<span class="sd">        request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The unique identifier of the network</span>
+<span class="sd">                request whose POST data is to be retrieved.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to get the POST data for the specified request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_request_post_data_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">GET_REQUEST_POST_DATA_TEMPLATE</span>
+        <span class="p">)</span>
+        <span class="n">get_request_post_data_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="k">return</span> <span class="n">get_request_post_data_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.get_response_body">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.get_response_body">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_response_body</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to retrieve the body of a response for a specific</span>
+<span class="sd">        request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The unique identifier of the request</span>
+<span class="sd">                for which the response body is to be fetched.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to get the response body associated with the</span>
+<span class="sd">                specified request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_response_body_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">GET_RESPONSE_BODY_TEMPLATE</span>
+        <span class="p">)</span>
+        <span class="n">get_response_body_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="k">return</span> <span class="n">get_response_body_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.set_cache_disabled">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.set_cache_disabled">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_cache_disabled</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cache_disabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to enable or disable the browser cache.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cache_disabled (bool): Set to True to disable caching, or False to</span>
+<span class="sd">                enable it.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to set the cache state in the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">set_cache_disabled_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">SET_CACHE_DISABLED_TEMPLATE</span>
+        <span class="p">)</span>
+        <span class="n">set_cache_disabled_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;cacheDisabled&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cache_disabled</span>
+        <span class="k">return</span> <span class="n">set_cache_disabled_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.set_cookie">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.set_cookie">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_cookie</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to set a specific cookie.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): The name of the cookie.</span>
+<span class="sd">            value (str): The value of the cookie.</span>
+<span class="sd">            url (str, optional): The URL associated with the cookie.</span>
+<span class="sd">                If provided, the cookie will be valid for this URL only.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to set the specified cookie in the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">set_cookie_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">SET_COOKIE_TEMPLATE</span><span class="p">)</span>
+        <span class="n">set_cookie_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">set_cookie_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+            <span class="n">set_cookie_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="k">return</span> <span class="n">set_cookie_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.set_cookies">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.set_cookies">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_cookies</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cookies</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to set multiple cookies at once.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cookies (list[dict]): A list of dictionaries, each representing a</span>
+<span class="sd">                cookie with its properties (name, value, url, etc.).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to set the specified cookies in the browser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">set_cookies_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">SET_COOKIES_TEMPLATE</span><span class="p">)</span>
+        <span class="n">set_cookies_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;cookies&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cookies</span>
+        <span class="k">return</span> <span class="n">set_cookies_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.set_extra_http_headers">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.set_extra_http_headers">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_extra_http_headers</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">headers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to set additional HTTP headers for subsequent network</span>
+<span class="sd">        requests.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            headers (dict): A dictionary of headers to include in all future</span>
+<span class="sd">                requests.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to set extra HTTP headers for the browser&#39;s network</span>
+<span class="sd">                requests.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">set_extra_http_headers_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">SET_EXTRA_HTTP_HEADERS_TEMPLATE</span>
+        <span class="p">)</span>
+        <span class="n">set_extra_http_headers_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;headers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">headers</span>
+        <span class="k">return</span> <span class="n">set_extra_http_headers_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.set_useragent_override">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.set_useragent_override">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_useragent_override</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">user_agent</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to override the user agent string used in network</span>
+<span class="sd">        requests.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_agent (str): The user agent string to set for future network</span>
+<span class="sd">                requests.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to override the browser&#39;s user agent for network</span>
+<span class="sd">                requests.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">set_useragent_override_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">SET_USERAGENT_OVERRIDE_TEMPLATE</span>
+        <span class="p">)</span>
+        <span class="n">set_useragent_override_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;userAgent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_agent</span>
+        <span class="k">return</span> <span class="n">set_useragent_override_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.get_all_cookies">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.get_all_cookies">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_all_cookies</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Command to retrieve all cookies stored in the browser.</span>
+
+<span class="sd">        This can be useful for diagnostics, testing, or ensuring that your</span>
+<span class="sd">        application behaves as expected when accessing cookies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">GET_ALL_COOKIES</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.search_in_response">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.search_in_response">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">search_in_response</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">case_sensitive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">is_regex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to search for a specific query in the response body</span>
+<span class="sd">        of a network request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            request_id (str): The unique identifier of the request to search</span>
+<span class="sd">                within.</span>
+<span class="sd">            query (str): The string to search for within the response body.</span>
+<span class="sd">            case_sensitive (bool, optional): Whether the search should be case</span>
+<span class="sd">                sensitive. Defaults to False.</span>
+<span class="sd">            is_regex (bool, optional): Whether the query should be treated as a</span>
+<span class="sd">                regular expression. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to search the specified query within the response</span>
+<span class="sd">                body of the given request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">search_in_response_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">SEARCH_IN_RESPONSE_TEMPLATE</span>
+        <span class="p">)</span>
+        <span class="n">search_in_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;requestId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+        <span class="n">search_in_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;query&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query</span>
+        <span class="n">search_in_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;caseSensitive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">case_sensitive</span>
+        <span class="n">search_in_response_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;isRegex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_regex</span>
+        <span class="k">return</span> <span class="n">search_in_response_template</span></div>
+
+
+<div class="viewcode-block" id="NetworkCommands.set_blocked_urls">
+<a class="viewcode-back" href="../../../source/pydoll.pydoll.commands.html#pydoll.commands.network.NetworkCommands.set_blocked_urls">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">set_blocked_urls</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a command to block specific URLs from being requested by the</span>
+<span class="sd">        browser.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            urls (list[str]): A list of URL patterns to block. The browser will</span>
+<span class="sd">                not make requests to any URLs matching these patterns.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A command to set the specified URLs as blocked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">set_blocked_urls_template</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">SET_BLOCKED_URLS</span><span class="p">)</span>
+        <span class="n">set_blocked_urls_template</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;urls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">urls</span>
+        <span class="k">return</span> <span class="n">set_blocked_urls_template</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
